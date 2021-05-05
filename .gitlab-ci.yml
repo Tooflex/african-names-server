@@ -19,7 +19,7 @@ build:
 test:
   stage: test
   tags:
-    - my-runner
+    - dev
   script:
     - echo "this is testing"
     - hostname
