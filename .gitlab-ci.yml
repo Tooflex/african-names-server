@@ -8,7 +8,7 @@ stages:
   - deploy
 
 build:
-  image: gradle:5.0-jdk8-alpine
+  image: gradle:6.0-jdk11-alpine
   stage: build
   script:
     - gradle build
