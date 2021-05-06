@@ -2,18 +2,17 @@ package com.tooflexdev.prenomsafricains.domain
 
 import org.hibernate.annotations.Cache
 import org.hibernate.annotations.CacheConcurrencyStrategy
-import org.hibernate.annotations.ColumnTransformer
 import javax.persistence.*
 
 @Entity
-@Table(name = "prenom_translation")
+@Table(name = "firstname_translation")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-class PrenomTranslation (
+class FirstnameTranslation (
     @Id var id: Long? = null,
     var meaningTranslation: String?,
     var originsTranslation: String?,
     @ManyToOne
     var language: Language,
     @ManyToOne
-    var product: Prenom
+    var product: Firstname
 )
