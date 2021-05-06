@@ -19,9 +19,10 @@ build:
 package:
   stage: package
   script:
-    - docker build -t registry.gitlab.com/african-names/back/african-names .
+    - ./gradlew bootBuildImage --imageName="$CI_REGISTRY_IMAGE"
+    - docker build -t $CI_REGISTRY_IMAGE .
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
-    - docker push registry.gitlab.com/african-names/back/african-names
+    - docker push $CI_REGISTRY_IMAGE
 
 deploy_staging:
   tags:
@@ -35,10 +36,9 @@ deploy_staging:
     - chmod 700 ~/.ssh
   script:
     - ssh -o StrictHostKeyChecking=no 78.192.91.3 docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com 
-    - ssh -o StrictHostKeyChecking=no 78.192.91.3 docker pull registry.gitlab.com/mathflake/api
-    - ssh -o StrictHostKeyChecking=no 78.192.91.3 "docker container stop mathflake_api && docker container rm mathflake_api || true"
-    - ssh -o StrictHostKeyChecking=no 78.192.91.3 docker run --name mathflake_api -p 80:80 -d registry.gitlab.com/mathflake/api
-
+    - ssh -o StrictHostKeyChecking=no 78.192.91.3 docker pull $CI_REGISTRY_IMAGE
+    - ssh -o StrictHostKeyChecking=no 78.192.91.3 "docker container stop african_name_api && docker container rm african_name_api || true"
+    - ssh -o StrictHostKeyChecking=no 78.192.91.3 docker run --name african_name_api -p 80:80 -d $CI_REGISTRY_IMAGE
   environment: dev
   only:
     - develop
