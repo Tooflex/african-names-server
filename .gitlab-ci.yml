@@ -8,6 +8,8 @@ stages:
   - deploy
 
 build:
+  tags:
+    - dev
   image: gradle:6.8.3-jdk11-openj9
   stage: build
   script:
@@ -17,6 +19,8 @@ build:
       - build/libs/*.jar
 
 package:
+  tags:
+    - dev
   stage: package
   script:
     - ./gradlew bootBuildImage --imageName="$CI_REGISTRY_IMAGE"
