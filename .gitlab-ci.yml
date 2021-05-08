@@ -4,8 +4,6 @@ stages:
   - deploy
 
 before_script:
-#  - echo `pwd` # debug
-#  - echo "$CI_BUILD_NAME, $CI_BUILD_REF_NAME $CI_BUILD_STAGE" # debug
   - export GRADLE_USER_HOME=`pwd`/.gradle
 
 cache:
@@ -25,6 +23,8 @@ build:
       - build/libs/*.jar
 
 package:
+  tags:
+    - dev
   variables:
     DOCKER_HOST: tcp://docker:2376
     DOCKER_DRIVER: overlay2
@@ -43,20 +43,9 @@ package:
     - apt-get update -y
     - apt-get install -y docker-ce
     - service docker start
-    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+    - echo "$CI_BUILD_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
     - ./gradlew bootBuildImage --imageName="$CI_REGISTRY_IMAGE"
     - docker push "$CI_REGISTRY_IMAGE"
-
-#package:
-#  tags:
-#    - dev
-#  image: gradle:6.8.3-jdk11-openj9
-#  stage: package
-#  script:
-#    - ./gradlew bootBuildImage --imageName="$CI_REGISTRY_IMAGE"
-    # - docker build -t registry.gitlab.com/african-names/back/african-names .
- #   - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
- #   - docker push $CI_REGISTRY_IMAGE
 
 deploy_staging:
   tags:
@@ -75,4 +64,4 @@ deploy_staging:
     - ssh -o StrictHostKeyChecking=no 78.192.91.3 docker run --name african_name_api -p 80:80 -d $CI_REGISTRY_IMAGE
   environment: dev
   only:
-    - develop
+    - dev
