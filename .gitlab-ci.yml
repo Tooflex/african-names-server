@@ -23,8 +23,6 @@ build:
       - build/libs/*.jar
 
 package:
-  tags:
-    - dev
   variables:
     DOCKER_HOST: tcp://docker:2376
     DOCKER_DRIVER: overlay2
