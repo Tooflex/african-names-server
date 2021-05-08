@@ -1,7 +1,3 @@
-image: docker:latest
-services:
-  - docker:dind
-
 stages:
   - build
   - package
@@ -29,15 +25,38 @@ build:
       - build/libs/*.jar
 
 package:
-  tags:
-    - dev
-  image: gradle:6.8.3-jdk11-openj9
-  stage: package
+  variables:
+    DOCKER_HOST: tcp://docker:2376
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: "/certs"
+    DOCKER_TLS_VERIFY: 1
+    DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
+  stage: build
+  image: azul/zulu-openjdk:11.0.10
+  services:
+    - docker:dind
   script:
+    - apt-get update
+    - apt-get install -y apt-transport-https ca-certificates curl software-properties-common
+    - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add
+    - add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+    - apt-get update -y
+    - apt-get install -y docker-ce
+    - service docker start
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
     - ./gradlew bootBuildImage --imageName="$CI_REGISTRY_IMAGE"
+    - docker push "$CI_REGISTRY_IMAGE"
+
+#package:
+#  tags:
+#    - dev
+#  image: gradle:6.8.3-jdk11-openj9
+#  stage: package
+#  script:
+#    - ./gradlew bootBuildImage --imageName="$CI_REGISTRY_IMAGE"
     # - docker build -t registry.gitlab.com/african-names/back/african-names .
-    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
-    - docker push $CI_REGISTRY_IMAGE
+ #   - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+ #   - docker push $CI_REGISTRY_IMAGE
 
 deploy_staging:
   tags:
