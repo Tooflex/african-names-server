@@ -31,7 +31,7 @@ package:
     DOCKER_TLS_CERTDIR: "/certs"
     DOCKER_TLS_VERIFY: 1
     DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
-  stage: build
+  stage: package
   image: azul/zulu-openjdk:11.0.10
   services:
     - docker:dind
