@@ -31,6 +31,7 @@ build:
 package:
   tags:
     - dev
+  image: gradle:6.8.3-jdk11-openj9
   stage: package
   script:
     - ./gradlew bootBuildImage --imageName="$CI_REGISTRY_IMAGE"
