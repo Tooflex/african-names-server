@@ -1,12 +1,10 @@
 package com.tooflexdev.prenomsafricains.repository
 
 import com.tooflexdev.prenomsafricains.domain.Firstname
-import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.CrudRepository
+import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor
+import org.springframework.data.rest.core.annotation.RepositoryRestResource
 
-interface FirstnameRepository: CrudRepository<Firstname, Long> {
-
-    @Query(nativeQuery=true, value="SELECT *  FROM firstname ORDER BY random()") //Use with postgres on small a database
-    fun findFirstnamesAlea(): List<Firstname>
-
+@RepositoryRestResource
+interface FirstnameRepository: JpaRepository<Firstname, Long>, JpaSpecificationExecutor<Firstname> {
 }
