@@ -27,6 +27,7 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("com.sipios:spring-search:0.2.3")
+	implementation("org.junit.jupiter:junit-jupiter:5.7.0")
 	runtimeOnly("com.h2database:h2")
 	//runtimeOnly("org.jetbrains.kotlin:kotlin-reflect:1.4.32")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
