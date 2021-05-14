@@ -43,7 +43,7 @@ package:
     - service docker start
     - echo "$CI_BUILD_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
     - docker build -t africannames/webapp .
-    - docker push "$CI_REGISTRY_IMAGE"
+    - docker push africannames/webapp:latest
 
 deploy_staging:
   tags:
