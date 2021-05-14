@@ -29,7 +29,7 @@ package:
     DOCKER_TLS_CERTDIR: "/certs"
     DOCKER_TLS_VERIFY: 1
     DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
-    REPOSITORY: $CI_REGISTRY/africannames/webapp
+    REPOSITORY: $CI_REGISTRY/african-names/back/african-names
   stage: package
   image: azul/zulu-openjdk:11.0.10
   services:
@@ -45,6 +45,7 @@ package:
     - echo "$CI_BUILD_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
     - docker build --pull -t $REPOSITORY:latest .
     - docker push $REPOSITORY:latest
+    - docker push $REPOSITORY
 
 deploy_staging:
   tags:

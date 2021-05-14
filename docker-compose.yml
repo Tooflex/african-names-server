@@ -2,7 +2,6 @@ version: "3.8"
 services:
   africannameswebapp:
     build: .
-    #image: africannames/webapp
     restart: always
     container_name: africannames/webapp
     depends_on:
