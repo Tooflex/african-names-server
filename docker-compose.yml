@@ -1,0 +1,39 @@
+version: "3.8"
+services:
+  africannameswebapp:
+    build: .
+    #image: africannames/webapp
+    restart: always
+    container_name: africannames/webapp
+    depends_on:
+      - dev-postgres-db
+    ports:
+    - "8080:8080"
+    networks:
+      - african-names-network
+    environment:
+      SPRING_PROFILES_ACTIVE: ${AFN_ENV}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://${AFN_POSTGRES_HOST}:${AFN_POSTGRES_PORT}/${AFN_POSTGRES_DB}
+      SPRING_DATASOURCE_USERNAME: ${AFN_POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${AFN_POSTGRES_PASSWORD}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_SECURITY_USER_NAME: ${AFN_APP_USER}
+      SPRING_SECURITY_USER_PASSWORD: ${AFN_APP_PASSWORD}
+
+  dev-postgres-db:
+    image: postgres:13.2-alpine
+    restart: always
+    ports:
+    - "5432:5432"
+    networks:
+      - african-names-network
+    environment:
+      POSTGRES_USER: ${AFN_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${AFN_POSTGRES_PASSWORD}
+      POSTGRES_DB: ${AFN_POSTGRES_DB}
+      volumes:
+        ./postgres-data:/var/lib/postgresql/data
+
+networks:
+  african-names-network:
+    driver: bridge
