@@ -34,8 +34,6 @@ package:
   image: azul/zulu-openjdk:11.0.10
   services:
     - docker:dind
-  before_script:
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
   script:
     - apt-get update
     - apt-get install -y apt-transport-https ca-certificates curl software-properties-common
