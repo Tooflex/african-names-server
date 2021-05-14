@@ -42,7 +42,7 @@ package:
     - apt-get install -y docker-ce
     - service docker start
     - echo "$CI_BUILD_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
-    - ./gradlew bootBuildImage --imageName="$CI_REGISTRY_IMAGE"
+    - docker build -t africannames/webapp .
     - docker push "$CI_REGISTRY_IMAGE"
 
 deploy_staging:
@@ -56,10 +56,8 @@ deploy_staging:
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
   script:
-    - ssh -o StrictHostKeyChecking=no 78.192.91.3 docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com 
-    - ssh -o StrictHostKeyChecking=no 78.192.91.3 docker pull $CI_REGISTRY_IMAGE
-    - ssh -o StrictHostKeyChecking=no 78.192.91.3 "docker container stop african_name_api && docker container rm african_name_api || true"
-    - ssh -o StrictHostKeyChecking=no 78.192.91.3 docker run --name african_name_api -p 80:80 -d $CI_REGISTRY_IMAGE
+    - ssh -o StrictHostKeyChecking=no tooflex.freeboxos.fr docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+    - docker compose --env-file $.env.dev up
   environment: dev
   only:
     - dev
