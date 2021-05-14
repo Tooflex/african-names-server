@@ -1,26 +1,26 @@
 stages:
-  - build
+  #- build
   - package
   - deploy
 
-before_script:
-  - export GRADLE_USER_HOME=`pwd`/.gradle
+#before_script:
+#  - export GRADLE_USER_HOME=`pwd`/.gradle
+#
+#cache:
+#  paths:
+#    - .gradle/wrapper
+#    - .gradle/caches
 
-cache:
-  paths:
-    - .gradle/wrapper
-    - .gradle/caches
-
-build:
-  tags:
-    - dev
-  image: gradle:6.8.3-jdk11-openj9
-  stage: build
-  script:
-    - ./gradlew build
-  artifacts:
-    paths:
-      - build/libs/*.jar
+#build:
+#  tags:
+#    - dev
+#  image: gradle:6.8.3-jdk11-openj9
+#  stage: build
+#  script:
+#    - ./gradlew build
+#  artifacts:
+#    paths:
+#      - build/libs/*.jar
 
 package:
   variables:
@@ -29,10 +29,13 @@ package:
     DOCKER_TLS_CERTDIR: "/certs"
     DOCKER_TLS_VERIFY: 1
     DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
+    REPOSITORY: $CI_REGISTRY/africannames/webapp
   stage: package
   image: azul/zulu-openjdk:11.0.10
   services:
     - docker:dind
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
   script:
     - apt-get update
     - apt-get install -y apt-transport-https ca-certificates curl software-properties-common
@@ -42,22 +45,31 @@ package:
     - apt-get install -y docker-ce
     - service docker start
     - echo "$CI_BUILD_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
-    - docker build -t africannames/webapp .
-    - docker push africannames/webapp:latest
+    - docker build --pull -t $REPOSITORY:latest .
+    - docker push $REPOSITORY:latest
 
 deploy_staging:
   tags:
     - dev
   stage: deploy
+  variables:
+    DOCKER_HOST: ssh://tooflex@$DEV_HOST
   before_script:
-    - apk add openssh-client
+    # Configure SSH
+    - export ENV=dev
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
     - eval $(ssh-agent -s)
-    - echo "$SSH_DEV_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - echo "$SSH_PRIVATE_KEY" | base64 -d | tr -d '\r' | ssh-add - > /dev/null
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
+    - ssh-keyscan -t rsa $DEV_HOST >> ~/.ssh/known_hosts
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
   script:
-    - ssh -o StrictHostKeyChecking=no tooflex.freeboxos.fr docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
-    - docker compose --env-file $.env.dev up
+    - echo setting up env $ENV
+    - docker compose pull
+    - docker compose --env-file $env_dev up -d --force-recreate
+  after_script:
+    - docker logout registry.gitlab.com
   environment: dev
   only:
     - dev
