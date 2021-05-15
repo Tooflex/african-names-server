@@ -52,17 +52,20 @@ deploy_staging:
     - dev
   stage: deploy
   variables:
-    DOCKER_HOST: ssh://tooflex@$DEV_HOST
+    DOCKER_HOST: ssh://tooflex@$DEV_HOST:8082
   before_script:
     # Configure SSH
     - export ENV=dev
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
     - eval $(ssh-agent -s)
-    - echo "$SSH_PRIVATE_KEY" | base64 -d | tr -d '\r' | ssh-add - > /dev/null
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    - ssh-keyscan -t rsa $DEV_HOST >> ~/.ssh/known_hosts
+    #- ssh-keyscan -t rsa $DEV_HOST >> ~/.ssh/known_hosts
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+
+
   script:
     - echo setting up env $ENV
     - docker compose pull
