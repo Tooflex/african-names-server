@@ -67,7 +67,6 @@ deploy_staging:
     - chmod 700 ~/.ssh
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
     # Configure Docker
-    - apk add docker-ce
     - service docker start
     - apk add docker-compose
     - echo "$CI_JOB_TOKEN" | docker login --username gitlab-ci-token --password-stdin $CI_REGISTRY
