@@ -56,7 +56,7 @@ deploy_staging:
     - dev
   stage: deploy
   variables:
-    DOCKER_HOST: ssh://tooflex@$DEV_HOST:8082
+    DOCKER_HOST: tcp://tooflex@$DEV_HOST:8082
   before_script:
     # Configure SSH
     - export ENV=dev
@@ -72,6 +72,7 @@ deploy_staging:
 
   script:
     - echo setting up env $ENV
+    - ssh tooflex@tooflex.freeboxos.fr -p 8082 docker info
     - docker compose pull
     - docker compose --env-file $env_dev up -d --force-recreate
   after_script:
