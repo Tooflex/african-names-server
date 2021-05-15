@@ -56,7 +56,7 @@ deploy_staging:
     - dev
   stage: deploy
   variables:
-    DOCKER_HOST: tcp://tooflex@$DEV_HOST:8082
+    DOCKER_HOST: tcp://tooflex@${DEV_HOST}:8082
   before_script:
     # Configure SSH
     - export ENV=dev
@@ -72,7 +72,6 @@ deploy_staging:
 
   script:
     - echo setting up env $ENV
-    - docker-compose pull
     - touch .env.dev
     - echo "env_dev=$env_dev" >> .env.dev
     - docker-compose pull
