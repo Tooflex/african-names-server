@@ -56,7 +56,7 @@ deploy_staging:
     - dev
   stage: deploy
   variables:
-    DOCKER_HOST: tcp://tooflex@${DEV_HOST}:8082
+    DOCKER_HOST: tcp://tooflex@tooflex.freeboxos.fr:8082
   before_script:
     # Configure SSH
     - export ENV=dev
