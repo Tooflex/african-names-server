@@ -74,7 +74,8 @@ deploy_staging:
     - echo setting up env $ENV
     - touch .env.dev
     - ls -al
-    - echo "the variables:" $ENV_DEV
+    - echo $ENV
+    - echo $ENV_DEV
     - echo "$ENV_DEV" >> .env.dev
     - cat .env.dev
     - docker-compose pull
