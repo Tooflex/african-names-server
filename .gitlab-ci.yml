@@ -55,7 +55,6 @@ deploy_staging:
   tags:
     - dev
   stage: deploy
-  image: azul/zulu-openjdk:11.0.10
   variables:
     DOCKER_HOST: ssh://tooflex@tooflex.freeboxos.fr:8082
         
@@ -80,19 +79,12 @@ deploy_staging:
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
 
     # Configure Docker
-    - apt-get update
-    - apt-get install -y apt-transport-https ca-certificates curl software-properties-common
-    - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add
-    - add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-    - apt-get update -y
-    - apt-get install -y docker-ce
-    - service docker start
-    - apt-get install -y docker-compose
+    - apk add docker-compose
     - echo "$CI_JOB_TOKEN" | docker login --username gitlab-ci-token --password-stdin $CI_REGISTRY
 
   script:
     - docker-compose pull
-    - docker-compose up -d
+    - docker-compose --verbose up -d --force-recreate
   after_script:
     - docker logout registry.gitlab.com
   environment: dev
