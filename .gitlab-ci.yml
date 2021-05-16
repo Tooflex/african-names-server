@@ -44,7 +44,7 @@ package:
     - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add
     - add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
     - apt-get update -y
-   - apt-get install -y docker-ce
+    - apt-get install -y docker-ce
     - service docker start
     - echo "$CI_BUILD_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
     - docker build --pull -t $REPOSITORY:latest .
@@ -57,6 +57,7 @@ deploy_staging:
   stage: deploy
   variables:
     DOCKER_HOST: ssh://tooflex@tooflex.freeboxos.fr:8082
+        
   before_script:
     # Add ENV variables
     - export ENV=dev
@@ -70,7 +71,6 @@ deploy_staging:
     - export AFN_ENV=$AFN_ENV
 
     # Configure SSH
-    - export ENV=dev
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
     - eval $(ssh-agent -s)
     - echo "${SSH_DEV_PRIVATE_KEY}" | tr -d '\r' | ssh-add -
