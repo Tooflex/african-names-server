@@ -3,8 +3,8 @@ services:
   - docker:dind
 
 stages:
-  - build
-  - package
+  #- build
+  #- package
   - deploy
 
 before_script:
@@ -73,8 +73,9 @@ deploy_staging:
   script:
     - echo setting up env $ENV
     - touch .env.dev
-    - ls
-    - echo $env_dev > .env.dev
+    - ls -al
+    - echo "the variables:" $env_dev
+    - echo "$env_dev" >> .env.dev
     - cat .env.dev
     - docker-compose pull
     #- docker-compose --env-file .env.dev up -d --force-recreate
