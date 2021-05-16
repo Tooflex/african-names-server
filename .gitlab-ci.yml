@@ -84,7 +84,7 @@ deploy_staging:
 
   script:
     - docker-compose pull
-    - docker-compose up -d --force-recreate
+    - docker-compose up -d --force-recreate --verbose
   after_script:
     - docker logout registry.gitlab.com
   environment: dev
