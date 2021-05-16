@@ -25,6 +25,8 @@ build:
   artifacts:
     paths:
       - build/libs/*.jar
+  only:
+    - dev
 
 package:
   variables:
@@ -50,6 +52,8 @@ package:
     - docker build --pull -t $REPOSITORY:latest .
     - docker push $REPOSITORY:latest
     - docker push $REPOSITORY
+  only:
+    - dev
 
 deploy_staging:
   tags:
@@ -100,6 +104,6 @@ deploy_prod:
       - echo $GCP_SERVICE_KEY > gcloud-service-key.json # Google Cloud service accounts
       - gcloud auth activate-service-account --key-file gcloud-service-key.json
       - gcloud config set project $GCP_PROJECT_ID
-      - gcloud builds submit . --config=cloudbuild.yaml
+      - gcloud builds submit . --config=cloudbuild.yml
   only:
     - master
