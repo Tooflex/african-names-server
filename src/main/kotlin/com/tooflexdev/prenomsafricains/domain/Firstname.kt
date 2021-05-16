@@ -6,16 +6,23 @@ import org.hibernate.annotations.ColumnTransformer
 import javax.persistence.*
 
 @Entity
-@Table(name = "prenom")
+@Table(name = "firstname")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-class Prenom(
+class Firstname(
     @Id var id: Long? = null,
     var firstname: String,
     @Enumerated(EnumType.STRING)
     @ColumnTransformer(read = "UPPER(gender)")
     var gender: Gender,
-    var isFavorite: Boolean = false,
+    @Column(length = 1024)
     var meaning: String?,
-    var origins: String?,
-    var soundURL: String?
+    @Column(length = 2048)
+    var meaningMore: String? = "",
+    var origins: String? = "",
+    var regions: String? = "",
+    var countries: String? = "",
+    var nearingNames: String? = "",
+    var celebrationDate: String? = "",
+    var celebrities: String? = "",
+    var soundURL: String? = ""
 )
