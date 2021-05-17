@@ -53,6 +53,23 @@ package:
   only:
     - dev
 
+package_prod:
+  stage: package
+  before_script:
+    # Login to Google Container Registry
+    - base64 -d $GCP_SERVICE_KEY_64 | docker login -u _json_key --password-stdin https://gcr.io
+    # Login to Gitlab container Registry
+    - echo $CI_JOB_TOKEN | docker login -u gitlab-ci-token $CI_REGISTRY --password-stdin
+  script:
+      # Build and tag image for both GCR and Gitlab registries
+      - docker build --cache-from -t gcr.io/$GCP_PROJECT_ID/african-names:latest -t african-names:latest .
+      # Push image to GCR
+      - docker push gcr.io/$GCP_PROJECT_ID/african-names:latest
+      # Push image to Gitlab registry
+      - docker push african-names:latest
+  only:
+    - master
+
 deploy_staging:
   tags:
     - dev
