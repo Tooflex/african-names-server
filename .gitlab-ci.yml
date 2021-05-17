@@ -53,6 +53,8 @@ package:
     - dev
 
 package_prod:
+  variables:
+    REPOSITORY: $CI_REGISTRY/african-names/back/african-names
   stage: package
   before_script:
     # Login to Google Container Registry
