@@ -49,7 +49,6 @@ package:
     - echo "$CI_BUILD_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
     - docker build --pull -t $REPOSITORY:latest .
     - docker push $REPOSITORY:latest
-    - docker push $REPOSITORY
   only:
     - dev
 
@@ -59,14 +58,14 @@ package_prod:
     # Login to Google Container Registry
     - echo "$GCP_SERVICE_KEY" | docker login -u _json_key --password-stdin https://gcr.io
     # Login to Gitlab container Registry
-    - echo $CI_JOB_TOKEN | docker login -u gitlab-ci-token $CI_REGISTRY --password-stdin
+    - echo "$CI_BUILD_TOKEN" | docker login -u gitlab-ci-token $CI_REGISTRY --password-stdin
   script:
       # Build and tag image for both GCR and Gitlab registries
-      - docker build --cache-from -t african-names:latest .
+      - docker build --pull -t $REPOSITORY:latest .
       # Push image to GCR
-      - docker push gcr.io/$GCP_PROJECT_ID/african-names:latest
+      - docker push gcr.io/$GCP_PROJECT_ID/$REPOSITORY:latest
       # Push image to Gitlab registry
-      - docker push african-names:latest
+      - docker push $REPOSITORY:latest
   only:
     - master
 
