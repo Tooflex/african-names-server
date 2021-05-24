@@ -4,7 +4,7 @@ services:
 
 stages:
   - build
-  - package
+  #- package
   - deploy
 
 before_script:
@@ -52,24 +52,24 @@ package:
   only:
     - dev
 
-package_prod:
-  variables:
-    REPOSITORY: $CI_REGISTRY/african-names/back/african-names
-  stage: package
-  before_script:
+#package_prod:
+#  variables:
+#    REPOSITORY: $CI_REGISTRY/african-names/back/african-names
+#  stage: package
+#  before_script:
     # Login to Google Container Registry
-    - echo "$GCP_SERVICE_KEY" | docker login -u _json_key --password-stdin https://gcr.io
+#    - echo "$GCP_SERVICE_KEY" | docker login -u _json_key --password-stdin https://gcr.io
     # Login to Gitlab container Registry
-    - echo "$CI_BUILD_TOKEN" | docker login -u gitlab-ci-token $CI_REGISTRY --password-stdin
-  script:
+#    - echo "$CI_BUILD_TOKEN" | docker login -u gitlab-ci-token $CI_REGISTRY --password-stdin
+#  script:
       # Build and tag image for both GCR and Gitlab registries
-      - docker build --pull -t gcr.io/$PROJECT_ID/african-names .
+#      - docker build --pull -t gcr.io/$PROJECT_ID/african-names .
       # Push image to GCR
-      - docker push gcr.io/$PROJECT_ID/african-names
+#      - docker push gcr.io/$PROJECT_ID/african-names
       # Push image to Gitlab registry
       # - docker push $REPOSITORY:latest
-  only:
-    - master
+ # only:
+  #  - master
 
 deploy_staging:
   tags:
