@@ -63,11 +63,11 @@ package_prod:
     - echo "$CI_BUILD_TOKEN" | docker login -u gitlab-ci-token $CI_REGISTRY --password-stdin
   script:
       # Build and tag image for both GCR and Gitlab registries
-      - docker build --pull -t $REPOSITORY:latest .
+      - docker build --pull -t $GCP_PROJECT_ID:latest .
       # Push image to GCR
-      - docker push gcr.io/$GCP_PROJECT_ID
+      - docker push gcr.io/$GCP_PROJECT_ID:latest
       # Push image to Gitlab registry
-      - docker push $REPOSITORY:latest
+      # - docker push $REPOSITORY:latest
   only:
     - master
 
