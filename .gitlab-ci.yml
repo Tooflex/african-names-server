@@ -65,7 +65,7 @@ package_prod:
       # Build and tag image for both GCR and Gitlab registries
       - docker build --pull -t $REPOSITORY:latest .
       # Push image to GCR
-      - docker push gcr.io/$GCP_PROJECT_ID/$REPOSITORY:latest
+      - docker push gcr.io/$GCP_PROJECT_ID/african-names/back/african-names:latest
       # Push image to Gitlab registry
       - docker push $REPOSITORY:latest
   only:
