@@ -26,7 +26,7 @@ dependencies {
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-	implementation("com.sipios:spring-search:0.2.3")
+	implementation("com.sipios:spring-search:0.2.4")
 	implementation("org.junit.jupiter:junit-jupiter:5.7.0")
 	runtimeOnly("com.h2database:h2")
 	//runtimeOnly("org.jetbrains.kotlin:kotlin-reflect:1.4.32")

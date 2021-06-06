@@ -96,6 +96,17 @@ deploy_prod:
   image: google/cloud-sdk
   services:
       - docker:dind
+  before_script:
+    # Add ENV variables
+    - export ENV=dev
+    - export AFN_POSTGRES_USER=$AFN_POSTGRES_USER
+    - export AFN_POSTGRES_PASSWORD=$AFN_POSTGRES_PASSWORD
+    - export AFN_POSTGRES_DB=$AFN_POSTGRES_DB
+    - export AFN_POSTGRES_HOST=$AFN_POSTGRES_HOST
+    - export AFN_POSTGRES_PORT=$AFN_POSTGRES_PORT
+    - export AFN_APP_USER=$AFN_APP_USER
+    - export AFN_APP_PASSWORD=$AFN_APP_PASSWORD
+    - export AFN_ENV=$AFN_ENV
   script:
       - echo $GCP_SERVICE_KEY > gcloud-service-key.json # Google Cloud service accounts
       - gcloud auth activate-service-account --key-file gcloud-service-key.json
