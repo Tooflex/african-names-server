@@ -7,17 +7,19 @@ import org.springframework.data.jpa.domain.Specification
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
+@RequestMapping("api/v1/")
 class FirstnameResource(val service: FirstnameService) {
-    @GetMapping("/api/v1/firstnames")
+    @GetMapping("/firstnames")
     fun findFirstnames(): List<Firstname> = service.findFirstnames()
 
-    @GetMapping("/api/v1/firstnames/random")
+    @GetMapping("/firstnames/random")
     fun findPrenomsAlea(): List<Firstname> = service.findPrenomsAlea()
 
-    @GetMapping("/api/v1/firstnames/search")
+    @GetMapping("/firstnames/search")
     fun searchFirstnames(@SearchSpec specs: Specification<Firstname?>?): ResponseEntity<Any?> {
         return try {
             ResponseEntity<Any?>(service.searchFirstnames(specs), HttpStatus.OK)
@@ -27,4 +29,7 @@ class FirstnameResource(val service: FirstnameService) {
             return ResponseEntity<Any?>("Error: Please check search arguments", HttpStatus.BAD_REQUEST)
         }
     }
+
+    @GetMapping("/origins")
+    fun findDistinctOrigins(): List<String> = service.findDistinctOrigins()
 }
