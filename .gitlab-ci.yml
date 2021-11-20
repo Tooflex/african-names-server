@@ -16,8 +16,6 @@ cache:
     - .gradle/caches
 
 build:
-  tags:
-    - dev
   image: gradle:6.8.3-jdk11-openj9
   stage: build
   script:
