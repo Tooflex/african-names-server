@@ -1,80 +1,78 @@
+# You can override the included template(s) by including variable overrides
+# SAST customization: https://docs.gitlab.com/ee/user/application_security/sast/#customizing-the-sast-settings
+# Secret Detection customization: https://docs.gitlab.com/ee/user/application_security/secret_detection/#customizing-settings
+# Dependency Scanning customization: https://docs.gitlab.com/ee/user/application_security/dependency_scanning/#customizing-the-dependency-scanning-settings
+# Note that environment variables can be set in several places
+# See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 image: docker:latest
 services:
-  - docker:dind
-
+- docker:dind
 stages:
-  - build
-  #- package
-  - deploy
-
+- build
+- deploy
+- test
 before_script:
-  - export GRADLE_USER_HOME=`pwd`/.gradle
-
+- export GRADLE_USER_HOME=`pwd`/.gradle
 cache:
   paths:
-    - .gradle/wrapper
-    - .gradle/caches
-
+  - ".gradle/wrapper"
+  - ".gradle/caches"
 build:
   tags:
-    - dev
+  - dev
   image: gradle:6.8.3-jdk11-openj9
   stage: build
   script:
-    - ./gradlew build
+  - "./gradlew build"
   artifacts:
     paths:
-      - build/libs/*.jar
-
+    - build/libs/*.jar
 deploy_staging:
   tags:
-    - dev
+  - dev
   stage: deploy
   variables:
     DOCKER_HOST: ssh://tooflex@tooflex.freeboxos.fr:8082
-        
   before_script:
-    # Add ENV variables
-    - export ENV=dev
-    - export AFN_POSTGRES_USER=$AFN_POSTGRES_USER
-    - export AFN_POSTGRES_PASSWORD=$AFN_POSTGRES_PASSWORD
-    - export AFN_POSTGRES_DB=$AFN_POSTGRES_DB
-    - export AFN_POSTGRES_HOST=$AFN_POSTGRES_HOST
-    - export AFN_POSTGRES_PORT=$AFN_POSTGRES_PORT
-    - export AFN_APP_USER=$AFN_APP_USER
-    - export AFN_APP_PASSWORD=$AFN_APP_PASSWORD
-    - export AFN_ENV=$AFN_ENV
-
-    # Configure SSH
-    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
-    - eval $(ssh-agent -s)
-    - echo "${SSH_DEV_PRIVATE_KEY}" | tr -d '\r' | ssh-add -
-    - mkdir -p ~/.ssh
-    - chmod 700 ~/.ssh
-    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-
-    # Configure Docker
-    - apk add docker-compose
-    - echo "$CI_JOB_TOKEN" | docker login --username gitlab-ci-token --password-stdin $CI_REGISTRY
-
+  - export ENV=dev
+  - export AFN_POSTGRES_USER=$AFN_POSTGRES_USER
+  - export AFN_POSTGRES_PASSWORD=$AFN_POSTGRES_PASSWORD
+  - export AFN_POSTGRES_DB=$AFN_POSTGRES_DB
+  - export AFN_POSTGRES_HOST=$AFN_POSTGRES_HOST
+  - export AFN_POSTGRES_PORT=$AFN_POSTGRES_PORT
+  - export AFN_APP_USER=$AFN_APP_USER
+  - export AFN_APP_PASSWORD=$AFN_APP_PASSWORD
+  - export AFN_ENV=$AFN_ENV
+  - which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )
+  - eval $(ssh-agent -s)
+  - echo "${SSH_DEV_PRIVATE_KEY}" | tr -d '\r' | ssh-add -
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+  - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+  - apk add docker-compose
+  - echo "$CI_JOB_TOKEN" | docker login --username gitlab-ci-token --password-stdin
+    $CI_REGISTRY
   script:
-    - docker-compose pull
-    - docker-compose --verbose up -d --force-recreate
+  - docker-compose pull
+  - docker-compose --verbose up -d --force-recreate
   after_script:
-    - docker logout registry.gitlab.com
+  - docker logout registry.gitlab.com
   environment: dev
   only:
-    - dev
-
+  - dev
 deploy_prod:
   stage: deploy
   image: google/cloud-sdk
   services:
-      - docker:dind
+  - docker:dind
   script:
-      - echo $GCP_SERVICE_KEY > gcloud-service-key.json # Google Cloud service accounts
-      - gcloud auth activate-service-account --key-file gcloud-service-key.json
-      - gcloud config set project $GCP_PROJECT_ID
-      - gcloud builds submit . --config=cloudbuild.yml
+  - echo $GCP_SERVICE_KEY > gcloud-service-key.json
+  - gcloud auth activate-service-account --key-file gcloud-service-key.json
+  - gcloud config set project $GCP_PROJECT_ID
+  - gcloud builds submit . --config=cloudbuild.yml
   only:
-    - master
+  - master
+sast:
+  stage: test
+include:
+- template: Security/SAST.gitlab-ci.yml
