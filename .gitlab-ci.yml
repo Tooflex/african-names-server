@@ -49,47 +49,7 @@ package:
     - docker push $REPOSITORY:latest
     - docker push $REPOSITORY
 
-deploy_staging:
-  tags:
-    - dev
-  stage: deploy
-  variables:
-    DOCKER_HOST: ssh://tooflex@tooflex.freeboxos.fr:8082
-        
-  before_script:
-    # Add ENV variables
-    - export ENV=dev
-    - export AFN_POSTGRES_USER=$AFN_POSTGRES_USER
-    - export AFN_POSTGRES_PASSWORD=$AFN_POSTGRES_PASSWORD
-    - export AFN_POSTGRES_DB=$AFN_POSTGRES_DB
-    - export AFN_POSTGRES_HOST=$AFN_POSTGRES_HOST
-    - export AFN_POSTGRES_PORT=$AFN_POSTGRES_PORT
-    - export AFN_APP_USER=$AFN_APP_USER
-    - export AFN_APP_PASSWORD=$AFN_APP_PASSWORD
-    - export AFN_ENV=$AFN_ENV
-
-    # Configure SSH
-    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
-    - eval $(ssh-agent -s)
-    - echo "${SSH_DEV_PRIVATE_KEY}" | tr -d '\r' | ssh-add -
-    - mkdir -p ~/.ssh
-    - chmod 700 ~/.ssh
-    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-
-    # Configure Docker
-    - apk add docker-compose
-    - echo "$CI_JOB_TOKEN" | docker login --username gitlab-ci-token --password-stdin $CI_REGISTRY
-
-  script:
-    - docker-compose pull
-    - docker-compose --verbose up -d --force-recreate
-  after_script:
-    - docker logout registry.gitlab.com
-  environment: dev
-  only:
-    - dev
-
-deploy_prod:
+deploy_dev:
   stage: deploy
   image: google/cloud-sdk
   services:
@@ -111,4 +71,4 @@ deploy_prod:
       - gcloud config set project $GCP_PROJECT_ID
       - gcloud builds submit . --config=cloudbuild.yaml
   only:
-    - master
+    - dev
