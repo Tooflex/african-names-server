@@ -2,6 +2,7 @@ package com.tooflexdev.prenomsafricains
 
 import com.tooflexdev.prenomsafricains.domain.Gender
 import com.tooflexdev.prenomsafricains.domain.Firstname
+import com.tooflexdev.prenomsafricains.domain.Size
 import com.tooflexdev.prenomsafricains.repository.FirstnameRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import org.springframework.data.repository.findByIdOrNull
+import java.time.LocalDateTime
 
 @DataJpaTest
 class RepositoriesTests @Autowired constructor(
@@ -18,7 +20,8 @@ class RepositoriesTests @Autowired constructor(
 
     @Test
     fun `When findByIdOrNull then return Prenom`() {
-        val amadou = Firstname(1, "Amadou", Gender.MALE, meaning = "")
+        val amadou = Firstname(1, "Amadou", Gender.MALE, meaning = "", size=Size.MEDIUM,
+            createDateTime = LocalDateTime.now(), updateDateTime = LocalDateTime.now())
         entityManager.persist(amadou)
         entityManager.flush()
         val found = firstnameRepository.findByIdOrNull(amadou.id!!)

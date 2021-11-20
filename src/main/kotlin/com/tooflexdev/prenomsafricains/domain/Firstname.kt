@@ -1,9 +1,11 @@
 package com.tooflexdev.prenomsafricains.domain
 
+import org.hibernate.annotations.*
 import org.hibernate.annotations.Cache
-import org.hibernate.annotations.CacheConcurrencyStrategy
-import org.hibernate.annotations.ColumnTransformer
+import java.time.LocalDateTime
 import javax.persistence.*
+import javax.persistence.Entity
+import javax.persistence.Table
 
 @Entity
 @Table(name = "firstname")
@@ -24,5 +26,32 @@ class Firstname(
     var nearingNames: String? = "",
     var celebrationDate: String? = "",
     var celebrities: String? = "",
-    var soundURL: String? = ""
-)
+    var soundURL: String? = "",
+    @Enumerated(EnumType.STRING)
+    @ColumnTransformer(read = "UPPER(size)")
+    var size: Size,
+    @CreationTimestamp
+    var createDateTime: LocalDateTime?,
+    @UpdateTimestamp
+    var updateDateTime: LocalDateTime?
+) {
+    @PrePersist
+    fun onCreate(){
+        size = determineSize(firstname)
+    }
+
+    @PreUpdate
+    fun onUpdate(){
+        size = determineSize(firstname)
+    }
+
+    fun determineSize(firstname: String): Size {
+        if(firstname.length < 6) {
+            return Size.SHORT
+        }
+        if(firstname.length > 10) {
+            return Size.LONG
+        }
+        return Size.MEDIUM
+    }
+}
