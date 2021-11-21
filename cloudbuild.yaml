@@ -11,5 +11,3 @@ steps:
       - 'AFN_APP_USER=${_AFN_APP_USER}'
       - 'AFN_APP_PASSWORD=${_AFN_APP_PASSWORD}'
       - 'AFN_ENV=${_AFN_ENV}'
-
-images: ['gcr.io/${_GCP_PROJECT_ID}/${_SERVICE_NAME}:latest']
