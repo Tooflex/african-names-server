@@ -69,7 +69,7 @@ deploy_dev:
       - echo $GCP_SERVICE_KEY > gcloud-service-key.json # Google Cloud service accounts
       - gcloud auth activate-service-account --key-file gcloud-service-key.json
       - gcloud config set project $GCP_PROJECT_ID
-      - gcloud builds submit --config=cloudbuild.yml #Run the gcloud build command to build our image
+      - gcloud builds submit --config=cloudbuild.yaml #Run the gcloud build command to build our image
       - gcloud run deploy $SERVICE_NAME --image gcr.io/$GCP_PROJECT_ID/$SERVICE_NAME --region=europe-west1 --platform managed --allow-unauthenticated --member="allUsers" --role="roles/run.invoker"# Run the gcloud run deploy command to deploy our new service
   only:
     - dev
