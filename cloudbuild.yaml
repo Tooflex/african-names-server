@@ -1,7 +1,7 @@
 #cloudbuild.yaml
 steps:
   - name: 'docker/compose:1.19.0'
-    args: ['-f', 'docker-compose.yml', '-t', 'gcr.io/${_GCP_PROJECT_ID}/${_SERVICE_NAME}', 'up', '-d']
+    args: ['-f', 'docker-compose.yml', 'up', '-d']
     env:
       - 'AFN_POSTGRES_USER=${_AFN_POSTGRES_USER}'
       - 'AFN_POSTGRES_PASSWORD=${_AFN_POSTGRES_PASSWORD}'
