@@ -4,7 +4,17 @@ steps:
     args: ['up', '-d']
   - name: 'gcr.io/cloud-builders/docker'
     args: ['tag', 'workspace_app:latest', 'gcr.io/$PROJECT_ID/$REPO_NAME:latest']
+    env:
+      - 'AFN_POSTGRES_USER=${_AFN_POSTGRES_USER}'
+      - 'AFN_POSTGRES_PASSWORD=${_AFN_POSTGRES_PASSWORD}'
+      - 'AFN_POSTGRES_DB=${_AFN_POSTGRES_DB}'
+      - 'AFN_POSTGRES_HOST=${_AFN_POSTGRES_HOST}'
+      - 'AFN_POSTGRES_PORT=${_AFN_POSTGRES_PORT}'
+      - 'AFN_APP_USER=${_AFN_APP_USER}'
+      - 'AFN_APP_PASSWORD=${_AFN_APP_PASSWORD}'
+      - 'AFN_ENV=${_AFN_ENV}'
+
   - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['run', 'deploy', 'africannameswebapp', '--image', 'gcr.io/$GCP_PROJECT_ID/africannameswebapp', '--region', 'europe-west1', '--platform', 'managed', '--allow-unauthenticated', '--member', 'allUsers', '--role', 'roles/run.invoker']
+    args: ['run', 'deploy', '${_SERVICE_NAME}', '--image', 'gcr.io/${_GCP_PROJECT_ID}/${_SERVICE_NAME}', '--region', 'europe-west1', '--platform', 'managed', '--allow-unauthenticated', '--member', 'allUsers', '--role', 'roles/run.invoker']
 
 images: ['gcr.io/$PROJECT_ID/$REPO_NAME:latest']

@@ -3,6 +3,8 @@ services:
   - docker:dind
 
 stages:
+  - build
+  - package
   - deploy
 
 before_script:
@@ -13,60 +15,50 @@ cache:
     - .gradle/wrapper
     - .gradle/caches
 
-#build:
-#  image: gradle:6.8.3-jdk11-openj9
-#  stage: build
-#  script:
-#    - ./gradlew build
-#  artifacts:
-#    paths:
-#      - build/libs/*.jar
+build:
+  image: gradle:6.8.3-jdk11-openj9
+  stage: build
+  script:
+    - ./gradlew build
+  artifacts:
+    paths:
+      - build/libs/*.jar
 
-#package:
-#  variables:
-#    DOCKER_HOST: tcp://docker:2376
-#    DOCKER_DRIVER: overlay2
-#    DOCKER_TLS_CERTDIR: "/certs"
-#    DOCKER_TLS_VERIFY: 1
-#    DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
-#    REPOSITORY: $CI_REGISTRY/african-names/back/african-names
-#  stage: package
-#  image: azul/zulu-openjdk:11.0.10
-#  services:
-#    - docker:dind
-#  script:
-#    - apt-get update
-#    - apt-get install -y apt-transport-https ca-certificates curl software-properties-common
-#    - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add
-#    - add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-#    - apt-get update -y
-#    - apt-get install -y docker-ce
-#    - service docker start
-#    - echo "$CI_BUILD_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
-#    - docker build --pull -t $REPOSITORY:latest .
-#    - docker push $REPOSITORY:latest
-#    - docker push $REPOSITORY
+package:
+  variables:
+    DOCKER_HOST: tcp://docker:2376
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: "/certs"
+    DOCKER_TLS_VERIFY: 1
+    DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
+    REPOSITORY: $CI_REGISTRY/african-names/back/african-names
+  stage: package
+  image: azul/zulu-openjdk:11.0.10
+  services:
+    - docker:dind
+  script:
+    - apt-get update
+    - apt-get install -y apt-transport-https ca-certificates curl software-properties-common
+    - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add
+    - add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+    - apt-get update -y
+    - apt-get install -y docker-ce
+    - service docker start
+    - echo "$CI_BUILD_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+    - docker build --pull -t $REPOSITORY:latest .
+    - docker push $REPOSITORY:latest
+    - docker push $REPOSITORY
 
 deploy_dev:
   stage: deploy
   image: google/cloud-sdk
   services:
       - docker:dind
-  before_script:
-    # Add ENV variables
-    - export ENV=dev
-    - export AFN_POSTGRES_USER=$AFN_POSTGRES_USER
-    - export AFN_POSTGRES_PASSWORD=$AFN_POSTGRES_PASSWORD
-    - export AFN_POSTGRES_DB=$AFN_POSTGRES_DB
-    - export AFN_POSTGRES_HOST=$AFN_POSTGRES_HOST
-    - export AFN_POSTGRES_PORT=$AFN_POSTGRES_PORT
-    - export AFN_APP_USER=$AFN_APP_USER
-    - export AFN_APP_PASSWORD=$AFN_APP_PASSWORD
-    - export AFN_ENV=$AFN_ENV
   script:
       - echo $GCP_SERVICE_KEY > gcloud-service-key.json # Google Cloud service accounts
       - gcloud auth activate-service-account --key-file gcloud-service-key.json
       - gcloud config set project $GCP_PROJECT_ID
-      - gcloud builds submit --config=cloudbuild.yaml #Run the gcloud build command to build our image
+      - gcloud builds submit --config=cloudbuild.yaml --substitutions=_AFN_POSTGRES_USER=$AFN_POSTGRES_USER,_AFN_POSTGRES_PASSWORD=$AFN_POSTGRES_PASSWORD,_AFN_POSTGRES_DB=$AFN_POSTGRES_DB,_AFN_POSTGRES_HOST=$AFN_POSTGRES_HOST,_AFN_POSTGRES_PORT=$AFN_POSTGRES_PORT,_AFN_APP_USER=$AFN_APP_USER,_AFN_APP_PASSWORD=$AFN_APP_PASSWORD,_AFN_ENV=$AFN_ENV,_GCP_PROJECT_ID=$GCP_PROJECT_ID,_SERVICE_NAME=$SERVICE_NAME .
+      - gcloud run deploy $SERVICE_NAME --image gcr.io/$GCP_PROJECT_ID/$SERVICE_NAME --region=europe-west1 --platform managed --allow-unauthenticated # Run the gcloud run deploy command to deploy our new service
   only:
     - dev
