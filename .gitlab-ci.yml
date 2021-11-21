@@ -3,8 +3,6 @@ services:
   - docker:dind
 
 stages:
-  - build
-  - package
   - deploy
 
 before_script:
@@ -15,39 +13,39 @@ cache:
     - .gradle/wrapper
     - .gradle/caches
 
-build:
-  image: gradle:6.8.3-jdk11-openj9
-  stage: build
-  script:
-    - ./gradlew build
-  artifacts:
-    paths:
-      - build/libs/*.jar
+#build:
+#  image: gradle:6.8.3-jdk11-openj9
+#  stage: build
+#  script:
+#    - ./gradlew build
+#  artifacts:
+#    paths:
+#      - build/libs/*.jar
 
-package:
-  variables:
-    DOCKER_HOST: tcp://docker:2376
-    DOCKER_DRIVER: overlay2
-    DOCKER_TLS_CERTDIR: "/certs"
-    DOCKER_TLS_VERIFY: 1
-    DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
-    REPOSITORY: $CI_REGISTRY/african-names/back/african-names
-  stage: package
-  image: azul/zulu-openjdk:11.0.10
-  services:
-    - docker:dind
-  script:
-    - apt-get update
-    - apt-get install -y apt-transport-https ca-certificates curl software-properties-common
-    - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add
-    - add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-    - apt-get update -y
-    - apt-get install -y docker-ce
-    - service docker start
-    - echo "$CI_BUILD_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
-    - docker build --pull -t $REPOSITORY:latest .
-    - docker push $REPOSITORY:latest
-    - docker push $REPOSITORY
+#package:
+#  variables:
+#    DOCKER_HOST: tcp://docker:2376
+#    DOCKER_DRIVER: overlay2
+#    DOCKER_TLS_CERTDIR: "/certs"
+#    DOCKER_TLS_VERIFY: 1
+#    DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
+#    REPOSITORY: $CI_REGISTRY/african-names/back/african-names
+#  stage: package
+#  image: azul/zulu-openjdk:11.0.10
+#  services:
+#    - docker:dind
+#  script:
+#    - apt-get update
+#    - apt-get install -y apt-transport-https ca-certificates curl software-properties-common
+#    - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add
+#    - add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+#    - apt-get update -y
+#    - apt-get install -y docker-ce
+#    - service docker start
+#    - echo "$CI_BUILD_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+#    - docker build --pull -t $REPOSITORY:latest .
+#    - docker push $REPOSITORY:latest
+#    - docker push $REPOSITORY
 
 deploy_dev:
   stage: deploy
