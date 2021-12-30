@@ -14,5 +14,5 @@ class FirstnameTranslation (
     @ManyToOne
     var language: Language,
     @ManyToOne
-    var product: Firstname
+    var firstname: Firstname
 )

@@ -20,8 +20,11 @@ class RepositoriesTests @Autowired constructor(
 
     @Test
     fun `When findByIdOrNull then return Prenom`() {
-        val amadou = Firstname(1, "Amadou", Gender.MALE, meaning = "", size=Size.MEDIUM,
-            createDateTime = LocalDateTime.now(), updateDateTime = LocalDateTime.now())
+        val amadou = Firstname()
+        amadou.firstname = "Amadou"
+        amadou.gender = Gender.MALE
+        amadou.meaning = ""
+        amadou.size=Size.MEDIUM
         entityManager.persist(amadou)
         entityManager.flush()
         val found = firstnameRepository.findByIdOrNull(amadou.id!!)
