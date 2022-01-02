@@ -19,7 +19,7 @@ export class CountryOrdersMapComponent implements OnDestroy {
 
   @Input() countryId: string;
 
-  @Output() select: EventEmitter<any> = new EventEmitter();
+  @Output() selectEmitter: EventEmitter<any> = new EventEmitter();
 
   layers = [];
   currentTheme: any;
@@ -80,7 +80,7 @@ export class CountryOrdersMapComponent implements OnDestroy {
       });
   }
 
-  private onEachFeature(feature, layer) {
+  private onEachFeature(_, layer) {
     layer.on({
       mouseover: (e) => this.highlightFeature(e.target),
       mouseout: (e) => this.moveout(e.target),
@@ -124,7 +124,7 @@ export class CountryOrdersMapComponent implements OnDestroy {
       this.resetHighlight(this.selectedCountry);
       this.highlightFeature(featureLayer);
       this.selectedCountry = featureLayer;
-      this.select.emit(featureLayer.feature.properties.name);
+      this.selectEmitter.emit(featureLayer.feature.properties.name);
     }
   }
 

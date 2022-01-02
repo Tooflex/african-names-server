@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {FirstnameResourceService} from '../../../../../build/openapi';
 
@@ -7,7 +7,7 @@ import {FirstnameResourceService} from '../../../../../build/openapi';
   templateUrl: './import-form.component.html',
   styleUrls: ['./import-form.component.scss'],
 })
-export class ImportFormComponent implements OnInit {
+export class ImportFormComponent {
 
 
   @Input()
@@ -19,9 +19,6 @@ export class ImportFormComponent implements OnInit {
   uploadSub: Subscription;
 
   constructor(private service: FirstnameResourceService) {}
-
-  ngOnInit() {
-  }
 
   onFileSelected(event) {
     this.selected = event.target.files[0];
