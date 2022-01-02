@@ -68,7 +68,7 @@ export class LoginComponent implements OnInit {
     ).subscribe(
       data => {
 
-        // tslint:disable-next-line:no-console
+        // eslint-disable-next-line no-console
         console.log(data);
 
         const mData: any = data;
