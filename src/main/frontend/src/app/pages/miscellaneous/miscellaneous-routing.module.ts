@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2022.
+ * @Author Otourou Da Costa
+ */
+
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 

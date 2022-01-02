@@ -55,14 +55,14 @@
         </ng-container>
       </div>
 
-      <button nbButton
-              fullWidth
-              status="primary"
-              size="large"
-              [disabled]="submitted || !form.valid"
-              [class.btn-pulse]="submitted">
+      <button
+        type="submit"
+        nbButton
+        [disabled]="submitted || !form.valid"
+        [class.btn-pulse]="submitted">
         Log In
       </button>
+      <button type="submit" nbButton>Submit</button>
       <button
         type="button"
         (click)="onReset()"

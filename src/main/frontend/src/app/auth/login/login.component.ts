@@ -68,9 +68,6 @@ export class LoginComponent implements OnInit {
     ).subscribe(
       data => {
 
-        // eslint-disable-next-line no-console
-        console.log(data);
-
         const mData: any = data;
         this.tokenStorage.saveToken(mData.jwt);
         this.tokenStorage.saveUser(mData);
@@ -79,7 +76,6 @@ export class LoginComponent implements OnInit {
         this.isLoggedIn = true;
         this.roles = this.tokenStorage.getUser().roles;
         this.router.navigate(['/pages']);
-        // this.reloadPage();
       },
       err => {
         this.errorMessage = err.error.message;

@@ -3,7 +3,6 @@ import { NbMenuModule } from '@nebular/theme';
 
 import { ThemeModule } from '../@theme/theme.module';
 import { PagesComponent } from './pages.component';
-import { DashboardModule } from './dashboard/dashboard.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { PagesRoutingModule } from './pages-routing.module';
 import { MiscellaneousModule } from './miscellaneous/miscellaneous.module';
@@ -17,7 +16,6 @@ import { LandingPageComponent } from '../landing-page/landing-page.component';
     PagesRoutingModule,
     ThemeModule,
     NbMenuModule,
-    DashboardModule,
     AnalyticsModule,
     MiscellaneousModule,
     SharedModule,
