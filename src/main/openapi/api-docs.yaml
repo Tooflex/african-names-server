@@ -1,0 +1,349 @@
+openapi: 3.0.1
+info:
+  title: African Names API definition
+  version: v1
+servers:
+  - url: http://localhost
+    description: Generated server url
+paths:
+  /api/v1/firstnames/{id}:
+    put:
+      tags:
+        - firstname-resource
+      operationId: updateFirstname
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Firstname'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+    delete:
+      tags:
+        - firstname-resource
+      operationId: deleteFirstname
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/firstnames/import:
+    post:
+      tags:
+        - firstname-resource
+      operationId: uploadCsvFile
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - file
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Firstname'
+  /api/v1/firstnames/:
+    post:
+      tags:
+        - firstname-resource
+      operationId: createFirstname
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Firstname'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Firstname'
+  /api/v1/auth/signup:
+    post:
+      tags:
+        - auth-resource
+      operationId: registerUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignupRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/auth/login:
+    post:
+      tags:
+        - auth-resource
+      operationId: authenticateUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/translations:
+    get:
+      tags:
+        - firstname-translation-resource
+      operationId: findFirstnameTranslations
+      parameters:
+        - name: lang
+          in: query
+          required: false
+          schema:
+            type: string
+            default: en
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FirstnameTranslation'
+  /api/v1/translations/firstnames/{id}:
+    get:
+      tags:
+        - firstname-translation-resource
+      operationId: findFirstnameTranslationsByFirstname
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FirstnameTranslation'
+  /api/v1/translations/firstnames/{firstnameId}/lang/{langId}:
+    get:
+      tags:
+        - firstname-translation-resource
+      operationId: findFirstnameTranslationByFirstnameAndLang
+      parameters:
+        - name: firstnameId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: langId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FirstnameTranslation'
+  /api/v1/firstnames:
+    get:
+      tags:
+        - firstname-resource
+      operationId: findFirstnames
+      parameters:
+        - name: lang
+          in: query
+          required: false
+          schema:
+            type: string
+            default: en
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Firstname'
+  /api/v1/firstnames/search:
+    get:
+      tags:
+        - firstname-resource
+      operationId: searchFirstnames
+      parameters:
+        - name: specs
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/SpecificationFirstname'
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/firstnames/random:
+    get:
+      tags:
+        - firstname-resource
+      operationId: findPrenomsAlea
+      parameters:
+        - name: lang
+          in: query
+          required: false
+          schema:
+            type: string
+            default: en
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Firstname'
+components:
+  schemas:
+    Firstname:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        firstname:
+          type: string
+        gender:
+          type: string
+          enum:
+            - MALE
+            - FEMALE
+            - MIXED
+            - UNDEFINED
+        meaning:
+          type: string
+        meaningMore:
+          type: string
+        origins:
+          type: string
+        regions:
+          type: string
+        countries:
+          type: string
+        nearingNames:
+          type: string
+        celebrationDate:
+          type: string
+        celebrities:
+          type: string
+        soundURL:
+          type: string
+        size:
+          type: string
+          enum:
+            - SHORT
+            - MEDIUM
+            - LONG
+        createDateTime:
+          type: string
+          format: date-time
+        updateDateTime:
+          type: string
+          format: date-time
+    SignupRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        roles:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+    LoginRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    FirstnameTranslation:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        meaningTranslation:
+          type: string
+        originsTranslation:
+          type: string
+        language:
+          $ref: '#/components/schemas/Language'
+        firstname:
+          $ref: '#/components/schemas/Firstname'
+    Language:
+      type: object
+      properties:
+        languageCode:
+          type: string
+        name:
+          type: string
+        nameInNativeLanguage:
+          type: string
+    SpecificationFirstname:
+      type: object
