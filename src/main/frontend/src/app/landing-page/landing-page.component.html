@@ -23,7 +23,7 @@
   <nav class="navbar">
     <a href="#home">home</a>
     <a href="#features">features</a>
-    <a href="#about">about</a>
+    <a href="#about">download</a>
     <a href="#contact">contact</a>
   </nav>
 
@@ -65,19 +65,19 @@
   <div class="box-container">
 
     <div class="box">
-      <img src="assets/images/f-icon1.png" alt="">
+      <ng-lottie [options]="optionsSearch" (animationCreated)="animationCreated($event)"></ng-lottie>
       <h3>Let us help you find beautiful and meaningful African baby names</h3>
       <p>Some names are too beautiful to forget. And others carry meanings that run deep. Whether you’re a new parent looking for the perfect African baby name, or just have a connection to a certain name, African Names has you covered.</p>
     </div>
 
     <div class="box">
-      <img src="assets/images/f-icon2.png" alt="">
+      <img src="assets/images/f-icon2.svg" class="f-icon-2" alt="Mom holding her baby">
       <h3>Know the meaning behind the name</h3>
       <p>We believe that names define people. That’s why we created African Names to help you select a name for your baby that has a rich meaning and origin from where your parents came from.</p>
     </div>
 
     <div class="box">
-      <img src="assets/images/f-icon3.png" alt="">
+      <ng-lottie [options]="optionsBaby" (animationCreated)="animationCreated($event)"></ng-lottie>
       <h3>Plenty of choices</h3>
       <p>The app has over 3000 african names and tells you what the name represents in their own language.</p>
     </div>
@@ -137,7 +137,7 @@
 <section class="contact" id="contact">
 
   <div class="image">
-    <img src="assets/images/contact-img.png" alt="">
+    <img src="assets/images/contact-img.svg" alt="">
   </div>
 
   <form action="">
@@ -185,10 +185,10 @@
 
     <div class="box">
       <h3>quick links</h3>
-      <a href="#">home</a>
-      <a href="#">features</a>
-      <a href="#">about</a>
-      <a href="#">contact</a>
+      <a href="#home">home</a>
+      <a href="#features">features</a>
+      <a href="#about">download</a>
+      <a href="#contact">contact</a>
     </div>
 
     <div class="box">

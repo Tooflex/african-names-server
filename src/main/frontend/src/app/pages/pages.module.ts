@@ -10,17 +10,19 @@ import { SharedModule } from '../shared/shared.module';
 import { AuthModule} from '../auth/auth.module';
 import { ProfileComponent } from './profile/profile.component';
 import { LandingPageComponent } from '../landing-page/landing-page.component';
+import {LottieModule} from "ngx-lottie";
 
 @NgModule({
-  imports: [
-    PagesRoutingModule,
-    ThemeModule,
-    NbMenuModule,
-    AnalyticsModule,
-    MiscellaneousModule,
-    SharedModule,
-    AuthModule,
-  ],
+    imports: [
+        PagesRoutingModule,
+        ThemeModule,
+        NbMenuModule,
+        AnalyticsModule,
+        MiscellaneousModule,
+        SharedModule,
+        AuthModule,
+        LottieModule,
+    ],
   declarations: [
     PagesComponent,
     ProfileComponent,

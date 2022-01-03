@@ -57,8 +57,6 @@ section {
 
 .heading {
   text-align: center;
-  background: var(--gradient);
-  color: transparent;
   -webkit-background-clip: text;
   background-clip: padding-box;
   font-size: 3.5rem;
@@ -230,6 +228,10 @@ header label {
   font-size: 1.3rem;
   color: #666;
   padding: 1rem 0;
+}
+
+.features .box-container .box .f-icon-2 {
+  height: 418px;
 }
 
 .about {
@@ -651,6 +653,8 @@ header label {
 
   .home .image img {
     width: 100%;
+    position: relative;
+    z-index: auto;
   }
 
   .blobSvg {
@@ -696,6 +700,14 @@ header label {
 
   .footer .credit {
     color: black;
+  }
+
+}
+
+@media (max-width: 600px) {
+  .home .content {
+    top: 100px;
+    position: relative;
   }
 
 }
