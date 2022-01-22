@@ -1,27 +1,25 @@
 import { NgModule } from '@angular/core';
-import { NbMenuModule } from '@nebular/theme';
+import { NbLayoutModule, NbMenuModule, NbSidebarModule } from '@nebular/theme';
 
-import { ThemeModule } from '../@theme/theme.module';
 import { PagesComponent } from './pages.component';
 import { AnalyticsModule } from './analytics/analytics.module';
-import { PagesRoutingModule } from './pages-routing.module';
-import { MiscellaneousModule } from './miscellaneous/miscellaneous.module';
 import { SharedModule } from '../shared/shared.module';
 import { AuthModule} from '../auth/auth.module';
 import { ProfileComponent } from './profile/profile.component';
 import { LandingPageComponent } from '../landing-page/landing-page.component';
 import {LottieModule} from "ngx-lottie";
+import { PagesRoutingModule } from './pages-rounting.module';
 
 @NgModule({
     imports: [
-        PagesRoutingModule,
-        ThemeModule,
-        NbMenuModule,
-        AnalyticsModule,
-        MiscellaneousModule,
-        SharedModule,
-        AuthModule,
-        LottieModule,
+      PagesRoutingModule,
+      NbMenuModule,
+      NbLayoutModule,
+      NbSidebarModule,
+      AnalyticsModule,
+      SharedModule,
+      AuthModule,
+      LottieModule,
     ],
   declarations: [
     PagesComponent,

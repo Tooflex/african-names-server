@@ -1,17 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ImportFormComponent } from './components/import-form/import-form.component';
-import { ThemeModule } from '../@theme/theme.module';
+import { NbButtonModule } from '@nebular/theme';
 
 
 
 @NgModule({
-  declarations: [
-    ImportFormComponent,
-  ],
+  declarations: [],
   imports: [
     CommonModule,
-    ThemeModule,
-  ],
+    NbButtonModule,
+  ]
 })
 export class SharedModule { }

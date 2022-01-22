@@ -1,30 +1,26 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Firstname } from 'build/openapi/models';
+import { FirstnameResourceService } from 'build/openapi/services';
 import { LocalDataSource } from 'ng2-smart-table';
-
-import { FirstnameResourceService } from '../../../../../build/openapi';
-import {Firstname} from '../../../../../build/openapi';
-import GenderEnum = Firstname.GenderEnum;
-import SizeEnum = Firstname.SizeEnum;
-import {ImportFormComponent} from '../../../shared/components/import-form/import-form.component';
-import {Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
-
+import { Subject, takeUntil } from 'rxjs';
+import { ImportFormComponent } from 'src/app/shared/import-form/import-form.component';
 
 @Component({
-  selector: 'ngx-firstname-table',
+  selector: 'app-firstname-table',
   templateUrl: './firstname-table.component.html',
-  styleUrls: ['./firstname-table.component.scss'],
+  styleUrls: ['./firstname-table.component.scss']
 })
-export class FirstnameTableComponent {
+export class FirstnameTableComponent implements OnInit, OnDestroy {
+
   private destroy$: Subject<void> = new Subject<void>();
 
   importForm = ImportFormComponent;
 
   settings = {
     add: {
-      addButtonContent: '<i class="nb-plus"></i>',
-      createButtonContent: '<i class="nb-checkmark"></i>',
-      cancelButtonContent: '<i class="nb-close"></i>',
+      addButtonContent: '+',
+      createButtonContent: 'OK',
+      cancelButtonContent: 'X',
       confirmCreate: true,
     },
     edit: {
@@ -48,7 +44,7 @@ export class FirstnameTableComponent {
       },
       gender: {
         title: 'Gender',
-        type: GenderEnum,
+        type: 'string',
       },
       meaning: {
         title: 'Meaning',
@@ -88,7 +84,7 @@ export class FirstnameTableComponent {
       },
       size: {
         title: 'Size',
-        type: SizeEnum,
+        type: 'string',
       },
       createDateTime: {
         title: 'CreatedTime',
@@ -104,18 +100,31 @@ export class FirstnameTableComponent {
   source: LocalDataSource = new LocalDataSource();
 
   constructor(private service: FirstnameResourceService) {
-    this.service.findFirstnames()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(firstnames => {
-      this.source.load(firstnames).then();
-    });
   }
 
-  onCreateConfirm(event): void {
+  ngOnInit() {
+    this.service.findFirstnames()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (firstnames) => {
+          this.source.load(firstnames).then();
+        },
+        error: (err) => {
+          console.log(err);
+        }
+      });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  onCreateConfirm(event: any): void {
     let firstnameToCreate: Firstname | undefined;
     firstnameToCreate = event.newData;
     if (firstnameToCreate) {
-      this.service.createFirstname(firstnameToCreate)
+      this.service.createFirstname({ body: firstnameToCreate })
         .pipe(takeUntil(this.destroy$))
         .subscribe(res => {
         const resFirstname: Firstname | undefined = res;
@@ -130,11 +139,11 @@ export class FirstnameTableComponent {
     }
   }
 
-  onSaveConfirm(event): void {
+  onSaveConfirm(event: any): void {
     let updatedFirstname: Firstname | undefined;
     updatedFirstname = event.newData;
-    if (updatedFirstname) {
-      this.service.updateFirstname(updatedFirstname.id, updatedFirstname)
+    if (updatedFirstname && updatedFirstname.id) {
+      this.service.updateFirstname({id: updatedFirstname.id, body: updatedFirstname})
         .pipe(takeUntil(this.destroy$))
         .subscribe(res => {
         const resFirstname: Firstname | undefined = res;
@@ -150,7 +159,7 @@ export class FirstnameTableComponent {
 
   }
 
-  onDeleteConfirm(event): void {
+  onDeleteConfirm(event: any): void {
     if (window.confirm('Are you sure you want to delete?')) {
       this.service.deleteFirstname(event.data.id).subscribe(res => {
         event.confirm.resolve();
@@ -160,3 +169,4 @@ export class FirstnameTableComponent {
     }
   }
 }
+

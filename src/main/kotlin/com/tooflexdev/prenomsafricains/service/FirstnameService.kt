@@ -1,12 +1,10 @@
 package com.tooflexdev.prenomsafricains.service
 
 import com.tooflexdev.prenomsafricains.domain.Firstname
-import com.tooflexdev.prenomsafricains.domain.FirstnameTranslation
 import com.tooflexdev.prenomsafricains.repository.FirstnameRepository
 import com.tooflexdev.prenomsafricains.repository.FirstnameTranslationRepository
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
-import org.springframework.web.bind.annotation.CrossOrigin
 import java.util.NoSuchElementException
 
 @Service
@@ -41,8 +39,6 @@ class FirstnameService(val db: FirstnameRepository, val dbFirstnameTranslation: 
         return list
     }
 
-    fun findByCountries(): List<Firstname> = db.findDistinctByCountriesIn(listOf("Ghana", "Senegal", "Ethiopie"))
-
     fun searchFirstnames(specs: Specification<Firstname?>?): List<Firstname> = db.findAll(Specification.where(specs))
 
     fun createFirstname(firstname: Firstname): Firstname {
@@ -76,13 +72,7 @@ class FirstnameService(val db: FirstnameRepository, val dbFirstnameTranslation: 
     }
 
     fun findDistinctOrigins(): List<String> {
-        var listOfOrigins = db.findDistinctOrigins()
-        var listToReturn = mutableListOf<String>()
-//        for (origin in listOfOrigins) {
-//            val originSanitized = origin.replace("[\\n\\t ]", "")
-//            listToReturn.add(originSanitized)
-//        }
-        return listToReturn
+        return db.findDistinctOrigins()
     }
 }
 

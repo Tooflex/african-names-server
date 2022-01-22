@@ -10,6 +10,12 @@ import com.tooflexdev.prenomsafricains.repository.RoleRepository
 import com.tooflexdev.prenomsafricains.repository.UserRepository
 import com.tooflexdev.prenomsafricains.security.JwtUtils
 import com.tooflexdev.prenomsafricains.security.UserDetailsImpl
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.media.ArraySchema
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager
@@ -40,6 +46,15 @@ class AuthResource {
 
     @Autowired
     var jwtUtils: JwtUtils? = null
+
+    @Operation(summary = "Authenticate user")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "User authenticated",
+            content = [Content(mediaType = "application/json",
+                schema = Schema(implementation = JwtResponse::class))]),
+        ApiResponse(responseCode = "400", description = "Bad request", content = [Content()]),
+        ApiResponse(responseCode = "404", description = "User not found", content = [Content()])]
+    )
     @PostMapping("/login")
     fun authenticateUser(@RequestBody loginRequest: @Valid LoginRequest?): ResponseEntity<*> {
         val authentication = authenticationManager!!.authenticate(

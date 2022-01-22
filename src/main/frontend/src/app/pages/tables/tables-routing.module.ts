@@ -3,18 +3,18 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { TablesComponent } from './tables.component';
 import { FirstnameTableComponent } from './firstname-table/firstname-table.component';
-import { FirstnameTranslationTableComponent } from './firstaname-translation-table/firstname-translation-table.component';
+import { FirstnameTranslationTableComponent } from './firstname-translation-table/firstname-translation-table.component';
 
 const routes: Routes = [{
   path: '',
   component: TablesComponent,
   children: [
     {
-      path: 'smart-table',
+      path: 'firstnames',
       component: FirstnameTableComponent,
     },
     {
-      path: 'tree-grid',
+      path: 'firstname-translations',
       component: FirstnameTranslationTableComponent,
     },
   ],

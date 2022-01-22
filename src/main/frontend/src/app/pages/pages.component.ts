@@ -1,20 +1,15 @@
-import {Component, OnInit} from '@angular/core';
-
+import { Component, OnInit } from '@angular/core';
 import {MENU_ITEMS_ADMIN, MENU_ITEMS_MODERATOR, MENU_ITEMS_NOT_LOGGED} from './pages-menu';
-import {TokenStorageService} from '../@core/services/token-storage.service';
+import { TokenStorageService } from '../@core/services/token-storage.service';
+import { NbMenuItem } from '@nebular/theme';
 
 @Component({
-  selector: 'ngx-pages',
-  styleUrls: ['pages.component.scss'],
-  template: `
-    <ngx-one-column-layout>
-      <nb-menu [items]="menu"></nb-menu>
-      <router-outlet></router-outlet>
-    </ngx-one-column-layout>
-  `,
+  selector: 'app-pages',
+  templateUrl: './pages.component.html',
+  styleUrls: ['./pages.component.scss']
 })
 export class PagesComponent implements OnInit {
-  menu = [];
+  menu: NbMenuItem[] = [];
 
   constructor(private tokenStorageService: TokenStorageService) {
 

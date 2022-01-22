@@ -153,9 +153,12 @@ header label {
 }
 
 @keyframes float {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-0.5rem);
   }
@@ -188,11 +191,9 @@ header label {
 
 .features {
   background: rgb(63, 94, 251);
-  background: linear-gradient(
-      0deg,
+  background: linear-gradient(0deg,
       rgba(63, 94, 251, 0.5256477591036415) 0%,
-      rgba(252, 70, 107, 0.1783088235294118) 99%
-  );
+      rgba(252, 70, 107, 0.1783088235294118) 99%);
 }
 
 .features .box-container {
@@ -476,7 +477,8 @@ header label {
   position: relative;
 }
 
-.contact form .inputBox input, .contact form .inputBox textarea {
+.contact form .inputBox input,
+.contact form .inputBox textarea {
   width: 100%;
   background: none;
   color: #666;
@@ -501,10 +503,10 @@ header label {
   transition: 0.2s linear;
 }
 
-.contact form .inputBox input:focus ~ label,
-.contact form .inputBox input:valid ~ label,
-.contact form .inputBox textarea:focus ~ label,
-.contact form .inputBox textarea:valid ~ label {
+.contact form .inputBox input:focus~label,
+.contact form .inputBox input:valid~label,
+.contact form .inputBox textarea:focus~label,
+.contact form .inputBox textarea:valid~label {
   top: -0.5rem;
   font-size: 1.5rem;
   color: var(--pink);
@@ -638,12 +640,12 @@ header label {
     font-size: 2rem;
   }
 
-  header input:checked ~ .navbar {
+  header input:checked~.navbar {
     transform: scaleY(1);
     opacity: 1;
   }
 
-  header input:checked ~ label::before {
+  header input:checked~label::before {
     content: '\f00d';
   }
 
@@ -732,4 +734,3 @@ header label {
   }
 
 }
-

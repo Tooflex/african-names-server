@@ -1,6 +1,5 @@
 package com.tooflexdev.prenomsafricains.domain
 
-import com.opencsv.bean.CsvBindByName
 import com.opencsv.bean.CsvBindByPosition
 import com.tooflexdev.prenomsafricains.annotation.GenderAnnotation
 import org.hibernate.annotations.*

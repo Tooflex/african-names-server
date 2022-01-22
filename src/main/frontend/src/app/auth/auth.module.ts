@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import {AuthRoutingModule, routedComponents} from './auth-routing.module';
 import {
   NbAlertModule,
+  NbButtonModule,
   NbCardModule,
   NbCheckboxModule,
   NbIconModule,
@@ -23,6 +24,7 @@ import {ReactiveFormsModule} from '@angular/forms';
     NbIconModule,
     NbCheckboxModule,
     NbCardModule,
+    NbButtonModule,
     NbLayoutModule,
   ],
   declarations: [

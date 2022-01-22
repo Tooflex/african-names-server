@@ -2,8 +2,15 @@ package com.tooflexdev.prenomsafricains.web.rest
 
 import com.sipios.springsearch.anotation.SearchSpec
 import com.tooflexdev.prenomsafricains.domain.Firstname
+import com.tooflexdev.prenomsafricains.domain.JwtResponse
 import com.tooflexdev.prenomsafricains.service.CsvService
 import com.tooflexdev.prenomsafricains.service.FirstnameService
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.media.ArraySchema
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -16,13 +23,40 @@ import org.springframework.web.multipart.MultipartFile
 @RequestMapping("/api/v1/firstnames")
 class FirstnameResource(val service: FirstnameService, val csvService: CsvService) {
 
+    @Operation(summary = "Get firstnames")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "Firstnames retrieved",
+            content = [Content(mediaType = "application/json", array = (
+                ArraySchema(schema = Schema(implementation = Firstname::class))
+            ))]),
+        ApiResponse(responseCode = "400", description = "Bad request", content = [Content()]),
+        ApiResponse(responseCode = "404", description = "No firstname found", content = [Content()])]
+    )
     @GetMapping("")
     fun findFirstnames(@RequestParam(defaultValue = "en") lang: String)
         : ResponseEntity<List<Firstname>> = ResponseEntity(service.findFirstnames(lang = lang), HttpStatus.OK)
 
+    @Operation(summary = "Get random list of firstnames")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "Firstnames retrieved",
+            content = [Content(mediaType = "application/json", array = (
+                    ArraySchema(schema = Schema(implementation = Firstname::class))
+                    ))]),
+        ApiResponse(responseCode = "400", description = "Bad request", content = [Content()]),
+        ApiResponse(responseCode = "404", description = "No firstname found", content = [Content()])]
+    )
     @GetMapping("/random")
     fun findPrenomsAlea(@RequestParam(defaultValue = "en") lang: String): List<Firstname> = service.findPrenomsAlea()
 
+    @Operation(summary = "Search firstnames")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "Firstnames retrieved",
+            content = [Content(mediaType = "application/json", array = (
+                    ArraySchema(schema = Schema(implementation = Firstname::class))
+                    ))]),
+        ApiResponse(responseCode = "400", description = "Bad request", content = [Content()]),
+        ApiResponse(responseCode = "404", description = "No firstname found", content = [Content()])]
+    )
     @GetMapping("/search")
     fun searchFirstnames(@SearchSpec specs: Specification<Firstname?>?): ResponseEntity<Any?> {
         return try {
@@ -34,10 +68,27 @@ class FirstnameResource(val service: FirstnameService, val csvService: CsvServic
         }
     }
 
+    @Operation(summary = "Create a firstname")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "Firstnames created",
+            content = [Content(mediaType = "application/json", schema = Schema(implementation = Firstname::class)
+                    )]),
+        ApiResponse(responseCode = "400", description = "Bad request", content = [Content()]),
+        ApiResponse(responseCode = "404", description = "No firstname found", content = [Content()])]
+    )
     @PostMapping("/")
     fun createFirstname(@RequestBody firstname: Firstname): ResponseEntity<Firstname>
     = ResponseEntity(service.createFirstname(firstname), HttpStatus.CREATED)
 
+    @Operation(summary = "Import firstnames via .csv file")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "Firstnames retrieved",
+            content = [Content(mediaType = "application/json", array = (
+                    ArraySchema(schema = Schema(implementation = Firstname::class))
+                    ))]),
+        ApiResponse(responseCode = "400", description = "Bad request", content = [Content()]),
+        ApiResponse(responseCode = "404", description = "No firstname found", content = [Content()])]
+    )
     @RequestMapping(value = ["/import"],
         method = [RequestMethod.POST],
         consumes = [MediaType.MULTIPART_FORM_DATA_VALUE]
@@ -47,6 +98,14 @@ class FirstnameResource(val service: FirstnameService, val csvService: CsvServic
         return ResponseEntity.ok(importedEntries)
     }
 
+    @Operation(summary = "Update a firstname")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "Firstnames updated",
+            content = [Content(mediaType = "application/json", schema = Schema(implementation = Firstname::class)
+            )]),
+        ApiResponse(responseCode = "400", description = "Bad request", content = [Content()]),
+        ApiResponse(responseCode = "404", description = "No firstname found", content = [Content()])]
+    )
     @PutMapping("/{id}")
     fun updateFirstname(@PathVariable(value = "id") firstnameId:Long, @RequestBody firstname: Firstname): ResponseEntity<Any?>
     {
@@ -57,6 +116,12 @@ class FirstnameResource(val service: FirstnameService, val csvService: CsvServic
         }
     }
 
+    @Operation(summary = "Update a firstname")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "Firstnames updated", content = [Content()]),
+        ApiResponse(responseCode = "400", description = "Bad request", content = [Content()]),
+        ApiResponse(responseCode = "404", description = "No firstname found", content = [Content()])]
+    )
     @DeleteMapping("/{id}")
     fun deleteFirstname(@PathVariable(value = "id") firstnameId:Long): ResponseEntity<Any> {
         return ResponseEntity(service.deleteFirstname(firstnameId), HttpStatus.OK)

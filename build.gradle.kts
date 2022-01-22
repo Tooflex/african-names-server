@@ -3,6 +3,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
 	id("org.springframework.boot") version "2.4.4"
 	id("io.spring.dependency-management") version "1.0.11.RELEASE"
+	id("com.github.johnrengelman.processes") version "0.5.0"
+	id("org.springdoc.openapi-gradle-plugin") version "1.3.3"
 	kotlin("jvm") version "1.6.0"
 	kotlin("plugin.spring") version "1.6.10"
 	kotlin("plugin.allopen") version "1.6.10"
@@ -49,6 +51,15 @@ tasks.withType<KotlinCompile> {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+
+//tasks.register<Copy>("copyApiDocs") {
+//	println("copyApiDocs task running")
+//	dependsOn(getTasksByName("generateOpenApiDocs", true))
+//	from(layout.buildDirectory.dir("api-docs.yaml"))
+//	into(layout.projectDirectory.dir("frontend/api-docs-test.yaml"))
+//}
+//
+//tasks.named("clean") { finalizedBy("copyApiDocs") }
 
 allOpen {
 	annotation("javax.persistence.Entity")
