@@ -22,8 +22,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
-import java.util.*
-
 
 @Configuration
 @EnableWebSecurity
@@ -70,7 +68,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
 
     fun corsConfigurationSource(): CorsConfigurationSource {
         val cors = CorsConfiguration()
-        cors.allowedOrigins = listOf("http://localhost:4200")
+        cors.allowedOrigins = listOf("http://localhost:4200", "http://localhost", "http://0.0.0.0")
         cors.allowedMethods = listOf("*")
         cors.allowedHeaders = listOf("*")
         cors.allowCredentials = true

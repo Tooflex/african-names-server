@@ -11,7 +11,6 @@ import com.tooflexdev.prenomsafricains.repository.UserRepository
 import com.tooflexdev.prenomsafricains.security.JwtUtils
 import com.tooflexdev.prenomsafricains.security.UserDetailsImpl
 import io.swagger.v3.oas.annotations.Operation
-import io.swagger.v3.oas.annotations.media.ArraySchema
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
@@ -29,7 +28,7 @@ import java.util.stream.Collectors
 import javax.validation.Valid
 
 @RestController
-@CrossOrigin(origins = ["localhost:4200"], maxAge = 3600)
+@CrossOrigin(origins = ["localhost:4200", "http://localhost", "http://0.0.0.0"], maxAge = 3600)
 @RequestMapping("/api/v1/auth")
 class AuthResource {
     @Autowired

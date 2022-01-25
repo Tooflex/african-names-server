@@ -40,6 +40,8 @@ services:
   africannamesfront:
     build: ./src/main/frontend
     container_name: africannames-front
+    depends_on:
+      - africannameswebapp
     ports:
       - "80:80"
     networks:

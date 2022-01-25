@@ -5,7 +5,6 @@
 
 package com.tooflexdev.prenomsafricains.web.rest
 
-import com.tooflexdev.prenomsafricains.domain.Firstname
 import com.tooflexdev.prenomsafricains.domain.FirstnameTranslation
 import com.tooflexdev.prenomsafricains.service.FirstnameTranslationService
 import io.swagger.v3.oas.annotations.Operation
@@ -19,7 +18,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@CrossOrigin(origins = ["http://localhost:4200"], maxAge=3600)
+@CrossOrigin(origins = ["http://localhost:4200", "http://localhost", "http://0.0.0.0"], maxAge=3600)
 @RequestMapping("/api/v1/translations")
 class FirstnameTranslationResource(val service: FirstnameTranslationService) {
 

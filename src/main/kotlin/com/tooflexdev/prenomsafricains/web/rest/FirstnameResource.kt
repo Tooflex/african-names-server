@@ -2,7 +2,6 @@ package com.tooflexdev.prenomsafricains.web.rest
 
 import com.sipios.springsearch.anotation.SearchSpec
 import com.tooflexdev.prenomsafricains.domain.Firstname
-import com.tooflexdev.prenomsafricains.domain.JwtResponse
 import com.tooflexdev.prenomsafricains.service.CsvService
 import com.tooflexdev.prenomsafricains.service.FirstnameService
 import io.swagger.v3.oas.annotations.Operation
@@ -19,7 +18,7 @@ import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 
 @RestController
-@CrossOrigin(origins = ["http://localhost:4200"], maxAge=3600)
+@CrossOrigin(origins = ["http://localhost:4200", "http://localhost", "http://0.0.0.0"], maxAge=3600)
 @RequestMapping("/api/v1/firstnames")
 class FirstnameResource(val service: FirstnameService, val csvService: CsvService) {
 
