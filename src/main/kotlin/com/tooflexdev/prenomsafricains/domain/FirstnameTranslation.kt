@@ -8,7 +8,9 @@ import javax.persistence.*
 @Table(name = "firstname_translation")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 class FirstnameTranslation (
-    @Id var id: Long? = null,
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    var id: Long? = null,
     var meaningTranslation: String?,
     var originsTranslation: String?,
     @ManyToOne

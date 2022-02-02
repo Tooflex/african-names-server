@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import org.springframework.data.repository.findByIdOrNull
-import java.time.LocalDateTime
 
 @DataJpaTest
 class RepositoriesTests @Autowired constructor(
@@ -27,7 +26,7 @@ class RepositoriesTests @Autowired constructor(
         amadou.size=Size.MEDIUM
         entityManager.persist(amadou)
         entityManager.flush()
-        val found = firstnameRepository.findByIdOrNull(amadou.id!!)
+        val found = firstnameRepository.findByIdOrNull(amadou.id)
         assertThat(found).isEqualTo(amadou)
     }
 }
