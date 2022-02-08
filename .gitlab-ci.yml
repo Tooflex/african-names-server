@@ -1,0 +1,57 @@
+stages:
+  - dockerbuild
+  - gkedeploy
+  - gkedestroy
+
+docker build webapp:
+  stage: dockerbuild
+  image: docker:stable
+  services:
+    - docker:dind
+  before_script:
+    - docker info
+    - docker login registry.gitlab.com -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}
+  script:
+    - docker build -t ${CI_REGISTRY}/africannames-webapp:$CI_COMMIT_TAG .
+    - docker build -t ${CI_REGISTRY}/africannames-webapp:latest .
+    - docker push ${CI_REGISTRY}/africannames-webapp:$CI_COMMIT_TAG
+    - docker push ${CI_REGISTRY}/africannames-webapp:latest
+  after_script:
+    - docker logout ${CI_REGISTRY}
+
+docker build frontend:
+  stage: dockerbuild
+  image: docker:stable
+  services:
+    - docker:dind
+  before_script:
+    - docker info
+    - docker login registry.gitlab.com -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}
+  script:
+    - docker build -t ${CI_REGISTRY}/africannames-front:$CI_COMMIT_TAG .
+    - docker build -t ${CI_REGISTRY}/africannames-front:latest .
+    - docker push ${CI_REGISTRY}/africannames-front:$CI_COMMIT_TAG
+    - docker push ${CI_REGISTRY}/africannames-front:latest
+  after_script:
+    - docker logout ${CI_REGISTRY}
+
+gcloud deploy:
+  stage: gkedeploy
+  image: google/cloud-sdk
+  script:
+    - echo $GCP_SERVICE_ACCOUNT_KEY | base64 -d > ~/encoded_serviceaccount.json
+    - gcloud auth activate-service-account --key-file ~/encoded_serviceaccount.json
+    - gcloud config set project $GCP_PROJECT_ID
+    - gcloud config set compute/zone us-central1-a
+    - gcloud container clusters create african-names-cluster --num-nodes=1
+    - gcloud container clusters get-credentials african-names-cluster
+    - kubectl apply -f ./k8/
+
+gcloud destroy:
+  stage: gkedestroy
+  image: google/cloud-sdk
+  when: manual
+  script:
+    - echo $GCP_SERVICE_ACCOUNT_KEY | base64 -d > ~/encoded_serviceaccount.json
+    - gcloud auth activate-service-account --key-file ~/encoded_serviceaccount.json
+    - gcloud container clusters delete african-names-cluster --zone us-central1-a --project $GCP_PROJECT_ID --quiet

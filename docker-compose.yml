@@ -4,7 +4,7 @@ services:
   africannameswebapp:
     build: .
     restart: always
-    container_name: africannameswebapp
+    container_name: africannames-webapp
     depends_on:
       - africannames-postgres-db
     ports:

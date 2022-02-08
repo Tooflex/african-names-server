@@ -1,10 +1,12 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+//import java.io.FileInputStream
 
 plugins {
 	id("org.springframework.boot") version "2.4.4"
 	id("io.spring.dependency-management") version "1.0.11.RELEASE"
 	id("com.github.johnrengelman.processes") version "0.5.0"
 	id("org.springdoc.openapi-gradle-plugin") version "1.3.3"
+	//id("org.liquibase.gradle") version "2.1.1"
 	kotlin("jvm") version "1.6.0"
 	kotlin("plugin.spring") version "1.6.10"
 	kotlin("plugin.allopen") version "1.6.10"
@@ -35,11 +37,30 @@ dependencies {
 	implementation("com.opencsv:opencsv:5.5.2")
 	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt
 	implementation("io.jsonwebtoken:jjwt:0.9.1")
+	// https://mvnrepository.com/artifact/org.liquibase/liquibase-core
+	//implementation("org.liquibase:liquibase-core:4.7.1")
 	runtimeOnly("com.h2database:h2:2.0.202")
 	//runtimeOnly("org.jetbrains.kotlin:kotlin-reflect:1.4.32")
 	testImplementation("org.springframework.boot:spring-boot-starter-test:2.6.1")
 	testImplementation("org.springframework.security:spring-security-test:5.5.1")
 }
+
+//val prop = java.util.properties().apply {
+//	load(FileInputStream(File(rootProject.rootDir, "src/main/resources/application.properties")))
+//}
+
+//liquibase {
+//	activities.register("main") {
+//		this.arguments = mapOf(
+//			"logLevel" to "info",
+//			"changeLogFile" to "src/main/resources/db/changelog/db.changelog-master.sql",
+//			"url" to prop.getProperty("spring.datasource.url"),
+//			"username" to prop.getProperty("spring.datasource.username"),
+//			"password" to prop.getProperty("spring.datasource.password"),
+//			"driver" to prop.getProperty("")
+//		)
+//	}
+//}
 
 tasks.withType<KotlinCompile> {
 	kotlinOptions {
