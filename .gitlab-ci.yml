@@ -12,9 +12,9 @@ docker build webapp:
     - docker info
     - docker login registry.gitlab.com -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}
   script:
-    - docker build -t ${CI_REGISTRY}/africannames-webapp:$CI_COMMIT_TAG .
+    - docker build -t ${CI_REGISTRY}/africannames-webapp:${CI_COMMIT_TAG} .
     - docker build -t ${CI_REGISTRY}/africannames-webapp:latest .
-    - docker push ${CI_REGISTRY}/africannames-webapp:$CI_COMMIT_TAG
+    - docker push ${CI_REGISTRY}/africannames-webapp:${CI_COMMIT_TAG}
     - docker push ${CI_REGISTRY}/africannames-webapp:latest
   after_script:
     - docker logout ${CI_REGISTRY}
@@ -28,9 +28,9 @@ docker build frontend:
     - docker info
     - docker login registry.gitlab.com -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}
   script:
-    - docker build -t ${CI_REGISTRY}/africannames-front:$CI_COMMIT_TAG .
+    - docker build -t ${CI_REGISTRY}/africannames-front:${CI_COMMIT_TAG} .
     - docker build -t ${CI_REGISTRY}/africannames-front:latest .
-    - docker push ${CI_REGISTRY}/africannames-front:$CI_COMMIT_TAG
+    - docker push ${CI_REGISTRY}/africannames-front:${CI_COMMIT_TAG}
     - docker push ${CI_REGISTRY}/africannames-front:latest
   after_script:
     - docker logout ${CI_REGISTRY}
