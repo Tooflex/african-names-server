@@ -8,12 +8,17 @@ docker build webapp:
   image: docker:stable
   services:
     - docker:dind
+  variables:
+    CONTAINER_IMAGE: ${CI_REGISTRY}/african-names/back/african-names/africannames-webapp:${CI_COMMIT_SHORT_SHA}
+
   before_script:
     - docker info
     - docker login registry.gitlab.com -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}
   script:
-    - docker build -t ${CI_REGISTRY}/african-names/back/african-names/africannames-webapp:latest .
-    - docker push ${CI_REGISTRY}/african-names/back/african-names/africannames-webapp:latest
+    - docker build -t ${CONTAINER_IMAGE} .
+    - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE}
+    - docker tag ${CONTAINER_IMAGE} ${CI_REGISTRY}/african-names/back/african-names/africannames-webapp:latest
+    - docker push ${CONTAINER_IMAGE}
   after_script:
     - docker logout ${CI_REGISTRY}
 
@@ -22,12 +27,17 @@ docker build frontend:
   image: docker:stable
   services:
     - docker:dind
+  variables:
+    CONTAINER_IMAGE: ${CI_REGISTRY}/african-names/back/african-names/africannames-front:${CI_COMMIT_SHORT_SHA}
+
   before_script:
     - docker info
     - docker login registry.gitlab.com -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}
   script:
-    - docker build -t ${CI_REGISTRY}/african-names/back/african-names/africannames-front:latest .
-    - docker push ${CI_REGISTRY}/african-names/back/african-names/africannames-front:latest
+    - docker build -t ${CONTAINER_IMAGE} .
+    - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE}
+    - docker tag ${CONTAINER_IMAGE} ${CI_REGISTRY}/african-names/back/african-names/africannames-front:latest
+    - docker push ${CONTAINER_IMAGE}
   after_script:
     - docker logout ${CI_REGISTRY}
 
