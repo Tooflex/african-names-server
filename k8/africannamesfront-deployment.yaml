@@ -25,7 +25,7 @@ spec:
         io.kompose.service: africannamesfront
     spec:
       containers:
-        - image: africannamesfront
+        - image: registry.gitlab.com/african-names/back/african-names/africannames-webapp
           name: africannames-front
           ports:
             - containerPort: 80
