@@ -49,7 +49,7 @@ gcloud deploy:
     - gcloud auth activate-service-account --key-file ~/encoded_serviceaccount.json
     - gcloud config set project $GCP_PROJECT_ID
     - gcloud config set compute/zone us-central1-a
-    - gcloud container clusters create african-names-cluster --num-nodes=1
+    - gcloud container clusters create african-names-cluster --num-nodes=1 --project=$GCP_PROJECT_ID
     - gcloud container clusters get-credentials african-names-cluster
     - kubectl apply -f ./k8/
 
