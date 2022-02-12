@@ -1,7 +1,6 @@
 stages:
   - dockerbuild
   - gkedeploy
-  - gkedestroy
 
 docker build webapp:
   stage: dockerbuild
@@ -51,12 +50,3 @@ gcloud deploy:
     - gcloud config set compute/zone us-central1-a
     - gcloud container clusters get-credentials $GKE_CLUSTER_NAME
     - kubectl apply -f ./k8/
-
-gcloud destroy:
-  stage: gkedestroy
-  image: google/cloud-sdk
-  when: manual
-  script:
-    - echo $GCP_SERVICE_ACCOUNT_KEY | base64 -d > ~/encoded_serviceaccount.json
-    - gcloud auth activate-service-account --key-file ~/encoded_serviceaccount.json
-    - gcloud container clusters delete $GKE_CLUSTER_NAME --zone us-central1-a --project $GCP_PROJECT_ID --quiet
