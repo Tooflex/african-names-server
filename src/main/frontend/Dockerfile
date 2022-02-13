@@ -2,9 +2,7 @@
 FROM node:16-alpine AS my-app-build
 WORKDIR /app
 COPY . .
-RUN rm -rf node_modules
-RUN rm package-lock.json
-RUN npm install
+RUN npm ci
 RUN npm install -g ng-openapi-gen
 RUN npm run build:prod
 
