@@ -12,7 +12,7 @@ docker build webapp:
 
   before_script:
     - docker info
-    - docker login registry.gitlab.com -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}
+    - echo "${CI_REGISTRY_PASSWORD}" | docker login registry.gitlab.com --username ${CI_REGISTRY_USER} --password-stdin
   script:
     - docker build -t ${CONTAINER_IMAGE} .
     - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE}
