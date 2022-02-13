@@ -33,6 +33,7 @@ docker build frontend:
     - docker info
     - docker login registry.gitlab.com -u ${CI_REGISTRY_USER} -p ${CI_REGISTRY_PASSWORD}
   script:
+    - cd /src/main/frontend
     - docker build -t ${CONTAINER_IMAGE} .
     - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE}
     - docker tag ${CONTAINER_IMAGE} ${CI_REGISTRY}/african-names/back/african-names/africannames-front:latest
