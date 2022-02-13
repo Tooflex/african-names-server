@@ -8,15 +8,16 @@ docker build webapp:
   services:
     - docker:dind
   variables:
-    CONTAINER_IMAGE: ${CI_REGISTRY}/african-names/back/african-names/africannames-webapp:${CI_COMMIT_SHORT_SHA}
+    CONTAINER_IMAGE: ${CI_REGISTRY}/african-names/back/african-names/africannames-webapp
 
   before_script:
     - docker info
     - echo "${CI_REGISTRY_PASSWORD}" | docker login registry.gitlab.com --username ${CI_REGISTRY_USER} --password-stdin
   script:
-    - docker build -t ${CONTAINER_IMAGE} .
-    - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE}
-    - docker push ${CONTAINER_IMAGE}
+    - docker build --pull --cache-from "${CONTAINER_IMAGE}:latest" -t "${CONTAINER_IMAGE}:${CI_COMMIT_SHORT_SHA}" .
+    - docker tag "${CONTAINER_IMAGE}:${CI_COMMIT_SHORT_SHA}" "${CONTAINER_IMAGE}:latest"
+    - docker push ${CONTAINER_IMAGE} ${CONTAINER_IMAGE}
+    - docker push "${CONTAINER_IMAGE}:latest"
   after_script:
     - docker logout ${CI_REGISTRY}
 
@@ -26,16 +27,17 @@ docker build frontend:
   services:
     - docker:dind
   variables:
-    CONTAINER_IMAGE: ${CI_REGISTRY}/african-names/back/african-names/africannames-front:${CI_COMMIT_SHORT_SHA}
+    CONTAINER_IMAGE: ${CI_REGISTRY}/african-names/back/african-names/africannames-front
 
   before_script:
     - docker info
     - echo "${CI_REGISTRY_PASSWORD}" | docker login registry.gitlab.com --username ${CI_REGISTRY_USER} --password-stdin
   script:
     - cd src/main/frontend
-    - docker build -t ${CONTAINER_IMAGE} .
-    - docker tag ${CONTAINER_IMAGE} ${CONTAINER_IMAGE}
-    - docker push ${CONTAINER_IMAGE}
+    - docker build --pull --cache-from "${CONTAINER_IMAGE}:latest" -t "${CONTAINER_IMAGE}:${CI_COMMIT_SHORT_SHA}" .
+    - docker tag "${CONTAINER_IMAGE}:${CI_COMMIT_SHORT_SHA}" "${CONTAINER_IMAGE}:latest"
+    - docker push ${CONTAINER_IMAGE} ${CONTAINER_IMAGE}
+    - docker push "${CONTAINER_IMAGE}:latest"
   after_script:
     - docker logout ${CI_REGISTRY}
 
