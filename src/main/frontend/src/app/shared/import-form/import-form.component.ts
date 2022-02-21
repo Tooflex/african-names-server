@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import { FirstnameResourceService } from 'build/openapi/services';
+import { FirstnameResourceService } from 'src/app/api/services';
 import {Subscription} from 'rxjs';
 
 @Component({

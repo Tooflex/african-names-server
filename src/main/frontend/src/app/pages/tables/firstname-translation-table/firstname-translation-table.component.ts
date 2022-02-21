@@ -1,9 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import {Subject} from 'rxjs';
 import {LocalDataSource} from 'ng2-smart-table';
 import {takeUntil} from 'rxjs/operators';
 import { ImportFormComponent } from 'src/app/shared/import-form/import-form.component';
-import { FirstnameTranslationResourceService } from 'build/openapi/services';
+import { FirstnameTranslationResourceService } from 'src/app/api/services';
 
 @Component({
   selector: 'app-firstname-translation-table',

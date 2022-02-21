@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Firstname } from 'build/openapi/models';
-import { FirstnameResourceService } from 'build/openapi/services';
+import { Firstname } from 'src/app/api/models';
+import { FirstnameResourceService } from 'src/app/api/services';
 import { LocalDataSource } from 'ng2-smart-table';
 import { Subject, takeUntil } from 'rxjs';
 import { ImportFormComponent } from 'src/app/shared/import-form/import-form.component';

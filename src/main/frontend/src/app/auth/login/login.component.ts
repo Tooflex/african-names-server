@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {TokenStorageService} from '../../@core/services/token-storage.service';
-import {AuthResourceService} from '../../../../build/openapi/services';
+import {AuthResourceService} from '../../api/services';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {Router} from '@angular/router';
-import { JwtResponse, LoginRequest } from 'build/openapi/models';
+import { JwtResponse, LoginRequest } from 'src/app/api/models';
 import { Subject, takeUntil } from 'rxjs';
 
 

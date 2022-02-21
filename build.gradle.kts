@@ -13,6 +13,7 @@ plugins {
 	kotlin("plugin.jpa") version "1.6.10"
 }
 
+description = "African names discovering app"
 group = "com.tooflexdev"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
@@ -72,6 +73,12 @@ tasks.withType<KotlinCompile> {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+
+//tasks.processResources {
+//	filesMatching("**/application.properties") {
+//		expand( project.properties )
+//	}
+//}
 
 //tasks.register<Copy>("copyApiDocs") {
 //	println("copyApiDocs task running")
