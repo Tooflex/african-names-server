@@ -4,7 +4,6 @@ metadata:
   annotations:
     kompose.cmd: kompose convert
     kompose.version: 1.26.1 (HEAD)
-  creationTimestamp: null
   labels:
     io.kompose.service: africannameswebapp
   name: africannameswebapp
@@ -19,7 +18,6 @@ spec:
       annotations:
         kompose.cmd: kompose convert
         kompose.version: 1.26.1 (HEAD)
-      creationTimestamp: null
       labels:
         io.kompose.network/african-names-network: "true"
         io.kompose.service: africannameswebapp
@@ -63,4 +61,3 @@ spec:
       imagePullSecrets:
         - name: registry-credentials
       restartPolicy: Always
-status: {}

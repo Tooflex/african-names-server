@@ -4,7 +4,6 @@ metadata:
   annotations:
     kompose.cmd: kompose convert
     kompose.version: 1.26.1 (HEAD)
-  creationTimestamp: null
   labels:
     io.kompose.service: africannames-postgres-db
   name: africannames-postgres-db
@@ -19,7 +18,6 @@ spec:
       annotations:
         kompose.cmd: kompose convert
         kompose.version: 1.26.1 (HEAD)
-      creationTimestamp: null
       labels:
         io.kompose.network/african-names-network: "true"
         io.kompose.service: africannames-postgres-db
@@ -49,4 +47,3 @@ spec:
             - containerPort: 5432
           resources: {}
       restartPolicy: Always
-status: {}
