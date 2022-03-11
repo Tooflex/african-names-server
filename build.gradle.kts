@@ -25,6 +25,7 @@ repositories {
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.6.1")
 	implementation("org.postgresql:postgresql:42.3.1")
+	implementation("org.springframework.cloud:spring-cloud-gcp-starter-sql-postgresql:1.2.8.RELEASE")
 	implementation("org.springframework.boot:spring-boot-starter-security:2.6.1")
 	implementation("org.springframework.boot:spring-boot-starter-web:2.6.1")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.0")

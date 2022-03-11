@@ -6,7 +6,7 @@
     "generate:api": "ng-openapi-gen --input api-docs.yaml --output src/app/api",
     "start": "ng serve",
     "build": "ng build",
-    "build:prod": "npm run build -- --configuration production --aot",
+    "build:prod": "npm run build -- --configuration=production --aot",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

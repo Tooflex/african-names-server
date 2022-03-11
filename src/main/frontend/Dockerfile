@@ -3,7 +3,6 @@ FROM node:16-alpine AS my-app-build
 WORKDIR /app
 COPY . .
 RUN npm ci -timeout=9999999
-RUN npm install -g ng-openapi-gen
 RUN npm run build:prod
 
 # stage 2
