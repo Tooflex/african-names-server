@@ -68,7 +68,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
 
     fun corsConfigurationSource(): CorsConfigurationSource {
         val cors = CorsConfiguration()
-        cors.allowedOrigins = listOf("http://localhost:4200", "http://localhost", "http://0.0.0.0")
+        cors.allowedOrigins = listOf("http://localhost:4200", "http://localhost", "http://0.0.0.0", "https://africannames.app")
         cors.allowedMethods = listOf("*")
         cors.allowedHeaders = listOf("*")
         cors.allowCredentials = true

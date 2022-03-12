@@ -28,7 +28,7 @@ import java.util.stream.Collectors
 import javax.validation.Valid
 
 @RestController
-@CrossOrigin(origins = ["localhost:4200", "http://localhost", "http://0.0.0.0"], maxAge = 3600)
+@CrossOrigin(origins = ["localhost:4200", "http://localhost", "http://0.0.0.0", "https://africannames.app"], maxAge = 3600)
 @RequestMapping("/api/v1/auth")
 class AuthResource {
     @Autowired
