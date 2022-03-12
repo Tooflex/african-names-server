@@ -66,3 +66,9 @@ spec:
       imagePullSecrets:
         - name: registry-credentials
       restartPolicy: Always
+      # [START cloud_sql_proxy_k8s_volume_secret]
+      volumes:
+        - name: cloudsql-volumes
+          secret:
+            secretName: cloudsql
+      # [END cloud_sql_proxy_k8s_volume_secret]
