@@ -20,6 +20,7 @@ services:
       SPRING_SECURITY_USER_NAME: ${AFN_APP_USER}
       SPRING_SECURITY_USER_PASSWORD: ${AFN_APP_PASSWORD}
       PROD_URL_HOST: ${AFN_POSTGRES_HOST}
+      PROD_DB: ${AFN_POSTGRES_DB}
 
   ########## WEB APP DATABASE ##########
   africannames-postgres-db:
