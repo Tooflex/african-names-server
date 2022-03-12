@@ -58,17 +58,23 @@ spec:
                 secretKeyRef:
                   name: afnsecrets
                   key: AFN_APP_PASSWORD
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /etc/gcp/service_account.json
           image: registry.gitlab.com/african-names/back/african-names/africannames-webapp
           name: africannames-webapp
           ports:
             - containerPort: 8080
           resources: {}
+          volumeMounts:
+            - name: cloudsql-volume
+              mountPath: /etc/gcp
+              readOnly: true
       imagePullSecrets:
         - name: registry-credentials
       restartPolicy: Always
       # [START cloud_sql_proxy_k8s_volume_secret]
       volumes:
-        - name: cloudsql-volumes
+        - name: cloudsql-volume
           secret:
             secretName: cloudsql
       # [END cloud_sql_proxy_k8s_volume_secret]
