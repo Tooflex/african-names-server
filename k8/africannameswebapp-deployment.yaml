@@ -24,6 +24,11 @@ spec:
     spec:
       containers:
         - env:
+            - name: PROD_URL_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: afnsecrets
+                  key: AFN_POSTGRES_HOST
             - name: SPRING_DATASOURCE_PASSWORD
               valueFrom:
                 secretKeyRef:
