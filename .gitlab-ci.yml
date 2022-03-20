@@ -20,6 +20,9 @@ docker build webapp:
     - docker push "${CONTAINER_IMAGE}:latest"
   after_script:
     - docker logout ${CI_REGISTRY}
+  only:
+    - tags
+    - master
 
 docker build frontend:
   stage: dockerbuild
@@ -40,6 +43,9 @@ docker build frontend:
     - docker push "${CONTAINER_IMAGE}:latest"
   after_script:
     - docker logout ${CI_REGISTRY}
+  only:
+    - tags
+    - master
 
 gcloud deploy:
   stage: gkedeploy
@@ -51,3 +57,6 @@ gcloud deploy:
     - gcloud config set compute/zone us-central1-a
     - gcloud container clusters get-credentials $GKE_CLUSTER_NAME
     - kubectl apply -f ./k8/
+  only:
+    - tags
+    - master
