@@ -1,0 +1,62 @@
+stages:
+  - dockerbuild
+  - gkedeploy
+
+docker build webapp:
+  stage: dockerbuild
+  image: docker:stable
+  services:
+    - docker:dind
+  variables:
+    CONTAINER_IMAGE: ${CI_REGISTRY}/african-names/back/african-names/africannames-webapp
+
+  before_script:
+    - docker info
+    - echo "${CI_REGISTRY_PASSWORD}" | docker login registry.gitlab.com --username ${CI_REGISTRY_USER} --password-stdin
+  script:
+    - docker build --pull --cache-from "${CONTAINER_IMAGE}:latest" -t "${CONTAINER_IMAGE}:${CI_COMMIT_SHORT_SHA}" .
+    - docker tag "${CONTAINER_IMAGE}:${CI_COMMIT_SHORT_SHA}" "${CONTAINER_IMAGE}:latest"
+    - docker push "${CONTAINER_IMAGE}:${CI_COMMIT_SHORT_SHA}"
+    - docker push "${CONTAINER_IMAGE}:latest"
+  after_script:
+    - docker logout ${CI_REGISTRY}
+  only:
+    - tags
+    - master
+
+docker build frontend:
+  stage: dockerbuild
+  image: docker:stable
+  services:
+    - docker:dind
+  variables:
+    CONTAINER_IMAGE: ${CI_REGISTRY}/african-names/back/african-names/africannames-front
+
+  before_script:
+    - docker info
+    - echo "${CI_REGISTRY_PASSWORD}" | docker login registry.gitlab.com --username ${CI_REGISTRY_USER} --password-stdin
+  script:
+    - cd src/main/frontend
+    - docker build --pull --cache-from "${CONTAINER_IMAGE}:latest" -t "${CONTAINER_IMAGE}:${CI_COMMIT_SHORT_SHA}" .
+    - docker tag "${CONTAINER_IMAGE}:${CI_COMMIT_SHORT_SHA}" "${CONTAINER_IMAGE}:latest"
+    - docker push "${CONTAINER_IMAGE}:${CI_COMMIT_SHORT_SHA}"
+    - docker push "${CONTAINER_IMAGE}:latest"
+  after_script:
+    - docker logout ${CI_REGISTRY}
+  only:
+    - tags
+    - master
+
+gcloud deploy:
+  stage: gkedeploy
+  image: google/cloud-sdk
+  script:
+    - base64 -d $GCP_SERVICE_ACCOUNT_KEY > ~/encoded_serviceaccount.json
+    - gcloud auth activate-service-account --key-file ~/encoded_serviceaccount.json
+    - gcloud config set project $GCP_PROJECT_ID
+    - gcloud config set compute/zone us-central1-a
+    - gcloud container clusters get-credentials $GKE_CLUSTER_NAME
+    - kubectl apply -f ./k8/
+  only:
+    - tags
+    - master

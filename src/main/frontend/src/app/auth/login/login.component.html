@@ -1,0 +1,91 @@
+<nb-layout>
+  <nb-layout-column>
+<nb-card>
+  <nb-card-header><h1 id="title" class="title">Login</h1></nb-card-header>
+  <nb-card-body class="login-form">
+    <p class="sub-title">Hello! Log in with your username.</p>
+
+    <nb-alert *ngIf="isLoginFailed" outline="danger" role="alert">
+      <p class="alert-title"><strong>Oh snap!</strong></p>
+      <ul class="alert-message-list">
+        <li class="alert-message">{{ errorMessage }}</li>
+      </ul>
+    </nb-alert>
+
+    <nb-alert *ngIf="isLoggedIn && !submitted" outline="success" role="alert">
+      <p class="alert-title"><strong>Hooray!</strong></p>
+      <ul class="alert-message-list">
+        <li class="alert-message">Logged in as {{ roles }}.</li>
+      </ul>
+    </nb-alert>
+
+    <form (ngSubmit)="onSubmit()" [formGroup]="form" aria-labelledby="title">
+
+      <div class="form-control-group">
+        <label class="label" for="username">Username:</label>
+        <input
+          nbInput
+          fullWidth
+          status="control"
+          placeholder="Username"
+          id="username"
+          type="text"
+          formControlName="username"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f['username'].errors }">
+
+        <ng-container *ngIf="f['username'].invalid && f['username'].touched">
+          <p class="caption status-danger" *ngIf="f['username'].errors?.['required']">
+            Username is required!
+          </p>
+          <p class="caption status-danger" *ngIf="f['username'].errors?.['minlength']">
+            Username should contain at least 4 characters
+          </p>
+        </ng-container>
+      </div>
+
+      <div class="form-control-group">
+        <label class="label" for="password">Password:</label>
+        <input
+          nbInput
+          fullWidth
+          status="control"
+          placeholder="Password"
+          id="password"
+          type="password"
+          formControlName="password"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f['password'].errors }">
+        <ng-container *ngIf="f['password'].invalid && f['password'].touched ">
+          <p class="caption status-danger" *ngIf="f['password'].errors?.['required']">
+            Password is required!
+          </p>
+          <p class="caption status-danger" *ngIf="f['password'].errors?.['minlength']">
+            Password should contain at least 6 characters
+          </p>
+        </ng-container>
+      </div>
+
+      <div>
+        <button
+          nbButton
+          type="submit"
+          status="primary"
+          [disabled]="submitted || !form.valid"
+          [class.btn-pulse]="submitted">
+          Log In
+        </button>
+        <button
+          nbButton
+          type="button"
+          (click)="onReset()"
+        >
+          Reset
+        </button>
+      </div>
+    </form>
+
+  </nb-card-body>
+</nb-card>
+      </nb-layout-column>
+</nb-layout>

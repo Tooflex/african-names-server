@@ -1,0 +1,9 @@
+<div class="p-4">
+  <form>
+    <div class="form-group">
+      <h3>Import file</h3>
+    <input nbInput type="file" class="file-upload" (change)="onFileSelected($event)">
+    </div>
+    <button nbButton status="primary" [disabled]="!selected" (click)="upload()">Upload</button>
+  </form>
+</div>

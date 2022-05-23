@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.26.1 (HEAD)
+  labels:
+    io.kompose.service: africannamesfront
+  name: africannamesfront
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: africannamesfront
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.26.1 (HEAD)
+      labels:
+        io.kompose.network/african-names-network: "true"
+        io.kompose.service: africannamesfront
+    spec:
+      containers:
+        - image: registry.gitlab.com/african-names/back/african-names/africannames-front
+          name: africannames-front
+          ports:
+            - containerPort: 80
+          resources: {}
+      imagePullSecrets:
+        - name: registry-credentials
+      restartPolicy: Always

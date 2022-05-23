@@ -1,0 +1,20 @@
+<nb-card>
+  <nb-card-header>
+    Name Translation List
+  </nb-card-header>
+
+  <nb-card-body>
+    <div class="buttons-row">
+      <button nbButton status="primary" [nbPopover]="importForm" hero>
+        Import CSV
+      </button>
+    </div>
+    <br>
+    <ng2-smart-table
+      [settings]="settings" [source]="source"
+      (createConfirm)="onCreateConfirm($event)"
+      (editConfirm)="onSaveConfirm($event)"
+      (deleteConfirm)="onDeleteConfirm($event)">
+    </ng2-smart-table>
+  </nb-card-body>
+</nb-card>
