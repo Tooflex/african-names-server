@@ -32,6 +32,7 @@ jobs:
           - dockerfile: ./Dockerfile
             image: ghcr.io/tooflex/${{ github.repository }}/backend
           - dockerfile: ./src/main/frontend/Dockerfile
+            context: ./src/main/frontend/
             image: ghcr.io/tooflex/${{ github.repository }}/frontend
     permissions:
       contents: read
