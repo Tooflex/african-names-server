@@ -29,9 +29,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - dockerfile: .
+          - dockerfile: ./Dockerfile
             image: ghcr.io/tooflex/${{ github.repository }}/backend
-          - dockerfile: ./src/main/frontend
+          - dockerfile: ./src/main/frontend/Dockerfile
             image: ghcr.io/tooflex/${{ github.repository }}/frontend
     permissions:
       contents: read
