@@ -52,8 +52,8 @@ jobs:
           manifests: |
             ./k8/
           images: |
-            ghcr.io/tooflex/african-names-server/frontend:${{ event.run_id }}
-            ghcr.io/tooflex/african-names-server/backend:${{ event.run_id }}
+            ghcr.io/tooflex/african-names-server/frontend:${{ github.sha }}
+            ghcr.io/tooflex/african-names-server/backend:${{ github.sha }}
           imagepullsecrets: |
             afnsecrets
           namespace: ${{ env.NAMESPACE }}
