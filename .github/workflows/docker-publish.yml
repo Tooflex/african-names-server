@@ -30,11 +30,11 @@ jobs:
       matrix:
         include:
           - dockerfile: ./Dockerfile
-            image: ghcr.io/tooflex/${{ github.repository }}/backend
+            image: ghcr.io/${{ github.repository }}/backend
             context: .
           - dockerfile: ./src/main/frontend/Dockerfile
             context: ./src/main/frontend/
-            image: ghcr.io/tooflex/${{ github.repository }}/frontend
+            image: ghcr.io/${{ github.repository }}/frontend
     permissions:
       contents: read
       packages: write
