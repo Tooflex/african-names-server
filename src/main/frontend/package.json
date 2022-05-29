@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "scripts": {
     "ng": "ng",
+    "config": "node set-env.ts",
     "generate:api": "ng-openapi-gen --input api-docs.yaml --output src/app/api",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "npm run config && ng build",
     "build:prod": "npm run build -- --configuration=production --aot",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
