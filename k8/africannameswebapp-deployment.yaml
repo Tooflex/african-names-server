@@ -60,7 +60,7 @@ spec:
                   key: AFN_APP_PASSWORD
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: /etc/gcp/service_account.json
-          image: registry.gitlab.com/african-names/back/african-names/africannames-webapp
+          image: ghcr.io/tooflex/african-names-server/backend:master
           name: africannames-webapp
           ports:
             - containerPort: 8080
