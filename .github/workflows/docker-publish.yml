@@ -114,5 +114,3 @@ jobs:
         run: |
           kubectl apply -f ./k8/
           kubectl apply -f ./k8/ovh/
-          kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.0.4/deploy/static/provider/baremetal/deploy.yaml
-
