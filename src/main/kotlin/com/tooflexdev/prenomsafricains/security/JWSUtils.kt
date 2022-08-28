@@ -12,7 +12,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Component
 import java.security.SignatureException
 import java.util.*
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.*
 
 @Component
 class JwtUtils {
@@ -29,7 +29,7 @@ class JwtUtils {
     }
 
     fun getUserNameFromJwtToken(token: String?): String {
-        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject()
+        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).body.subject
     }
 
     fun validateJwtToken(authToken: String?): Boolean {

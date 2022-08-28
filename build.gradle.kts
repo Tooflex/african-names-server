@@ -1,8 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-//import java.io.FileInputStream
 
 plugins {
-	id("org.springframework.boot") version "2.4.4"
+	id("org.springframework.boot") version "2.7.3"
 	id("io.spring.dependency-management") version "1.0.11.RELEASE"
 	id("com.github.johnrengelman.processes") version "0.5.0"
 	id("org.springdoc.openapi-gradle-plugin") version "1.3.3"
@@ -23,45 +22,31 @@ repositories {
 }
 
 dependencies {
-	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.6.1")
-	implementation("org.postgresql:postgresql:42.3.1")
-	implementation("org.springframework.boot:spring-boot-starter-security:2.6.1")
-	implementation("org.springframework.boot:spring-boot-starter-web:2.6.1")
-	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.0")
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.7.3")
+	implementation("org.springframework.boot:spring-boot-starter-data-rest:2.7.3")
+	implementation("org.postgresql:postgresql:42.4.2")
+	implementation("org.springframework.boot:spring-boot-starter-security:2.7.3")
+	implementation("org.springframework.boot:spring-boot-starter-web:2.7.3")
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.3")
 	implementation("org.jetbrains.kotlin:kotlin-reflect:1.6.0")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.0")
 	implementation("com.sipios:spring-search:0.2.4")
-	implementation("org.junit.jupiter:junit-jupiter:5.8.2")
+	implementation("org.junit.jupiter:junit-jupiter:5.9.0")
 	// https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-ui
-	implementation("org.springdoc:springdoc-openapi-ui:1.5.13")
+	implementation("org.springdoc:springdoc-openapi-ui:1.6.10")
 	// https://mvnrepository.com/artifact/com.opencsv/opencsv
-	implementation("com.opencsv:opencsv:5.5.2")
+	implementation("com.opencsv:opencsv:5.6")
 	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt
 	implementation("io.jsonwebtoken:jjwt:0.9.1")
 	// https://mvnrepository.com/artifact/org.liquibase/liquibase-core
 	//implementation("org.liquibase:liquibase-core:4.7.1")
-	runtimeOnly("com.h2database:h2:2.0.202")
-	//runtimeOnly("org.jetbrains.kotlin:kotlin-reflect:1.4.32")
-	testImplementation("org.springframework.boot:spring-boot-starter-test:2.6.1")
-	testImplementation("org.springframework.security:spring-security-test:5.5.1")
+	runtimeOnly("com.h2database:h2:2.1.214")
+	testImplementation("org.springframework.boot:spring-boot-starter-test:2.7.3") {
+		exclude(group = "org.mockito", module = "mockito-core")
+	}
+	testImplementation("org.springframework.security:spring-security-test:5.7.3")
+	testImplementation("com.ninja-squad:springmockk:3.1.1")
 }
-
-//val prop = java.util.properties().apply {
-//	load(FileInputStream(File(rootProject.rootDir, "src/main/resources/application.properties")))
-//}
-
-//liquibase {
-//	activities.register("main") {
-//		this.arguments = mapOf(
-//			"logLevel" to "info",
-//			"changeLogFile" to "src/main/resources/db/changelog/db.changelog-master.sql",
-//			"url" to prop.getProperty("spring.datasource.url"),
-//			"username" to prop.getProperty("spring.datasource.username"),
-//			"password" to prop.getProperty("spring.datasource.password"),
-//			"driver" to prop.getProperty("")
-//		)
-//	}
-//}
 
 tasks.withType<KotlinCompile> {
 	kotlinOptions {
@@ -73,21 +58,6 @@ tasks.withType<KotlinCompile> {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
-
-//tasks.processResources {
-//	filesMatching("**/application.properties") {
-//		expand( project.properties )
-//	}
-//}
-
-//tasks.register<Copy>("copyApiDocs") {
-//	println("copyApiDocs task running")
-//	dependsOn(getTasksByName("generateOpenApiDocs", true))
-//	from(layout.buildDirectory.dir("api-docs.yaml"))
-//	into(layout.projectDirectory.dir("frontend/api-docs-test.yaml"))
-//}
-//
-//tasks.named("clean") { finalizedBy("copyApiDocs") }
 
 allOpen {
 	annotation("javax.persistence.Entity")

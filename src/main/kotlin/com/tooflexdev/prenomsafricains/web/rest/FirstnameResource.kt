@@ -32,8 +32,14 @@ class FirstnameResource(val service: FirstnameService, val csvService: CsvServic
         ApiResponse(responseCode = "404", description = "No firstname found", content = [Content()])]
     )
     @GetMapping("")
-    fun findFirstnames(@RequestParam(defaultValue = "en") lang: String)
-        : ResponseEntity<List<Firstname>> = ResponseEntity(service.findFirstnames(lang = lang), HttpStatus.OK)
+    fun findFirstnames(@RequestParam(defaultValue = "en") lang: String): ResponseEntity<Any?> {
+         val firstnamesRetrieved = service.findFirstnames(lang = lang)
+        return if (firstnamesRetrieved.isNotEmpty()) {
+            ResponseEntity(firstnamesRetrieved, HttpStatus.OK)
+        } else {
+            ResponseEntity<Any?>("Error: No firstname found", HttpStatus.NOT_FOUND)
+        }
+    }
 
     @Operation(summary = "Get random list of firstnames")
     @ApiResponses(value = [
@@ -69,14 +75,15 @@ class FirstnameResource(val service: FirstnameService, val csvService: CsvServic
 
     @Operation(summary = "Create a firstname")
     @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "Firstnames created",
+        ApiResponse(responseCode = "201", description = "Firstnames created",
             content = [Content(mediaType = "application/json", schema = Schema(implementation = Firstname::class)
                     )]),
         ApiResponse(responseCode = "400", description = "Bad request", content = [Content()]),
-        ApiResponse(responseCode = "404", description = "No firstname found", content = [Content()])]
+        ApiResponse(responseCode = "403", description = "Forbidden", content = [Content()]),
+    ]
     )
     @PostMapping("/")
-    fun createFirstname(@RequestBody firstname: Firstname): ResponseEntity<Firstname>
+    fun createFirstname(@RequestBody firstname: Firstname): ResponseEntity<Any?>
     = ResponseEntity(service.createFirstname(firstname), HttpStatus.CREATED)
 
     @Operation(summary = "Import firstnames via .csv file")
@@ -115,7 +122,7 @@ class FirstnameResource(val service: FirstnameService, val csvService: CsvServic
         }
     }
 
-    @Operation(summary = "Update a firstname")
+    @Operation(summary = "Delete a firstname")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "Firstnames updated", content = [Content()]),
         ApiResponse(responseCode = "400", description = "Bad request", content = [Content()]),
