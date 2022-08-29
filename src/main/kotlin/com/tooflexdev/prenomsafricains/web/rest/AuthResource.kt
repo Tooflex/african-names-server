@@ -52,6 +52,7 @@ class AuthResource {
             content = [Content(mediaType = "application/json",
                 schema = Schema(implementation = JwtResponse::class))]),
         ApiResponse(responseCode = "400", description = "Bad request", content = [Content()]),
+        ApiResponse(responseCode = "401", description = "Unauthorized", content = [Content()]),
         ApiResponse(responseCode = "404", description = "User not found", content = [Content()])]
     )
     @PostMapping("/login")

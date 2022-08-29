@@ -1,6 +1,6 @@
-import {Component, Input} from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FirstnameResourceService } from 'src/app/api/services';
-import {Subscription} from 'rxjs';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-import-form',
@@ -8,8 +8,6 @@ import {Subscription} from 'rxjs';
   styleUrls: ['./import-form.component.scss'],
 })
 export class ImportFormComponent {
-
-
   @Input()
   requiredFileType?: string;
 
@@ -18,7 +16,7 @@ export class ImportFormComponent {
   uploadProgress?: number;
   uploadSub?: Subscription;
 
-  constructor(private service: FirstnameResourceService) {}
+  constructor(private service: FirstnameResourceService) { }
 
   onFileSelected(event: any) {
     this.selected = event.target.files[0];
@@ -28,8 +26,14 @@ export class ImportFormComponent {
   }
 
   upload() {
-    if (!this.selected) {
-      this.service.uploadCsvFile(this.selected).subscribe();
+    if (this.selected) {
+      this.service
+        .uploadCsvFile({
+          body: {
+            file: this.selected,
+          },
+        })
+        .subscribe();
     }
   }
 }

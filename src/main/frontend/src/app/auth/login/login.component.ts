@@ -1,11 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {TokenStorageService} from '../../@core/services/token-storage.service';
-import {AuthResourceService} from '../../api/services';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {Router} from '@angular/router';
+import { TokenStorageService } from '../../@core/services/token-storage.service';
+import { AuthResourceService } from '../../api/services';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+import { Router } from '@angular/router';
 import { JwtResponse, LoginRequest } from 'src/app/api/models';
 import { Subject, takeUntil } from 'rxjs';
-
 
 @Component({
   selector: 'app-login',
@@ -26,8 +30,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private authService: AuthResourceService,
     private tokenStorage: TokenStorageService,
-    private router: Router,
-  ) { }
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     if (this.tokenStorage.getToken()) {
@@ -35,24 +39,10 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.roles = this.tokenStorage.getUser().roles;
     }
 
-    this.form = this.formBuilder.group(
-      {
-        username: [
-          '',
-          [
-            Validators.required,
-            Validators.minLength(4),
-          ],
-        ],
-        password: [
-          '',
-          [
-            Validators.required,
-            Validators.minLength(6),
-          ],
-        ],
-      },
-    );
+    this.form = this.formBuilder.group({
+      username: ['', [Validators.required, Validators.minLength(4)]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+    });
   }
 
   ngOnDestroy(): void {
@@ -76,7 +66,8 @@ export class LoginComponent implements OnInit, OnDestroy {
       password: this.form.value.password,
     };
 
-    this.authService.authenticateUser({ body: loginRequest })
+    this.authService
+      .authenticateUser({ body: loginRequest })
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data) => {
@@ -89,13 +80,12 @@ export class LoginComponent implements OnInit, OnDestroy {
             this.roles = this.tokenStorage.getUser().roles;
             this.router.navigate(['/pages']);
           }
-
         },
         error: (err) => {
-          this.errorMessage = err;
+          this.errorMessage = err.error.message;
           this.isLoginFailed = true;
         },
-      })
+      });
   }
 
   reloadPage(): void {

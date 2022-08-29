@@ -151,8 +151,8 @@ export class FirstnameResourceService extends BaseService {
    */
   uploadCsvFile$Response(params?: {
     body?: {
-'file': Blob;
-}
+      'file': Blob;
+    }
   }): Observable<StrictHttpResponse<Array<Firstname>>> {
 
     const rb = new RequestBuilder(this.rootUrl, FirstnameResourceService.UploadCsvFilePath, 'post');
@@ -183,8 +183,8 @@ export class FirstnameResourceService extends BaseService {
    */
   uploadCsvFile(params?: {
     body?: {
-'file': Blob;
-}
+      'file': Blob;
+    }
   }): Observable<Array<Firstname>> {
 
     return this.uploadCsvFile$Response(params).pipe(
