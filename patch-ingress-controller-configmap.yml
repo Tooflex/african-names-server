@@ -1,4 +1,0 @@
-data:
-  use-proxy-protocol: "true"
-  real-ip-header: "proxy_protocol"
-  proxy-real-ip-cidr: "10.124.5.102/32,10.124.5.103/32,10.124.21.28/32,10.124.27.147/32"
