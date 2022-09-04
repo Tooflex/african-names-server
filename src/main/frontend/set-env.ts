@@ -1,8 +1,8 @@
 const fs = require('fs');
 
 const environmentFile = `export const environment = {
-  baseApiUrl: '${process.env["AFN_BASE_API_URI"]}',
-  production: '${process.env["PRODUCTION"]}'
+  baseApiUrl: '${process.env["AFN_BASE_API_URI"]}' || 'https://africannames.app',
+  production: '${process.env["PRODUCTION"]} || true'
 };
 `;
 

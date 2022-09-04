@@ -1,26 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    kompose.cmd: kompose convert
-    kompose.version: 1.26.1 (HEAD)
   labels:
-    io.kompose.service: africannameswebapp
+    app: africannameswebapp
   name: africannameswebapp
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: africannameswebapp
-  strategy: {}
+      app: africannameswebapp
   template:
     metadata:
-      annotations:
-        kompose.cmd: kompose convert
-        kompose.version: 1.26.1 (HEAD)
       labels:
-        io.kompose.network/african-names-network: "true"
-        io.kompose.service: africannameswebapp
+        app: africannameswebapp
     spec:
       containers:
         - env:
@@ -58,13 +50,9 @@ spec:
                 secretKeyRef:
                   name: afnsecrets
                   key: AFN_APP_PASSWORD
-            - name: GOOGLE_APPLICATION_CREDENTIALS
-              value: /etc/gcp/service_account.json
           image: ghcr.io/tooflex/african-names-server/backend:master
           name: africannames-webapp
           ports:
             - containerPort: 8080
           resources: {}
-      imagePullSecrets:
-        - name: registry-credentials
       restartPolicy: Always

@@ -5,14 +5,14 @@
   <nb-card-body class="login-form">
     <p class="sub-title">Hello! Log in with your username.</p>
 
-    <nb-alert *ngIf="isLoginFailed" outline="danger" role="alert">
+    <nb-alert *ngIf="isLoginFailed" outline="danger" role="alert" status="danger">
       <p class="alert-title"><strong>Oh snap!</strong></p>
       <ul class="alert-message-list">
         <li class="alert-message">{{ errorMessage }}</li>
       </ul>
     </nb-alert>
 
-    <nb-alert *ngIf="isLoggedIn && !submitted" outline="success" role="alert">
+    <nb-alert *ngIf="isLoggedIn && !submitted" outline="success" role="alert" status="success">
       <p class="alert-title"><strong>Hooray!</strong></p>
       <ul class="alert-message-list">
         <li class="alert-message">Logged in as {{ roles }}.</li>

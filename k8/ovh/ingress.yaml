@@ -2,35 +2,40 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/enable-cors: "true"
-    nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS"
-    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
-    nginx.ingress.kubernetes.io/rewrite-target: /
-    nginx.ingress.kubernetes.io/cors-allow-origin: "https://africannames.app"
-    nginx.ingress.kubernetes.io/use-regex: "true"
-    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
     cert-manager.io/cluster-issuer: letsencrypt-production
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+    nginx.ingress.kubernetes.io/cors-allow-methods: PUT, GET, POST, OPTIONS
+    nginx.ingress.kubernetes.io/cors-allow-origin: https://africannames.app
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
   name: afn-ingress
 spec:
-    tls:
-    - hosts:
-        - africannames.app
-      secretName: afn-ingress-cert
-    rules:
-    - http:
-        paths:
-          - path: /*
-            pathType: Prefix
-            backend:
-              service:
-                name: africannamesfront
-                port:
-                  number: 80
-          - path: /api
-            pathType: Prefix
-            backend:
-              service: 
-                name: africannameswebapp
-                port: 
-                  number: 8080
+  defaultBackend:
+    service:
+      name: africannamesfront
+      port:
+        number: 80
+  rules:
+  - host: africannames.app
+    http:
+      paths:
+      - backend:
+          service:
+            name: africannamesfront
+            port:
+              number: 80
+        path: /*
+        pathType: Prefix
+      - backend:
+          service:
+            name: africannameswebapp
+            port:
+              number: 8080
+        path: /api/*
+        pathType: Prefix
+  tls:
+  - hosts:
+    - africannames.app
+    secretName:  afn-app-tls
+
