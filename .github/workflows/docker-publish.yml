@@ -92,3 +92,8 @@ jobs:
         run: |
           kubectl apply -f ./k8/
           kubectl apply -f ./k8/ovh/
+          kubectl rollout restart deployment africannameswebapp
+          kubectl rollout restart deployment africannamesfront
+          kubectl rollout status deploy africannameswebapp
+          kubectl rollout status deploy africannamesfront
+
