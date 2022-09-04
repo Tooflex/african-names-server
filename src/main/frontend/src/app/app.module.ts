@@ -10,12 +10,12 @@ import { ImportFormComponent } from './shared/import-form/import-form.component'
 import { LottieModule } from 'ngx-lottie';
 import player from 'lottie-web';
 
-import {authInterceptorProviders} from './@core/interceptors/auth.interceptor';
+import { authInterceptorProviders } from './@core/interceptors/auth.interceptor';
 import { AuthGuardService } from './@core/services/auth-guard.service';
 
 import { HttpClientModule } from '@angular/common/http';
 
-  // Note we need a separate function as it's required
+// Note we need a separate function as it's required
 // by the AOT compiler.
 export function playerFactory() {
   return player;
