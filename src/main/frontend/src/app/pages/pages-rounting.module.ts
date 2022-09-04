@@ -2,7 +2,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 
 import { PagesComponent } from './pages.component';
-import {AuthGuardService as AuthGuard} from '../@core/services/auth-guard.service';
+import { AuthGuardService as AuthGuard } from '../@core/services/auth-guard.service';
 import { ProfileComponent } from './profile/profile.component';
 import { AnalyticsComponent } from './analytics/analytics.component';
 
