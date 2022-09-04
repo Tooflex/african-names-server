@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { APP_BASE_HREF } from '@angular/common';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -39,7 +38,7 @@ export function playerFactory() {
     NbEvaIconsModule,
     LottieModule.forRoot({ player: playerFactory }),
   ],
-  providers: [authInterceptorProviders, AuthGuardService, { provide: APP_BASE_HREF, useValue: '/' }],
+  providers: [authInterceptorProviders, AuthGuardService],
   bootstrap: [AppComponent]
 })
 
