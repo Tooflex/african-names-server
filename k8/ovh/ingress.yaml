@@ -8,6 +8,7 @@ metadata:
     nginx.ingress.kubernetes.io/cors-allow-methods: PUT, GET, POST, OPTIONS
     nginx.ingress.kubernetes.io/cors-allow-origin: https://africannames.app
     nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
   name: afn-ingress
 spec:
   defaultBackend:
