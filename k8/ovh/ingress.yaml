@@ -9,13 +9,10 @@ metadata:
     nginx.ingress.kubernetes.io/cors-allow-origin: https://africannames.app
     nginx.ingress.kubernetes.io/enable-cors: "true"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
+    nginx.ingress.kubernetes.io/enable-access-log: "false"
   name: afn-ingress
 spec:
-  defaultBackend:
-    service:
-      name: africannamesfront
-      port:
-        number: 80
   rules:
   - host: africannames.app
     http:
