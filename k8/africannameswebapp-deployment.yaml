@@ -35,7 +35,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: afnsecrets
-                  key: AFN_APP_USER
+                  key: AFN_POSTGRES_USER
             - name: SPRING_JPA_HIBERNATE_DDL_AUTO
               value: none
             - name: SPRING_PROFILES_ACTIVE
