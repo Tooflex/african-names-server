@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FirstnameResourceService } from 'src/app/api/services';
 import { Subscription } from 'rxjs';
 
@@ -10,6 +10,10 @@ import { Subscription } from 'rxjs';
 export class ImportFormComponent {
   @Input()
   requiredFileType?: string;
+
+  @Output()
+  uploadFinished: EventEmitter<boolean> = new EventEmitter<boolean>();
+
 
   selected?: File;
   fileName = '';
@@ -33,7 +37,11 @@ export class ImportFormComponent {
             file: this.selected,
           },
         })
-        .subscribe();
+        .subscribe(
+          () => {
+            this.uploadFinished.emit(true);
+          }
+        );
     }
   }
 }

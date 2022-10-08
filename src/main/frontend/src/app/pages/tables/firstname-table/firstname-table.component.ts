@@ -1,9 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Firstname } from 'src/app/api/models';
 import { FirstnameResourceService } from 'src/app/api/services';
 import { LocalDataSource } from 'ng2-smart-table';
 import { Subject, takeUntil } from 'rxjs';
-import { ImportFormComponent } from 'src/app/shared/import-form/import-form.component';
+import { NbPopoverDirective } from '@nebular/theme';
 
 @Component({
   selector: 'app-firstname-table',
@@ -14,7 +14,8 @@ export class FirstnameTableComponent implements OnInit, OnDestroy {
 
   private destroy$: Subject<void> = new Subject<void>();
 
-  importForm = ImportFormComponent;
+  @ViewChild(NbPopoverDirective) popover: NbPopoverDirective | undefined;
+
 
   settings = {
     add: {
@@ -103,21 +104,28 @@ export class FirstnameTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.findFirstnames()
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  findFirstnames() {
     this.service.findFirstnames()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (firstnames) => {
+          if (this.popover) {
+            this.popover.hide();
+          }
           this.source.load(firstnames).then();
         },
         error: (err) => {
           console.log(err);
         }
       });
-  }
-
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 
   onCreateConfirm(event: any): void {
@@ -127,13 +135,13 @@ export class FirstnameTableComponent implements OnInit, OnDestroy {
       this.service.createFirstname({ body: firstnameToCreate })
         .pipe(takeUntil(this.destroy$))
         .subscribe(res => {
-        const resFirstname: Firstname | undefined = res;
-        if (resFirstname) {
-          event.confirm.resolve(resFirstname);
-        } else {
-          event.confirm.reject();
-        }
-      });
+          const resFirstname: Firstname | undefined = res;
+          if (resFirstname) {
+            event.confirm.resolve(resFirstname);
+          } else {
+            event.confirm.reject();
+          }
+        });
     } else {
       event.confirm.reject();
     }
@@ -143,16 +151,16 @@ export class FirstnameTableComponent implements OnInit, OnDestroy {
     let updatedFirstname: Firstname | undefined;
     updatedFirstname = event.newData;
     if (updatedFirstname && updatedFirstname.id) {
-      this.service.updateFirstname({id: updatedFirstname.id, body: updatedFirstname})
+      this.service.updateFirstname({ id: updatedFirstname.id, body: updatedFirstname })
         .pipe(takeUntil(this.destroy$))
         .subscribe(res => {
-        const resFirstname: Firstname | undefined = res;
-        if (resFirstname) {
-          event.confirm.resolve(resFirstname);
-        } else {
-          event.confirm.reject();
-        }
-      });
+          const resFirstname: Firstname | undefined = res;
+          if (resFirstname) {
+            event.confirm.resolve(resFirstname);
+          } else {
+            event.confirm.reject();
+          }
+        });
     } else {
       event.confirm.reject();
     }
@@ -161,7 +169,7 @@ export class FirstnameTableComponent implements OnInit, OnDestroy {
 
   onDeleteConfirm(event: any): void {
     if (window.confirm('Are you sure you want to delete?')) {
-      this.service.deleteFirstname(event.data.id).subscribe(res => {
+      this.service.deleteFirstname(event.data.id).subscribe(_ => {
         event.confirm.resolve();
       });
     } else {
