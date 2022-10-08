@@ -6,7 +6,6 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NbThemeModule, NbLayoutModule, NbSidebarModule, NbMenuModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
-import { ImportFormComponent } from './shared/import-form/import-form.component';
 import { LottieModule } from 'ngx-lottie';
 import player from 'lottie-web';
 
@@ -24,7 +23,6 @@ export function playerFactory() {
 @NgModule({
   declarations: [
     AppComponent,
-    ImportFormComponent,
   ],
   imports: [
     HttpClientModule,

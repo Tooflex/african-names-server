@@ -5,6 +5,7 @@ import { FirstnameTranslationTableComponent } from './firstname-translation-tabl
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { TablesRoutingModule, routedComponents } from './tables-routing.module';
 import { NbButtonModule, NbCardModule, NbIconModule, NbPopoverModule } from '@nebular/theme';
+import {SharedModule} from "../../shared/shared.module";
 
 
 @NgModule({
@@ -21,6 +22,6 @@ import { NbButtonModule, NbCardModule, NbIconModule, NbPopoverModule } from '@ne
     NbButtonModule,
     NbIconModule,
     TablesRoutingModule,
-  ]
+    SharedModule]
 })
 export class TablesModule { }
