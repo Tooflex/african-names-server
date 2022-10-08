@@ -17,6 +17,8 @@ export class FirstnameTableComponent implements OnInit, OnDestroy {
   @ViewChild(NbPopoverDirective) popover: NbPopoverDirective | undefined;
 
 
+  genderList = [{ value: 0, title: 'MALE' }, { value: 1, title: 'FEMALE' }, { value: 2, title: 'MIXED' }];
+
   settings = {
     add: {
       addButtonContent: '+',
@@ -25,20 +27,16 @@ export class FirstnameTableComponent implements OnInit, OnDestroy {
       confirmCreate: true,
     },
     edit: {
-      editButtonContent: '<i class="nb-edit"></i>',
-      saveButtonContent: '<i class="nb-checkmark"></i>',
-      cancelButtonContent: '<i class="nb-close"></i>',
+      editButtonContent: 'edit',
+      saveButtonContent: 'OK',
+      cancelButtonContent: 'X',
       confirmSave: true,
     },
     delete: {
-      deleteButtonContent: '<i class="nb-trash"></i>',
+      deleteButtonContent: 'X',
       confirmDelete: true,
     },
     columns: {
-      id: {
-        title: 'ID',
-        type: 'number',
-      },
       firstname: {
         title: 'First Name',
         type: 'string',
@@ -46,6 +44,16 @@ export class FirstnameTableComponent implements OnInit, OnDestroy {
       gender: {
         title: 'Gender',
         type: 'string',
+        editor: {
+          type: 'list',
+          config: {
+            list: this.genderList
+          }
+        },
+        valuePrepareFunction: (cell: string) => {
+          let res = this.genderList.find(item => item.title === cell);
+          return res?.title
+        }
       },
       meaning: {
         title: 'Meaning',
