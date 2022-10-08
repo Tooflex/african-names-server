@@ -13,18 +13,26 @@ import org.springframework.stereotype.Component
 import java.security.SignatureException
 import java.util.*
 import io.jsonwebtoken.*
+import org.springframework.security.core.GrantedAuthority
 
 @Component
 class JwtUtils {
     @Value("\${spring.security.user.password}")
     private val jwtSecret: String? = null
 
+    @Value("\${app.server-url}")
+    private val appUrl: String? = null
+
     @Value("\${jwtExpirationMs}")
     private val jwtExpirationMs = 0
     fun generateJwtToken(authentication: Authentication): String {
         val userPrincipal = authentication.principal as UserDetailsImpl
-        return Jwts.builder().setSubject(userPrincipal.username).setIssuedAt(Date())
-            .setExpiration(Date(Date().time + jwtExpirationMs)).signWith(SignatureAlgorithm.HS512, jwtSecret)
+        return Jwts.builder()
+            .setSubject(userPrincipal.username)
+            .setIssuer(appUrl)
+            .setIssuedAt(Date())
+            .setExpiration(Date(Date().time + jwtExpirationMs))
+            .signWith(SignatureAlgorithm.HS512, jwtSecret)
             .compact()
     }
 
