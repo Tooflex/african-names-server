@@ -5,7 +5,8 @@
 
   <nb-card-body>
     <div class="buttons-row">
-      <button nbButton status="primary" [nbPopover]="importForm" hero>
+      <ng-template #popContent><app-import-form (uploadFinished)="findtranslations()"></app-import-form></ng-template>
+      <button nbButton status="primary" [nbPopover]="popContent" hero>
         Import CSV
       </button>
     </div>
