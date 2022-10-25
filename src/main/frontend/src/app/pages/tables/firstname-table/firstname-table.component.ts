@@ -4,7 +4,6 @@ import { FirstnameResourceService } from 'src/app/api/services';
 import { LocalDataSource } from 'ng2-smart-table';
 import { Subject, takeUntil } from 'rxjs';
 import { NbPopoverDirective } from '@nebular/theme';
-import { ImportFormComponent } from 'src/app/shared/import-form/import-form.component';
 
 @Component({
   selector: 'app-firstname-table',
@@ -14,8 +13,6 @@ import { ImportFormComponent } from 'src/app/shared/import-form/import-form.comp
 export class FirstnameTableComponent implements OnInit, OnDestroy {
 
   private destroy$: Subject<void> = new Subject<void>();
-
-  importForm = ImportFormComponent;
 
   @ViewChild(NbPopoverDirective) popover: NbPopoverDirective | undefined;
 
@@ -112,7 +109,6 @@ export class FirstnameTableComponent implements OnInit, OnDestroy {
   source: LocalDataSource = new LocalDataSource();
 
   constructor(private service: FirstnameResourceService) {
-    this.importForm.type = 'firstname';
   }
 
   ngOnInit() {
@@ -124,7 +120,7 @@ export class FirstnameTableComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  findFirstnames(): void {
+  findFirstnames() {
     this.service.findFirstnames()
       .pipe(takeUntil(this.destroy$))
       .subscribe({

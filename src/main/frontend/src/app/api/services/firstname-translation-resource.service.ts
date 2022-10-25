@@ -9,7 +9,6 @@ import { RequestBuilder } from '../request-builder';
 import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
-import { Firstname } from '../models/firstname';
 import { FirstnameTranslation } from '../models/firstname-translation';
 
 @Injectable({
@@ -21,64 +20,6 @@ export class FirstnameTranslationResourceService extends BaseService {
     http: HttpClient
   ) {
     super(config, http);
-  }
-
-  /**
-   * Path part for operation uploadCsvFile
-   */
-  static readonly UploadCsvFilePath = '/api/v1/translations/import';
-
-  /**
-   * Import firstnames via .csv file.
-   *
-   *
-   *
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `uploadCsvFile()` instead.
-   *
-   * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
-   */
-  uploadCsvFile$Response(params?: {
-    body?: {
-'file': Blob;
-}
-  }): Observable<StrictHttpResponse<Array<Firstname>>> {
-
-    const rb = new RequestBuilder(this.rootUrl, FirstnameTranslationResourceService.UploadCsvFilePath, 'post');
-    if (params) {
-      rb.body(params.body, 'multipart/form-data');
-    }
-
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<Firstname>>;
-      })
-    );
-  }
-
-  /**
-   * Import firstnames via .csv file.
-   *
-   *
-   *
-   * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `uploadCsvFile$Response()` instead.
-   *
-   * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
-   */
-  uploadCsvFile(params?: {
-    body?: {
-'file': Blob;
-}
-  }): Observable<Array<Firstname>> {
-
-    return this.uploadCsvFile$Response(params).pipe(
-      map((r: StrictHttpResponse<Array<Firstname>>) => r.body as Array<Firstname>)
-    );
   }
 
   /**

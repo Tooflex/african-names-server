@@ -8,6 +8,7 @@ package com.tooflexdev.prenomsafricains.service
 import com.opencsv.bean.CsvToBean
 import com.opencsv.bean.CsvToBeanBuilder
 import com.tooflexdev.prenomsafricains.domain.Firstname
+import com.tooflexdev.prenomsafricains.domain.FirstnameTranslation
 import com.tooflexdev.prenomsafricains.exception.BadRequestException
 import com.tooflexdev.prenomsafricains.exception.CsvImportException
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,12 +19,12 @@ import java.io.IOException
 import java.io.InputStreamReader
 
 @Service
-class CsvService {
+class CsvTranslationService {
 
     @Autowired
-    lateinit var firstnameService: FirstnameService;
+    lateinit var firstnameTranslationService: FirstnameTranslationService
 
-    fun uploadCsvFile(file: MultipartFile): List<Firstname> {
+    fun uploadFirstnameTranslationCsvFile(file: MultipartFile): List<FirstnameTranslation> {
         throwIfFileEmpty(file)
         var fileReader: BufferedReader? = null
 
@@ -31,9 +32,9 @@ class CsvService {
             fileReader = BufferedReader(InputStreamReader(file.inputStream))
             val csvToBean = createCSVToBean(fileReader)
 
-            val firstnames = csvToBean.parse()
+            val translations = csvToBean.parse()
 
-            return firstnameService.saveAll(firstnames)
+            return firstnameTranslationService.saveAll(translations)
         } catch (ex: Exception) {
             throw CsvImportException("Error during csv import")
         } finally {
@@ -46,9 +47,9 @@ class CsvService {
             throw BadRequestException("Empty file")
     }
 
-    private fun createCSVToBean(fileReader: BufferedReader?): CsvToBean<Firstname> =
-        CsvToBeanBuilder<Firstname>(fileReader)
-            .withType(Firstname::class.java)
+    private fun createCSVToBean(fileReader: BufferedReader?): CsvToBean<FirstnameTranslation> =
+        CsvToBeanBuilder<FirstnameTranslation>(fileReader)
+            .withType(FirstnameTranslation::class.java)
             .withSkipLines(1)
             .withIgnoreLeadingWhiteSpace(true)
             .build()

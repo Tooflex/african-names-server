@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FirstnameResourceService, FirstnameTranslationResourceService } from 'src/app/api/services';
+import { FirstnameResourceService } from 'src/app/api/services';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -20,9 +20,7 @@ export class ImportFormComponent {
   uploadProgress?: number;
   uploadSub?: Subscription;
 
-  static type: string = 'firstname'
-
-  constructor(private service: FirstnameResourceService, private translationService: FirstnameTranslationResourceService) { }
+  constructor(private service: FirstnameResourceService) { }
 
   onFileSelected(event: any) {
     this.selected = event.target.files[0];
@@ -33,32 +31,17 @@ export class ImportFormComponent {
 
   upload() {
     if (this.selected) {
-      if (ImportFormComponent.type === 'firstname') {
-        this.service
-          .uploadCsvFile1$Response({
-            body: {
-              file: this.selected,
-            },
-          })
-          .subscribe(
-            () => {
-              this.uploadFinished.emit(true);
-            }
-          );
-      }
-      else if (ImportFormComponent.type === 'firstname_translation') {
-        this.translationService
-          .uploadCsvFile({
-            body: {
-              file: this.selected,
-            },
-          })
-          .subscribe(
-            () => {
-              this.uploadFinished.emit(true);
-            }
-          );
-      }
+      this.service
+        .uploadCsvFile({
+          body: {
+            file: this.selected,
+          },
+        })
+        .subscribe(
+          () => {
+            this.uploadFinished.emit(true);
+          }
+        );
     }
   }
 }
