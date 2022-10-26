@@ -5,8 +5,8 @@ import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
 import { FirstnameResourceService } from './services/firstname-resource.service';
-import { AuthResourceService } from './services/auth-resource.service';
 import { FirstnameTranslationResourceService } from './services/firstname-translation-resource.service';
+import { AuthResourceService } from './services/auth-resource.service';
 
 /**
  * Module that provides all services and configuration.
@@ -17,8 +17,8 @@ import { FirstnameTranslationResourceService } from './services/firstname-transl
   declarations: [],
   providers: [
     FirstnameResourceService,
-    AuthResourceService,
     FirstnameTranslationResourceService,
+    AuthResourceService,
     ApiConfiguration
   ],
 })

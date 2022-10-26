@@ -1,24 +1,25 @@
 openapi: 3.0.1
 info:
-  title: African Names API definition
-  version: v1
+  title: African Names App API
+  description: African Names Discovering App
+  version: '0.1'
 servers:
-- url: http://localhost:8080
-  description: Generated server url
+  - url: http://localhost:8080
+    description: Development environment URL
 paths:
   /api/v1/firstnames/{id}:
     put:
       tags:
-      - firstname-resource
+        - firstname-resource
       summary: Update a firstname
       operationId: updateFirstname
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
       requestBody:
         content:
           application/json:
@@ -38,27 +39,27 @@ paths:
                 $ref: '#/components/schemas/Firstname'
     delete:
       tags:
-      - firstname-resource
-      summary: Update a firstname
+        - firstname-resource
+      summary: Delete a firstname
       operationId: deleteFirstname
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
         "400":
           description: Bad request
-        "200":
-          description: Firstnames updated
         "404":
           description: No firstname found
-  /api/v1/firstnames/import:
+        "200":
+          description: Firstnames updated
+  /api/v1/translations/import:
     post:
       tags:
-      - firstname-resource
+        - firstname-translation-resource
       summary: Import firstnames via .csv file
       operationId: uploadCsvFile
       requestBody:
@@ -66,7 +67,37 @@ paths:
           multipart/form-data:
             schema:
               required:
-              - file
+                - file
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        "400":
+          description: Bad request
+        "404":
+          description: No firstname found
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Firstname'
+  /api/v1/firstnames/import:
+    post:
+      tags:
+        - firstname-resource
+      summary: Import firstnames via .csv file
+      operationId: uploadCsvFile_1
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - file
               type: object
               properties:
                 file:
@@ -88,7 +119,7 @@ paths:
   /api/v1/firstnames/:
     post:
       tags:
-      - firstname-resource
+        - firstname-resource
       summary: Create a firstname
       operationId: createFirstname
       requestBody:
@@ -98,7 +129,9 @@ paths:
               $ref: '#/components/schemas/Firstname'
         required: true
       responses:
-        "200":
+        "403":
+          description: Forbidden
+        "201":
           description: Firstnames created
           content:
             application/json:
@@ -106,12 +139,10 @@ paths:
                 $ref: '#/components/schemas/Firstname'
         "400":
           description: Bad request
-        "404":
-          description: No firstname found
   /api/v1/auth/signup:
     post:
       tags:
-      - auth-resource
+        - auth-resource
       operationId: registerUser
       requestBody:
         content:
@@ -128,7 +159,7 @@ paths:
   /api/v1/auth/login:
     post:
       tags:
-      - auth-resource
+        - auth-resource
       summary: Authenticate user
       operationId: authenticateUser
       requestBody:
@@ -137,32 +168,32 @@ paths:
             schema:
               $ref: '#/components/schemas/LoginRequest'
       responses:
-        "404":
-          description: User not found
-        "400":
-          description: Bad request
         "200":
           description: User authenticated
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/JwtResponse'
+        "400":
+          description: Bad request
+        "404":
+          description: User not found
+        "401":
+          description: Unauthorized
   /api/v1/translations:
     get:
       tags:
-      - firstname-translation-resource
+        - firstname-translation-resource
       summary: Get firstname translations
       operationId: findFirstnameTranslations
       parameters:
-      - name: lang
-        in: query
-        required: false
-        schema:
-          type: string
-          default: en
+        - name: lang
+          in: query
+          required: false
+          schema:
+            type: string
+            default: en
       responses:
-        "400":
-          description: Bad request
         "200":
           description: Firstname Translations retrieved
           content:
@@ -171,22 +202,28 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/FirstnameTranslation'
+        "400":
+          description: Bad request
         "404":
           description: No firstname found
   /api/v1/translations/firstnames/{id}:
     get:
       tags:
-      - firstname-translation-resource
+        - firstname-translation-resource
       summary: Get firstname translations
       operationId: findFirstnameTranslationsByFirstname
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
+        "400":
+          description: Bad request
+        "404":
+          description: No firstname found
         "200":
           description: Get firstname by Id
           content:
@@ -195,29 +232,29 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/FirstnameTranslation'
-        "400":
-          description: Bad request
-        "404":
-          description: No firstname found
   /api/v1/translations/firstnames/{firstnameId}/lang/{langId}:
     get:
       tags:
-      - firstname-translation-resource
+        - firstname-translation-resource
       summary: Get firstname translations
       operationId: findFirstnameTranslationByFirstnameAndLang
       parameters:
-      - name: firstnameId
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
-      - name: langId
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: firstnameId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: langId
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
+        "400":
+          description: Bad request
+        "404":
+          description: No firstname found
         "200":
           description: Get firstname by Id
           content:
@@ -226,23 +263,19 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/FirstnameTranslation'
-        "400":
-          description: Bad request
-        "404":
-          description: No firstname found
   /api/v1/firstnames:
     get:
       tags:
-      - firstname-resource
+        - firstname-resource
       summary: Get firstnames
       operationId: findFirstnames
       parameters:
-      - name: lang
-        in: query
-        required: false
-        schema:
-          type: string
-          default: en
+        - name: lang
+          in: query
+          required: false
+          schema:
+            type: string
+            default: en
       responses:
         "400":
           description: Bad request
@@ -259,15 +292,15 @@ paths:
   /api/v1/firstnames/search:
     get:
       tags:
-      - firstname-resource
+        - firstname-resource
       summary: Search firstnames
       operationId: searchFirstnames
       parameters:
-      - name: specs
-        in: query
-        required: false
-        schema:
-          $ref: '#/components/schemas/SpecificationFirstname'
+        - name: specs
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/SpecificationFirstname'
       responses:
         "400":
           description: Bad request
@@ -284,16 +317,16 @@ paths:
   /api/v1/firstnames/random:
     get:
       tags:
-      - firstname-resource
+        - firstname-resource
       summary: Get random list of firstnames
       operationId: findPrenomsAlea
       parameters:
-      - name: lang
-        in: query
-        required: false
-        schema:
-          type: string
-          default: en
+        - name: lang
+          in: query
+          required: false
+          schema:
+            type: string
+            default: en
       responses:
         "400":
           description: Bad request
@@ -320,10 +353,10 @@ components:
         gender:
           type: string
           enum:
-          - MALE
-          - FEMALE
-          - MIXED
-          - UNDEFINED
+            - MALE
+            - FEMALE
+            - MIXED
+            - UNDEFINED
         meaning:
           type: string
         meaningMore:
@@ -345,9 +378,9 @@ components:
         size:
           type: string
           enum:
-          - SHORT
-          - MEDIUM
-          - LONG
+            - SHORT
+            - MEDIUM
+            - LONG
         createDateTime:
           type: string
           format: date-time
