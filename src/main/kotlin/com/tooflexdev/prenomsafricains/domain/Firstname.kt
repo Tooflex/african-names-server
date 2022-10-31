@@ -27,7 +27,7 @@ class Firstname(
     @CsvBindByPosition(position = 6)
     var gender: Gender = Gender.UNDEFINED,
 
-    @Column(length = 2048)
+    @Column(length = 4096)
     @CsvBindByPosition(position = 7)
     var meaning: String? = "No meaning",
 

@@ -86,7 +86,7 @@ export class FirstnameResourceService extends BaseService {
   static readonly DeleteFirstnamePath = '/api/v1/firstnames/{id}';
 
   /**
-   * Update a firstname.
+   * Delete a firstname.
    *
    *
    *
@@ -116,7 +116,7 @@ export class FirstnameResourceService extends BaseService {
   }
 
   /**
-   * Update a firstname.
+   * Delete a firstname.
    *
    *
    *
@@ -135,9 +135,9 @@ export class FirstnameResourceService extends BaseService {
   }
 
   /**
-   * Path part for operation uploadCsvFile
+   * Path part for operation uploadCsvFile1
    */
-  static readonly UploadCsvFilePath = '/api/v1/firstnames/import';
+  static readonly UploadCsvFile1Path = '/api/v1/firstnames/import';
 
   /**
    * Import firstnames via .csv file.
@@ -145,17 +145,17 @@ export class FirstnameResourceService extends BaseService {
    *
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `uploadCsvFile()` instead.
+   * To access only the response body, use `uploadCsvFile1()` instead.
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  uploadCsvFile$Response(params?: {
+  uploadCsvFile1$Response(params?: {
     body?: {
-      'file': Blob;
-    }
+'file': Blob;
+}
   }): Observable<StrictHttpResponse<Array<Firstname>>> {
 
-    const rb = new RequestBuilder(this.rootUrl, FirstnameResourceService.UploadCsvFilePath, 'post');
+    const rb = new RequestBuilder(this.rootUrl, FirstnameResourceService.UploadCsvFile1Path, 'post');
     if (params) {
       rb.body(params.body, 'multipart/form-data');
     }
@@ -177,17 +177,17 @@ export class FirstnameResourceService extends BaseService {
    *
    *
    * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `uploadCsvFile$Response()` instead.
+   * To access the full response (for headers, for example), `uploadCsvFile1$Response()` instead.
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  uploadCsvFile(params?: {
+  uploadCsvFile1(params?: {
     body?: {
-      'file': Blob;
-    }
+'file': Blob;
+}
   }): Observable<Array<Firstname>> {
 
-    return this.uploadCsvFile$Response(params).pipe(
+    return this.uploadCsvFile1$Response(params).pipe(
       map((r: StrictHttpResponse<Array<Firstname>>) => r.body as Array<Firstname>)
     );
   }

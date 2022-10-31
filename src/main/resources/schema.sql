@@ -55,8 +55,8 @@ CREATE TABLE firstname
     id               BIGINT NOT NULL,
     firstname        VARCHAR(255),
     gender           VARCHAR(255),
-    meaning          VARCHAR(1024),
-    meaning_more     VARCHAR(2048),
+    meaning          VARCHAR(4096),
+    meaning_more     VARCHAR(4096),
     origins          VARCHAR(255),
     regions          VARCHAR(255),
     countries        VARCHAR(255),
@@ -73,7 +73,7 @@ CREATE TABLE firstname
 CREATE TABLE firstname_translation
 (
     id                     BIGINT NOT NULL,
-    meaning_translation    VARCHAR(255),
+    meaning_translation    VARCHAR(4096),
     origins_translation    VARCHAR(255),
     language_language_code VARCHAR(255),
     firstname_id           BIGINT,

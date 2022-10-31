@@ -51,7 +51,7 @@ class FirstnameResource(val service: FirstnameService, val csvService: CsvServic
         ApiResponse(responseCode = "404", description = "No firstname found", content = [Content()])]
     )
     @GetMapping("/random")
-    fun findPrenomsAlea(@RequestParam(defaultValue = "en") lang: String): List<Firstname> = service.findPrenomsAlea()
+    fun findPrenomsAlea(@RequestParam(defaultValue = "en") lang: String): List<Firstname> = service.findPrenomsAlea(lang = lang)
 
     @Operation(summary = "Search firstnames")
     @ApiResponses(value = [

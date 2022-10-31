@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import {Subject} from 'rxjs';
-import {LocalDataSource} from 'ng2-smart-table';
-import {takeUntil} from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { LocalDataSource } from 'ng2-smart-table';
+import { map, takeUntil } from 'rxjs/operators';
 import { ImportFormComponent } from 'src/app/shared/import-form/import-form.component';
 import { FirstnameTranslationResourceService } from 'src/app/api/services';
 
@@ -16,10 +16,10 @@ export class FirstnameTranslationTableComponent {
   importForm = ImportFormComponent;
 
   langList = [
-    {value: 1, title: 'English'},
-    {value: 2, title: 'French'},
-    {value: 3, title: 'Italian'},
-    {value: 4, title: 'German'},
+    { value: 1, title: 'English' },
+    { value: 2, title: 'French' },
+    { value: 3, title: 'Italian' },
+    { value: 4, title: 'German' },
   ];
 
   settings = {
@@ -40,10 +40,6 @@ export class FirstnameTranslationTableComponent {
       confirmDelete: true,
     },
     columns: {
-      id: {
-        title: 'ID',
-        type: 'number',
-      },
       firstname: {
         title: 'First Name',
         type: 'string',
@@ -51,12 +47,12 @@ export class FirstnameTranslationTableComponent {
       language: {
         title: 'Lang',
         editor:
-          {
-            type: 'list',
-            config: {
-              list: this.langList,
-            },
+        {
+          type: 'list',
+          config: {
+            list: this.langList,
           },
+        },
       },
       meaningTranslation: {
         title: 'Meaning translation',
@@ -72,11 +68,26 @@ export class FirstnameTranslationTableComponent {
   source: LocalDataSource = new LocalDataSource();
 
   constructor(private service: FirstnameTranslationResourceService) {
-    this.service.findFirstnameTranslations({lang: 'en'})
+    this.importForm.type = 'firstname_translation';
+  }
+
+  ngOnInit(): void {
+    this.findTranslations();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  findTranslations(): void {
+    this.service.findFirstnameTranslations({ lang: 'en' })
       .pipe(takeUntil(this.destroy$))
+      // get firstname of firstname and language code of language
+      .pipe(map((res) => res.map((item) => ({ ...item, firstname: item.firstname!.firstname, language: item.language!.languageCode }))))
       .subscribe(firstnameTranslations => {
-      this.source.load(firstnameTranslations).then();
-    });
+        this.source.load(firstnameTranslations).then();
+      });
   }
 
   onCreateConfirm(event: any): void {

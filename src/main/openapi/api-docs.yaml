@@ -1,15 +1,17 @@
 openapi: 3.0.1
 info:
-  title: African Names API definition
-  version: v1
+  title: African Names App API
+  description: African Names Discovering App
+  version: '0.1'
 servers:
   - url: http://localhost
-    description: Generated server url
+    description: Development environment URL
 paths:
   /api/v1/firstnames/{id}:
     put:
       tags:
         - firstname-resource
+      summary: Update a firstname
       operationId: updateFirstname
       parameters:
         - name: id
@@ -25,15 +27,20 @@ paths:
               $ref: '#/components/schemas/Firstname'
         required: true
       responses:
+        "400":
+          description: Bad request
+        "404":
+          description: No firstname found
         "200":
-          description: OK
+          description: Firstnames updated
           content:
-            '*/*':
+            application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/Firstname'
     delete:
       tags:
         - firstname-resource
+      summary: Delete a firstname
       operationId: deleteFirstname
       parameters:
         - name: id
@@ -43,16 +50,17 @@ paths:
             type: integer
             format: int64
       responses:
+        "400":
+          description: Bad request
+        "404":
+          description: No firstname found
         "200":
-          description: OK
-          content:
-            '*/*':
-              schema:
-                type: object
-  /api/v1/firstnames/import:
+          description: Firstnames updated
+  /api/v1/translations/import:
     post:
       tags:
-        - firstname-resource
+        - firstname-translation-resource
+      summary: Import firstnames via .csv file
       operationId: uploadCsvFile
       requestBody:
         content:
@@ -66,10 +74,44 @@ paths:
                   type: string
                   format: binary
       responses:
+        "400":
+          description: Bad request
+        "404":
+          description: No firstname found
         "200":
           description: OK
           content:
-            '*/*':
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Firstname'
+  /api/v1/firstnames/import:
+    post:
+      tags:
+        - firstname-resource
+      summary: Import firstnames via .csv file
+      operationId: uploadCsvFile_1
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - file
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        "400":
+          description: Bad request
+        "404":
+          description: No firstname found
+        "200":
+          description: Firstnames retrieved
+          content:
+            application/json:
               schema:
                 type: array
                 items:
@@ -78,6 +120,7 @@ paths:
     post:
       tags:
         - firstname-resource
+      summary: Create a firstname
       operationId: createFirstname
       requestBody:
         content:
@@ -86,12 +129,16 @@ paths:
               $ref: '#/components/schemas/Firstname'
         required: true
       responses:
-        "200":
-          description: OK
+        "403":
+          description: Forbidden
+        "201":
+          description: Firstnames created
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/Firstname'
+        "400":
+          description: Bad request
   /api/v1/auth/signup:
     post:
       tags:
@@ -113,6 +160,7 @@ paths:
     post:
       tags:
         - auth-resource
+      summary: Authenticate user
       operationId: authenticateUser
       requestBody:
         content:
@@ -121,15 +169,22 @@ paths:
               $ref: '#/components/schemas/LoginRequest'
       responses:
         "200":
-          description: OK
+          description: User authenticated
           content:
-            '*/*':
+            application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/JwtResponse'
+        "400":
+          description: Bad request
+        "404":
+          description: User not found
+        "401":
+          description: Unauthorized
   /api/v1/translations:
     get:
       tags:
         - firstname-translation-resource
+      summary: Get firstname translations
       operationId: findFirstnameTranslations
       parameters:
         - name: lang
@@ -140,17 +195,22 @@ paths:
             default: en
       responses:
         "200":
-          description: OK
+          description: Firstname Translations retrieved
           content:
-            '*/*':
+            application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/FirstnameTranslation'
+        "400":
+          description: Bad request
+        "404":
+          description: No firstname found
   /api/v1/translations/firstnames/{id}:
     get:
       tags:
         - firstname-translation-resource
+      summary: Get firstname translations
       operationId: findFirstnameTranslationsByFirstname
       parameters:
         - name: id
@@ -160,10 +220,14 @@ paths:
             type: integer
             format: int64
       responses:
+        "400":
+          description: Bad request
+        "404":
+          description: No firstname found
         "200":
-          description: OK
+          description: Get firstname by Id
           content:
-            '*/*':
+            application/json:
               schema:
                 type: array
                 items:
@@ -172,6 +236,7 @@ paths:
     get:
       tags:
         - firstname-translation-resource
+      summary: Get firstname translations
       operationId: findFirstnameTranslationByFirstnameAndLang
       parameters:
         - name: firstnameId
@@ -186,10 +251,14 @@ paths:
           schema:
             type: string
       responses:
+        "400":
+          description: Bad request
+        "404":
+          description: No firstname found
         "200":
-          description: OK
+          description: Get firstname by Id
           content:
-            '*/*':
+            application/json:
               schema:
                 type: array
                 items:
@@ -198,6 +267,7 @@ paths:
     get:
       tags:
         - firstname-resource
+      summary: Get firstnames
       operationId: findFirstnames
       parameters:
         - name: lang
@@ -207,10 +277,14 @@ paths:
             type: string
             default: en
       responses:
+        "400":
+          description: Bad request
+        "404":
+          description: No firstname found
         "200":
-          description: OK
+          description: Firstnames retrieved
           content:
-            '*/*':
+            application/json:
               schema:
                 type: array
                 items:
@@ -219,6 +293,7 @@ paths:
     get:
       tags:
         - firstname-resource
+      summary: Search firstnames
       operationId: searchFirstnames
       parameters:
         - name: specs
@@ -227,16 +302,23 @@ paths:
           schema:
             $ref: '#/components/schemas/SpecificationFirstname'
       responses:
+        "400":
+          description: Bad request
+        "404":
+          description: No firstname found
         "200":
-          description: OK
+          description: Firstnames retrieved
           content:
-            '*/*':
+            application/json:
               schema:
-                type: object
+                type: array
+                items:
+                  $ref: '#/components/schemas/Firstname'
   /api/v1/firstnames/random:
     get:
       tags:
         - firstname-resource
+      summary: Get random list of firstnames
       operationId: findPrenomsAlea
       parameters:
         - name: lang
@@ -246,10 +328,14 @@ paths:
             type: string
             default: en
       responses:
+        "400":
+          description: Bad request
+        "404":
+          description: No firstname found
         "200":
-          description: OK
+          description: Firstnames retrieved
           content:
-            '*/*':
+            application/json:
               schema:
                 type: array
                 items:
@@ -322,6 +408,22 @@ components:
           type: string
         password:
           type: string
+    JwtResponse:
+      type: object
+      properties:
+        jwt:
+          type: string
+        id:
+          type: integer
+          format: int64
+        username:
+          type: string
+        email:
+          type: string
+        roles:
+          type: array
+          items:
+            type: string
     FirstnameTranslation:
       type: object
       properties:
