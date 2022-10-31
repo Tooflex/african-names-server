@@ -27,6 +27,8 @@
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
+              "src/.well-known/apple-app-site-association",
+              { "glob": "apple-app-site-association", "input": "src/.well-known/", "output": "/" },
               "src/favicon.ico",
               "src/assets"
             ],
