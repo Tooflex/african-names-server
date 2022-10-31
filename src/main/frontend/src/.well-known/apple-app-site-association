@@ -3,7 +3,18 @@
         "apps": [],
         "details": [{
             "appID": "6NTQ2Y43QX.com.tooflexdev.Prenom-Africains",
-            "paths": ["/links/?link=*"]
+            "components": [
+                           {
+                              "#": "no_universal_links",
+                              "exclude": true,
+                              "comment": "Matches any URL with a fragment that equals no_universal_links and instructs the system not to open it as a universal link."
+                           },
+                           {
+                              "/": /links/*",
+                              "?": "link=*",
+                              "comment": "Matches any URL with a path that starts with links/ and a query parameter named link."
+                           },
+                         ]
         }]
     }
 }
