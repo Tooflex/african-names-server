@@ -9,7 +9,7 @@ import javax.persistence.*
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 class Language (
     @Id
-    var languageCode: String,
-    var name: String,
-    var nameInNativeLanguage: String
+    var languageCode: String?,
+    var name: String?,
+    var nameInNativeLanguage: String?
 )

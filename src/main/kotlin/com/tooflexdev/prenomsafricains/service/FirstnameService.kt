@@ -33,9 +33,24 @@ class FirstnameService(val db: FirstnameRepository, val dbFirstnameTranslation: 
         return firstnameList
     }
 
-    fun findPrenomsAlea(): List<Firstname> {
+    fun findPrenomsAlea(lang: String = "en"): List<Firstname> {
         val list = db.findAll()
         list.shuffle()
+
+        if (lang == "en") {
+            return list
+        }
+
+        // Find translations
+        for (firstname in list) {
+            val translation = dbFirstnameTranslation.findByFirstnameAndLanguage(firstname.id, lang)
+            if (translation.isNotEmpty()) {
+                firstname.meaning = translation.first().meaningTranslation
+                firstname.origins = translation.first().originsTranslation
+            }
+        }
+
+
         return list
     }
 
