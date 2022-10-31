@@ -87,6 +87,7 @@ class CsvService {
             .withType(FirstnameTranslationDTO::class.java)
             .withSkipLines(1)
             .withIgnoreLeadingWhiteSpace(true)
+            .withSeparator(';')
             .build()
 
     private fun closeFileReader(fileReader: BufferedReader?) {
