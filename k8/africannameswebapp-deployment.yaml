@@ -56,11 +56,11 @@ spec:
             - containerPort: 8080
           resources: {}
           volumeMounts:
-            - mountPath: /etc/afn_secrets
-              name: afn_secrets
+            - mountPath: /etc/afn-secrets
+              name: afn-secrets
               readOnly: true
       volumes:
-        - name: afn_secrets
+        - name: afn-secrets
           secret:
             secretName: afnsecrets
       restartPolicy: Always
