@@ -50,17 +50,29 @@ spec:
                 secretKeyRef:
                   name: afnsecrets
                   key: AFN_APP_PASSWORD
+            - name: TWITTER_CONSUMER_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: afnsecrets
+                  key: TWITTER_CONSUMER_KEY
+            - name: TWITTER_CONSUMER_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: afnsecrets
+                  key: TWITTER_CONSUMER_SECRET
+            - name: TWITTER_ACCESS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: afnsecrets
+                  key: TWITTER_ACCESS_TOKEN
+            - name: TWITTER_ACCESS_TOKEN_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: afnsecrets
+                  key: TWITTER_ACCESS_TOKEN_SECRET
           image: ghcr.io/tooflex/african-names-server/backend:master
           name: africannames-webapp
           ports:
             - containerPort: 8080
           resources: {}
-          volumeMounts:
-            - mountPath: /etc/afn-secrets
-              name: afn-secrets
-              readOnly: true
-      volumes:
-        - name: afn-secrets
-          secret:
-            secretName: afnsecrets
       restartPolicy: Always
