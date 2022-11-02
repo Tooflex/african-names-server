@@ -55,7 +55,7 @@ class TwitterPostScheduler {
     private val firebaseDynamicLinksAndroidFallbackLink: String? = null
 
     // Every 120 minutes, between 07:00 AM and 10:59 PM
-    @Scheduled(cron = "0 0/2 * 1/1 * *")
+    @Scheduled(cron = "0 */120 7-22 * * *")
     fun postTweet() {
         logger.info(twitterService.postStatus(createTweet()).toString())
     }
