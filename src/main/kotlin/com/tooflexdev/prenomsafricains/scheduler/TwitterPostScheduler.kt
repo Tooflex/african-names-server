@@ -33,7 +33,7 @@ class TwitterPostScheduler {
     @Value("\${firebase.dynamicLinks.apiKey}")
     private val firebaseApiKey: String? = null
 
-    @Value("\${FIREBASE_DYNAMIC_LINKS_URL_PREFIX}")
+    @Value("\${firebase.dynamicsLinks.urlPrefix}")
     private val firebaseDynamicLinksUrlPrefix: String? = null
 
     @Value("\${firebase.dynamicLinks.domainUriPrefix}")
