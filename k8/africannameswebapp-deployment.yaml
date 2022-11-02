@@ -70,6 +70,26 @@ spec:
                 secretKeyRef:
                   name: afnsecrets
                   key: TWITTER_ACCESS_TOKEN_SECRET
+            - name: FIREBASE_DYNAMIC_LINKS_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: afnsecrets
+                  key: FIREBASE_DYNAMIC_LINKS_API_KEY
+            - name: FIREBASE_DYNAMIC_LINKS_DOMAIN_URI_PREFIX
+              valueFrom:
+                secretKeyRef:
+                  name: afnsecrets
+                  key: FIREBASE_DYNAMIC_LINKS_DOMAIN_URI_PREFIX
+            - name: FIREBASE_DYNAMIC_LINKS_ANDROID_FALLBACK_LINK
+              valueFrom:
+                secretKeyRef:
+                  name: afnsecrets
+                  key: FIREBASE_DYNAMIC_LINKS_ANDROID_FALLBACK_LINK
+            - name: FIREBASE_DYNAMIC_LINKS_IOS_FALLBACK_LINK
+              valueFrom:
+                secretKeyRef:
+                  name: afnsecrets
+                  key: FIREBASE_DYNAMIC_LINKS_IOS_FALLBACK_LINK
           image: ghcr.io/tooflex/african-names-server/backend:master
           name: africannames-webapp
           ports:

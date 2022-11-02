@@ -44,6 +44,8 @@ dependencies {
 	implementation("io.jsonwebtoken:jjwt:0.9.1")
 	// https://mvnrepository.com/artifact/org.twitter4j/twitter4j-core
 	implementation("org.twitter4j:twitter4j-core:4.1.1")
+	// https://mvnrepository.com/artifact/com.google.code.gson/gson
+	implementation("com.google.code.gson:gson:2.10")
 	// https://mvnrepository.com/artifact/org.liquibase/liquibase-core
 	//implementation("org.liquibase:liquibase-core:4.7.1")
 	runtimeOnly("com.h2database:h2:2.1.214")
