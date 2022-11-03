@@ -9,6 +9,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { LandingPageComponent } from '../landing-page/landing-page.component';
 import { LottieModule } from "ngx-lottie";
 import { PagesRoutingModule } from './pages-rounting.module';
+import {ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
   imports: [
@@ -20,6 +21,7 @@ import { PagesRoutingModule } from './pages-rounting.module';
     SharedModule,
     AuthModule,
     LottieModule,
+    ReactiveFormsModule,
   ],
   declarations: [
     PagesComponent,

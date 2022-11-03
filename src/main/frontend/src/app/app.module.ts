@@ -13,6 +13,7 @@ import { authInterceptorProviders } from './@core/interceptors/auth.interceptor'
 import { AuthGuardService } from './@core/services/auth-guard.service';
 
 import { HttpClientModule } from '@angular/common/http';
+import {ReactiveFormsModule} from "@angular/forms";
 
 // Note we need a separate function as it's required
 // by the AOT compiler.
@@ -35,6 +36,7 @@ export function playerFactory() {
     NbLayoutModule,
     NbEvaIconsModule,
     LottieModule.forRoot({ player: playerFactory }),
+    ReactiveFormsModule,
   ],
   providers: [authInterceptorProviders, AuthGuardService],
   bootstrap: [AppComponent]

@@ -78,7 +78,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             this.isLoginFailed = false;
             this.isLoggedIn = true;
             this.roles = this.tokenStorage.getUser().roles;
-            this.router.navigate(['/pages']);
+            this.router.navigate(['/pages']).then(r => {});
           }
         },
         error: (err) => {
