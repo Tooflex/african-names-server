@@ -109,7 +109,6 @@
       <p>With us, you can find great African baby names fast.</p>
       <div class="buttons">
         <a href="#" class="btn"> <i class="fab fa-apple"></i> app store </a>
-        <a href="#" class="btn"> <i class="fab fa-google-play"></i> google-play </a>
       </div>
     </div>
 
@@ -121,16 +120,39 @@
 
 <!-- newsletter  -->
 
-<div class="newsletter">
+<!--<div class="newsletter">-->
 
-  <h3>Subscribe For New Features</h3>
-  <p>Test new features & give us advices</p>
-  <form action="">
-    <input type="email" placeholder="enter your email">
-    <input type="submit" value="Subscribe">
+<!--  <h3>Subscribe For New Features</h3>-->
+<!--  <p>Test new features & give us advices</p>-->
+
+<!--  <form [formGroup]="subscribeForm" (ngSubmit)='subscribe()'>-->
+<!--    <input name="firstName" type="text" placeholder="First Name" required formControlName="firstName">-->
+<!--    <input name="lastName" type="text" placeholder="Last Name" required formControlName="lastName" >-->
+<!--    <input name="email" type="email" placeholder="Email" required formControlName="email">-->
+<!--    <input type="submit" value="Subscribe">-->
+<!--  </form>-->
+
+<!--</div>-->
+
+<div class="newsletter" id="revue-embed">
+  <h3>Subscribe For Curated Content</h3>
+  <p>Test new features & give us feedbacks</p>
+  <form action="https://www.getrevue.co/profile/african_names/add_subscriber" method="post" id="revue-form" name="revue-form"  target="_blank">
+    <div class="revue-form-group">
+      <input class="revue-form-field" placeholder="Your email address..." type="email" name="member[email]" id="member_email">
+    </div>
+    <div class="revue-form-group" >
+      <input class="revue-form-field" placeholder="First name... (Optional)" type="text" name="member[first_name]" id="member_first_name">
+    </div>
+    <div class="revue-form-group">
+      <input class="revue-form-field" placeholder="Last name... (Optional)" type="text" name="member[last_name]" id="member_last_name">
+    </div>
+    <div class="revue-form-actions">
+      <input type="submit" value="Subscribe" name="member[subscribe]" id="member_submit">
+    </div>
   </form>
-
 </div>
+<div class="revue-form-footer">By subscribing, you agree with Revue’s <a target="_blank" href="https://www.getrevue.co/terms">Terms of Service</a> and <a target="_blank" href="https://www.getrevue.co/privacy">Privacy Policy</a>.</div>
 
 <!-- contact section starts  -->
 
@@ -140,37 +162,16 @@
     <img src="assets/images/contact-img.svg" alt="">
   </div>
 
-  <form action="">
+  <form action="mailto:info@africannames.app&subject=Question or remark about Africn Names App&body=" enctype="multipart/form-data">
 
     <h1 class="heading">contact us</h1>
-
-    <div class="inputBox">
-      <input type="text" required>
-      <label>name</label>
-    </div>
-
-    <div class="inputBox">
-      <input type="email" required>
-      <label>email</label>
-    </div>
-
-    <div class="inputBox">
-      <input type="number" required>
-      <label>phone</label>
-    </div>
-
-    <div class="inputBox">
-      <textarea required name="" id="" cols="30" rows="10"></textarea>
-      <label>message</label>
-    </div>
-
     <input type="submit" class="btn" value="send message">
 
   </form>
 
 </section>
 
-<!-- contact section edns -->
+<!-- contact section ends -->
 
 <!-- footer section starts  -->
 
@@ -193,7 +194,6 @@
 
     <div class="box">
       <h3>follow us</h3>
-      <a href="#">facebook</a>
       <a href="https://www.instagram.com/african_names_app">instagram</a>
       <a href="https://www.youtube.com/channel/UC96M_g1nNMvO0qXWD-KxQeQ">youtube</a>
       <a href="https://twitter.com/african_names">twitter</a>
@@ -209,7 +209,7 @@
 
   </div>
 
-  <h1 class="credit"> &copy; copyright @ 2021 by Tooflex Dev! </h1>
+  <h1 class="credit"> &copy; copyright @ 2022 by Tooflex Dev! </h1>
 
 </div>
 

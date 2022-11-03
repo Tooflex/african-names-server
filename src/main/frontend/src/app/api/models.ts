@@ -1,4 +1,5 @@
 export { Firstname } from './models/firstname';
+export { SubscribeNewsletterRequest } from './models/subscribe-newsletter-request';
 export { SignupRequest } from './models/signup-request';
 export { LoginRequest } from './models/login-request';
 export { JwtResponse } from './models/jwt-response';

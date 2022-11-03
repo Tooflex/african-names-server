@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import {ExtraOptions, RouterModule, Routes} from '@angular/router';
 import {LandingPageComponent} from "./landing-page/landing-page.component";
 
 export const routes: Routes = [
@@ -26,8 +26,14 @@ export const routes: Routes = [
   { path: '**', redirectTo: 'landing-page' },
 ];
 
+const routerOptions: ExtraOptions = {
+  anchorScrolling: 'enabled',
+  onSameUrlNavigation: 'reload',
+  scrollPositionRestoration: 'enabled'
+};
+
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, routerOptions)],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

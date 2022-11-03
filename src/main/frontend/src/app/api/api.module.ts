@@ -6,6 +6,7 @@ import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
 import { FirstnameResourceService } from './services/firstname-resource.service';
 import { FirstnameTranslationResourceService } from './services/firstname-translation-resource.service';
+import { MailChimpResourceService } from './services/mail-chimp-resource.service';
 import { AuthResourceService } from './services/auth-resource.service';
 
 /**
@@ -18,6 +19,7 @@ import { AuthResourceService } from './services/auth-resource.service';
   providers: [
     FirstnameResourceService,
     FirstnameTranslationResourceService,
+    MailChimpResourceService,
     AuthResourceService,
     ApiConfiguration
   ],
