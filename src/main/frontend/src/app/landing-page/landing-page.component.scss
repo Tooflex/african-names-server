@@ -297,12 +297,14 @@ header label {
 
 .newsletter form {
   display: flex;
-  max-width: 70rem;
+  max-width: 90rem;
   border: 0.2rem solid #fff;
   padding: 0.5rem;
   border-radius: 5rem;
   margin: 2rem auto;
   height: 5.5rem;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .newsletter form input[type='email'] {
@@ -319,9 +321,24 @@ header label {
   text-transform: capitalize;
 }
 
+.newsletter form input[type='text'] {
+  padding: 0 2rem;
+  font-size: 1.7rem;
+  background: none;
+  width: 100%;
+  color: #fff;
+  text-transform: none;
+}
+
+.newsletter form input[type='text']::placeholder {
+  color: #eee;
+  text-transform: capitalize;
+}
+
 .newsletter form input[type='submit'] {
   background: #fff;
   width: 20rem;
+  height: 4rem;
   font-size: 1.7rem;
   border-radius: 5rem;
   cursor: pointer;
@@ -466,6 +483,7 @@ header label {
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
   border-radius: 0.5rem;
   background: #fff;
+  text-align: center;
 }
 
 .contact form .heading {
@@ -733,4 +751,12 @@ header label {
     margin: 1rem 0;
   }
 
+}
+
+.revue-form-footer {
+  text-align: end;
+}
+
+a.box {
+  pointer-events: none;
 }

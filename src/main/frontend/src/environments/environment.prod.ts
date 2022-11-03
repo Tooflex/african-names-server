@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  baseApiUrl: 'https://africannames.app'
+  baseApiUrl: 'https://africannames.app',
 };
