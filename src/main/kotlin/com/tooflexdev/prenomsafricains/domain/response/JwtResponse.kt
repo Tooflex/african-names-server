@@ -3,7 +3,7 @@
  * @Author Otourou Da Costa
  */
 
-package com.tooflexdev.prenomsafricains.domain
+package com.tooflexdev.prenomsafricains.domain.response
 
 class JwtResponse(
     var jwt: String,

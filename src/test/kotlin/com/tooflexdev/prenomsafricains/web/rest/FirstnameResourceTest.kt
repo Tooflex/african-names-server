@@ -14,6 +14,7 @@ import com.tooflexdev.prenomsafricains.domain.Size
 import com.tooflexdev.prenomsafricains.service.CsvService
 import com.tooflexdev.prenomsafricains.service.FirstnameService
 import com.tooflexdev.prenomsafricains.service.FirstnameTranslationService
+import com.tooflexdev.prenomsafricains.service.MailChimpService
 import io.mockk.every
 import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.collection.IsCollectionWithSize.hasSize
@@ -44,6 +45,9 @@ class FirstnameResourceTest @Autowired constructor(
 
     @MockkBean
     lateinit var firstnameTranslationService: FirstnameTranslationService
+
+    @MockkBean
+    lateinit var mailChimpService: MailChimpService
 
     private lateinit var firstname1: Firstname
     private lateinit var firstname2: Firstname

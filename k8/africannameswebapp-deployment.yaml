@@ -90,6 +90,16 @@ spec:
                 secretKeyRef:
                   name: afnsecrets
                   key: FIREBASE_DYNAMIC_LINKS_IOS_FALLBACK_LINK
+            - name: MAILCHIMP_API_KEY
+              valueFrom:
+                  secretKeyRef:
+                    name: afnsecrets
+                    key: MAILCHIMP_API_KEY
+            - name: MAILCHIMP_LIST_ID
+              valueFrom:
+                  secretKeyRef:
+                      name: afnsecrets
+                      key: MAILCHIMP_LIST_ID
           image: ghcr.io/tooflex/african-names-server/backend:master
           name: africannames-webapp
           ports:

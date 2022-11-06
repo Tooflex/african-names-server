@@ -6,7 +6,7 @@
 package com.tooflexdev.prenomsafricains.scheduler
 
 import com.google.gson.Gson
-import com.tooflexdev.prenomsafricains.domain.DeepLinkResponse
+import com.tooflexdev.prenomsafricains.domain.response.DeepLinkResponse
 import com.tooflexdev.prenomsafricains.domain.Firstname
 import com.tooflexdev.prenomsafricains.service.FirstnameService
 import com.tooflexdev.prenomsafricains.service.TwitterService
