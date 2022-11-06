@@ -62,7 +62,6 @@ class WebSecurityConfig {
     fun filterChain(http: HttpSecurity): SecurityFilterChain? {
         http
             .cors()
-            .configurationSource(corsConfigurationSource())
             .and()
             .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
             .and()
@@ -75,6 +74,7 @@ class WebSecurityConfig {
         return http.build()
     }
 
+    @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val cors = CorsConfiguration()
         cors.allowedOrigins = listOf("http://localhost:4200", "http://localhost", "http://0.0.0.0", "https://africannames.app")
@@ -83,7 +83,7 @@ class WebSecurityConfig {
             HttpMethod.POST.name,
             HttpMethod.PUT.name,
             HttpMethod.DELETE.name,
-            HttpMethod.OPTIONS.name
+            HttpMethod.OPTIONS.name,
         )
         cors.allowedHeaders = listOf(
             HttpHeaders.AUTHORIZATION,
