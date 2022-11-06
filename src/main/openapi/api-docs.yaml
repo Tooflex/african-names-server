@@ -4,7 +4,7 @@ info:
   description: African Names Discovering App
   version: '0.1'
 servers:
-  - url: http://localhost
+  - url: http://localhost:8080
     description: Development environment URL
 paths:
   /api/v1/firstnames/{id}:
@@ -27,16 +27,16 @@ paths:
               $ref: '#/components/schemas/Firstname'
         required: true
       responses:
-        "400":
-          description: Bad request
-        "404":
-          description: No firstname found
         "200":
           description: Firstnames updated
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Firstname'
+        "400":
+          description: Bad request
+        "404":
+          description: No firstname found
     delete:
       tags:
         - firstname-resource
@@ -52,10 +52,10 @@ paths:
       responses:
         "400":
           description: Bad request
-        "404":
-          description: No firstname found
         "200":
           description: Firstnames updated
+        "404":
+          description: No firstname found
   /api/v1/translations/import:
     post:
       tags:
@@ -86,6 +86,24 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Firstname'
+  /api/v1/newsletter/subscribe:
+    post:
+      tags:
+        - mail-chimp-resource
+      summary: Subscribe to African Name App newsletter
+      operationId: subscribeToNewsletter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscribeNewsletterRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
   /api/v1/firstnames/import:
     post:
       tags:
@@ -104,10 +122,6 @@ paths:
                   type: string
                   format: binary
       responses:
-        "400":
-          description: Bad request
-        "404":
-          description: No firstname found
         "200":
           description: Firstnames retrieved
           content:
@@ -116,6 +130,10 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Firstname'
+        "400":
+          description: Bad request
+        "404":
+          description: No firstname found
   /api/v1/firstnames/:
     post:
       tags:
@@ -168,18 +186,18 @@ paths:
             schema:
               $ref: '#/components/schemas/LoginRequest'
       responses:
+        "401":
+          description: Unauthorized
+        "404":
+          description: User not found
+        "400":
+          description: Bad request
         "200":
           description: User authenticated
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/JwtResponse'
-        "400":
-          description: Bad request
-        "404":
-          description: User not found
-        "401":
-          description: Unauthorized
   /api/v1/translations:
     get:
       tags:
@@ -263,6 +281,32 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/FirstnameTranslation'
+  /api/v1/newsletter/ping:
+    get:
+      tags:
+        - mail-chimp-resource
+      summary: Ping MailChimp API
+      operationId: ping
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  /api/v1/newsletter/members:
+    get:
+      tags:
+        - mail-chimp-resource
+      summary: Get all members of the newsletter list
+      operationId: getSubscribers
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
   /api/v1/firstnames:
     get:
       tags:
@@ -277,10 +321,6 @@ paths:
             type: string
             default: en
       responses:
-        "400":
-          description: Bad request
-        "404":
-          description: No firstname found
         "200":
           description: Firstnames retrieved
           content:
@@ -289,6 +329,10 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Firstname'
+        "400":
+          description: Bad request
+        "404":
+          description: No firstname found
   /api/v1/firstnames/search:
     get:
       tags:
@@ -302,10 +346,6 @@ paths:
           schema:
             $ref: '#/components/schemas/SpecificationFirstname'
       responses:
-        "400":
-          description: Bad request
-        "404":
-          description: No firstname found
         "200":
           description: Firstnames retrieved
           content:
@@ -314,6 +354,10 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Firstname'
+        "400":
+          description: Bad request
+        "404":
+          description: No firstname found
   /api/v1/firstnames/random:
     get:
       tags:
@@ -328,10 +372,6 @@ paths:
             type: string
             default: en
       responses:
-        "400":
-          description: Bad request
-        "404":
-          description: No firstname found
         "200":
           description: Firstnames retrieved
           content:
@@ -340,6 +380,10 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Firstname'
+        "400":
+          description: Bad request
+        "404":
+          description: No firstname found
 components:
   schemas:
     Firstname:
@@ -387,6 +431,15 @@ components:
         updateDateTime:
           type: string
           format: date-time
+    SubscribeNewsletterRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
     SignupRequest:
       type: object
       properties:

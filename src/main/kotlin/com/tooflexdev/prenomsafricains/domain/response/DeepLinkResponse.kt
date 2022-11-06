@@ -3,6 +3,6 @@
  * @Author Otourou Da Costa
  */
 
-package com.tooflexdev.prenomsafricains.domain
+package com.tooflexdev.prenomsafricains.domain.response
 
 data class DeepLinkResponse(val shortLink: String, val previewLink: String)

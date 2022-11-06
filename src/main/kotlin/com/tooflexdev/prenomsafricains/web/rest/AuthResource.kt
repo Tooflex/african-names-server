@@ -6,6 +6,10 @@
 package com.tooflexdev.prenomsafricains.web.rest
 
 import com.tooflexdev.prenomsafricains.domain.*
+import com.tooflexdev.prenomsafricains.domain.request.LoginRequest
+import com.tooflexdev.prenomsafricains.domain.request.SignupRequest
+import com.tooflexdev.prenomsafricains.domain.response.JwtResponse
+import com.tooflexdev.prenomsafricains.domain.response.MessageResponse
 import com.tooflexdev.prenomsafricains.repository.RoleRepository
 import com.tooflexdev.prenomsafricains.repository.UserRepository
 import com.tooflexdev.prenomsafricains.security.JwtUtils
