@@ -80,6 +80,7 @@ class CsvService {
             .withType(Firstname::class.java)
             .withSkipLines(1)
             .withIgnoreLeadingWhiteSpace(true)
+            .withSeparator(';')
             .build()
 
     private fun createFirstnameTranslationCSVToBean(fileReader: BufferedReader?): CsvToBean<FirstnameTranslationDTO> =
