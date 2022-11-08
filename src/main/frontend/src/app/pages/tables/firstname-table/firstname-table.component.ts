@@ -179,7 +179,7 @@ export class FirstnameTableComponent implements OnInit, OnDestroy {
     let firstnameToDelete: Firstname | undefined;
     firstnameToDelete = event.data;
     if (firstnameToDelete && firstnameToDelete.id) {
-      if (window.confirm('Are you sure you want to delete?')) {
+      if (window.confirm(`Are you sure you want to delete the name ${ firstnameToDelete.firstname }?`)) {
         this.service.deleteFirstname({id: firstnameToDelete.id}).subscribe(_ => {
           event.confirm.resolve();
         });
