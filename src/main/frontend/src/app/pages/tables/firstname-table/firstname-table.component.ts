@@ -4,6 +4,7 @@ import { FirstnameResourceService } from 'src/app/api/services';
 import { LocalDataSource } from 'ng2-smart-table';
 import { Subject, takeUntil } from 'rxjs';
 import { NbPopoverDirective } from '@nebular/theme';
+import {DatePipe} from "@angular/common";
 
 @Component({
   selector: 'app-firstname-table',
@@ -98,10 +99,22 @@ export class FirstnameTableComponent implements OnInit, OnDestroy {
       createDateTime: {
         title: 'CreatedTime',
         type: 'date',
+        valuePrepareFunction: (cell: string) => {
+          if (cell) {
+            return new DatePipe('en-US').transform(cell, 'dd/MM/yyyy HH:mm:ss');
+          }
+          return null;
+        }
       },
       updateDateTime: {
         title: 'Update Time',
         type: 'date',
+        valuePrepareFunction: (cell: string) => {
+          if (cell) {
+            return new DatePipe('en-US').transform(cell, 'dd/MM/yyyy HH:mm:ss');
+          }
+          return null;
+        }
       },
     },
   };
@@ -140,6 +153,9 @@ export class FirstnameTableComponent implements OnInit, OnDestroy {
     let firstnameToCreate: Firstname | undefined;
     firstnameToCreate = event.newData;
     if (firstnameToCreate) {
+      // Set size by default, will be updated by the backend
+      firstnameToCreate.size = 'SHORT'
+
       this.service.createFirstname({ body: firstnameToCreate })
         .pipe(takeUntil(this.destroy$))
         .subscribe(res => {
