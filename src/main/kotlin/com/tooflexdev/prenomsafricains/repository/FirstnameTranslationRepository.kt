@@ -5,11 +5,11 @@
 
 package com.tooflexdev.prenomsafricains.repository
 
-import com.tooflexdev.prenomsafricains.domain.Firstname
 import com.tooflexdev.prenomsafricains.domain.FirstnameTranslation
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -19,10 +19,13 @@ interface FirstnameTranslationRepository: JpaRepository<FirstnameTranslation, Lo
             "inner join ft.firstname ftfn " +
             "where ftfn.id = :firstnameId " +
             "and ft.language.languageCode = :lang")
-    fun findByFirstnameAndLanguage(firstnameId: Long, lang: String): List<FirstnameTranslation>
+    fun findByFirstnameAndLanguage(@Param("firstnameId") firstnameId: Long, @Param("lang") lang: String): List<FirstnameTranslation>
+
 
     @Query("SELECT ft FROM FirstnameTranslation ft where ft.language.languageCode = :lang")
-    fun findByLanguage(lang: String): List<FirstnameTranslation>
+    fun findByLanguage(@Param("lang") lang: String): List<FirstnameTranslation>
 
-    fun findByFirstname_Id(firstnameId: Long): List<FirstnameTranslation>
+    @Query("SELECT ft FROM FirstnameTranslation ft " +
+            "where ft.firstname.id = :firstnameId ")
+    fun findByFirstname_Id(@Param("firstnameId") firstnameId: Long): List<FirstnameTranslation>
 }
