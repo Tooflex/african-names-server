@@ -9,6 +9,11 @@
       <button nbButton status="primary" [nbPopover]="popContent" hero>
         Import CSV
       </button>
+      <span style="margin-left: 50px"></span>
+      <nb-select placeholder="Select Showcase" [(selected)]="langList[0]">
+        <nb-option value="" disabled>All</nb-option>
+        <nb-option *ngFor="let lang of langList" [value]="lang">{{lang.title}}</nb-option>
+      </nb-select >
     </div>
     <br>
     <ng2-smart-table

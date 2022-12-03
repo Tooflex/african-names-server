@@ -5,7 +5,7 @@
 
   <nb-card-body>
     <div class="buttons-row">
-      <ng-template #popContent><app-import-form (uploadFinished)="findFirstnames()"></app-import-form></ng-template>
+      <ng-template #popContent><app-import-form></app-import-form></ng-template>
       <button nbButton status="primary" [nbPopover]="popContent"
         >Import CSV</button>
     </div>

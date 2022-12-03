@@ -52,10 +52,10 @@ paths:
       responses:
         "400":
           description: Bad request
-        "200":
-          description: Firstnames updated
         "404":
           description: No firstname found
+        "200":
+          description: Firstnames updated
   /api/v1/translations/import:
     post:
       tags:
@@ -74,10 +74,6 @@ paths:
                   type: string
                   format: binary
       responses:
-        "400":
-          description: Bad request
-        "404":
-          description: No firstname found
         "200":
           description: OK
           content:
@@ -86,6 +82,10 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Firstname'
+        "400":
+          description: Bad request
+        "404":
+          description: No firstname found
   /api/v1/newsletter/subscribe:
     post:
       tags:
@@ -122,6 +122,10 @@ paths:
                   type: string
                   format: binary
       responses:
+        "400":
+          description: Bad request
+        "404":
+          description: No firstname found
         "200":
           description: Firstnames retrieved
           content:
@@ -130,10 +134,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Firstname'
-        "400":
-          description: Bad request
-        "404":
-          description: No firstname found
   /api/v1/firstnames/:
     post:
       tags:
@@ -147,6 +147,8 @@ paths:
               $ref: '#/components/schemas/Firstname'
         required: true
       responses:
+        "400":
+          description: Bad request
         "403":
           description: Forbidden
         "201":
@@ -155,8 +157,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Firstname'
-        "400":
-          description: Bad request
   /api/v1/auth/signup:
     post:
       tags:
@@ -186,12 +186,12 @@ paths:
             schema:
               $ref: '#/components/schemas/LoginRequest'
       responses:
-        "401":
-          description: Unauthorized
-        "404":
-          description: User not found
         "400":
           description: Bad request
+        "404":
+          description: User not found
+        "401":
+          description: Unauthorized
         "200":
           description: User authenticated
           content:
@@ -211,19 +211,22 @@ paths:
           schema:
             type: string
             default: en
+        - name: pageable
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/Pageable'
       responses:
+        "400":
+          description: Bad request
+        "404":
+          description: No firstname found
         "200":
           description: Firstname Translations retrieved
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/FirstnameTranslation'
-        "400":
-          description: Bad request
-        "404":
-          description: No firstname found
+                $ref: '#/components/schemas/FirstnameTranslationResponse'
   /api/v1/translations/firstnames/{id}:
     get:
       tags:
@@ -238,10 +241,6 @@ paths:
             type: integer
             format: int64
       responses:
-        "400":
-          description: Bad request
-        "404":
-          description: No firstname found
         "200":
           description: Get firstname by Id
           content:
@@ -250,6 +249,10 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/FirstnameTranslation'
+        "400":
+          description: Bad request
+        "404":
+          description: No firstname found
   /api/v1/translations/firstnames/{firstnameId}/lang/{langId}:
     get:
       tags:
@@ -269,10 +272,6 @@ paths:
           schema:
             type: string
       responses:
-        "400":
-          description: Bad request
-        "404":
-          description: No firstname found
         "200":
           description: Get firstname by Id
           content:
@@ -281,6 +280,10 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/FirstnameTranslation'
+        "400":
+          description: Bad request
+        "404":
+          description: No firstname found
   /api/v1/newsletter/ping:
     get:
       tags:
@@ -311,7 +314,7 @@ paths:
     get:
       tags:
         - firstname-resource
-      summary: Get firstnames
+      summary: Get firstnames list
       operationId: findFirstnames
       parameters:
         - name: lang
@@ -320,15 +323,18 @@ paths:
           schema:
             type: string
             default: en
+        - name: pageable
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/Pageable'
       responses:
         "200":
           description: Firstnames retrieved
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Firstname'
+                $ref: '#/components/schemas/FirstnameResponse'
         "400":
           description: Bad request
         "404":
@@ -346,6 +352,10 @@ paths:
           schema:
             $ref: '#/components/schemas/SpecificationFirstname'
       responses:
+        "400":
+          description: Bad request
+        "404":
+          description: No firstname found
         "200":
           description: Firstnames retrieved
           content:
@@ -354,10 +364,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Firstname'
-        "400":
-          description: Bad request
-        "404":
-          description: No firstname found
   /api/v1/firstnames/random:
     get:
       tags:
@@ -371,7 +377,16 @@ paths:
           schema:
             type: string
             default: en
+        - name: pageable
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/Pageable'
       responses:
+        "400":
+          description: Bad request
+        "404":
+          description: No firstname found
         "200":
           description: Firstnames retrieved
           content:
@@ -380,10 +395,35 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Firstname'
+  /api/v1/firstnames/paged:
+    get:
+      tags:
+        - firstname-resource
+      summary: Get firstnames list (paginated)
+      operationId: findPagedFirstnames
+      parameters:
+        - name: lang
+          in: query
+          required: false
+          schema:
+            type: string
+            default: en
+        - name: pageable
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/Pageable'
+      responses:
         "400":
           description: Bad request
         "404":
           description: No firstname found
+        "200":
+          description: Firstnames retrieved page by page
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FirstnameResponse'
 components:
   schemas:
     Firstname:
@@ -477,6 +517,24 @@ components:
           type: array
           items:
             type: string
+    Pageable:
+      type: object
+      properties:
+        sort:
+          $ref: '#/components/schemas/Sort'
+        pageNumber:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
+        offset:
+          type: integer
+          format: int32
+        paged:
+          type: boolean
+        unpaged:
+          type: boolean
     FirstnameTranslation:
       type: object
       properties:
@@ -491,6 +549,38 @@ components:
           $ref: '#/components/schemas/Language'
         firstname:
           $ref: '#/components/schemas/Firstname'
+    FirstnameTranslationResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/FirstnameTranslation'
+        pageable:
+          $ref: '#/components/schemas/Pageable'
+        totalElements:
+          type: integer
+          format: int32
+        totalPages:
+          type: integer
+          format: int32
+        last:
+          type: boolean
+        numberOfElements:
+          type: integer
+          format: int32
+        number:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        sort:
+          $ref: '#/components/schemas/Sort'
+        first:
+          type: boolean
+        empty:
+          type: boolean
     Language:
       type: object
       properties:
@@ -500,5 +590,46 @@ components:
           type: string
         nameInNativeLanguage:
           type: string
+    Sort:
+      type: object
+      properties:
+        unsorted:
+          type: boolean
+        sorted:
+          type: boolean
+        empty:
+          type: boolean
+    FirstnameResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Firstname'
+        pageable:
+          $ref: '#/components/schemas/Pageable'
+        totalPages:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int32
+        last:
+          type: boolean
+        numberOfElements:
+          type: integer
+          format: int32
+        sort:
+          $ref: '#/components/schemas/Sort'
+        size:
+          type: integer
+          format: int32
+        first:
+          type: boolean
+        number:
+          type: integer
+          format: int32
+        empty:
+          type: boolean
     SpecificationFirstname:
       type: object
