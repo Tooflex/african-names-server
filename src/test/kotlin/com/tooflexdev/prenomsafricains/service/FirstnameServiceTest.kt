@@ -8,9 +8,7 @@
 
 package com.tooflexdev.prenomsafricains.service
 
-import com.tooflexdev.prenomsafricains.domain.Firstname
-import com.tooflexdev.prenomsafricains.domain.Gender
-import com.tooflexdev.prenomsafricains.domain.Size
+import com.tooflexdev.prenomsafricains.domain.*
 import com.tooflexdev.prenomsafricains.repository.FirstnameRepository
 import com.tooflexdev.prenomsafricains.repository.FirstnameTranslationRepository
 import io.mockk.every
@@ -32,6 +30,9 @@ class FirstnameServiceTest {
     lateinit var firstname1: Firstname
     lateinit var firstname2: Firstname
     lateinit var firstnames: MutableIterable<Firstname>
+
+    lateinit var frFirstnameTranslations: List<FirstnameTranslation>
+
     lateinit var page: Page<Firstname>
     lateinit var pageOf1: Page<Firstname>
 
@@ -41,14 +42,14 @@ class FirstnameServiceTest {
         firstname1 = Firstname(
             firstname = "Amadou",
             gender = Gender.MALE,
-            meaning = "",
+            meaning = "The name Amadou means Form of Ahmad used in parts of West Africa.",
             size = Size.MEDIUM
         )
 
         firstname2 = Firstname(
             firstname = "Fatou",
             gender = Gender.FEMALE,
-            meaning = "",
+            meaning = "The name Fatou means Form of Fatima used in parts of West Africa.",
             size = Size.SHORT
         )
 
@@ -56,6 +57,20 @@ class FirstnameServiceTest {
 
         page = PageImpl(firstnames.toList())
         pageOf1 = PageImpl(firstnames.toList().subList(0, 1))
+
+        frFirstnameTranslations = listOf(
+            FirstnameTranslation(
+                firstname = firstname1,
+                language = Language("fr", "French", "Français"),
+                meaningTranslation = "Le prénom Amadou signifie Forme d'Ahmad utilisée dans certaines parties de l'Afrique de l'Ouest.",
+                originsTranslation = "Afrique de l'Ouest"
+            ),
+            FirstnameTranslation(
+                firstname = firstname2,
+                language = Language("fr", "French", "Français"),
+                meaningTranslation = "Le prénom Fatou signifie Forme de Fatima utilisée dans certaines parties de l'Afrique de l'Ouest.",
+                originsTranslation = "Afrique de l'Ouest"
+            ))
     }
 
     @Test
@@ -120,11 +135,13 @@ class FirstnameServiceTest {
         // given
         every { firstnameRepository.findAll(Pageable.ofSize(1)) } returns pageOf1
         every { firstnameRepository.findAll() } returns firstnames.toList()
+        //every {  firstnameTranslationRepository.findByLanguageAndFirstnameIds("fr", listOf(firstname1.id, firstname2.id)) } returns frFirstnameTranslations
+        //every { firstnameTranslationRepository.findByLanguageAndFirstnameIds("fr", listOf()) } returns listOf()
 
         // when
-        val result1 = firstnameService.findRandomFirstnames(pageable = Pageable.ofSize(1))
-        val result2 = firstnameService.findRandomFirstnames(pageable = Pageable.ofSize(1))
-        val result3 = firstnameService.findRandomFirstnames(pageable = Pageable.ofSize(1))
+        val result1 = firstnameService.findRandomFirstnames("fr", pageable = Pageable.ofSize(1))
+        val result2 = firstnameService.findRandomFirstnames("fr", pageable = Pageable.ofSize(1))
+        val result3 = firstnameService.findRandomFirstnames("fr", pageable = Pageable.ofSize(1))
 
         // then
         verify(exactly = 3) { firstnameRepository.findAll() }

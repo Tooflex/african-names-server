@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.http.MediaType
 import org.springframework.security.test.context.support.WithMockUser
@@ -53,9 +54,9 @@ class FirstnameResourceTest @Autowired constructor(
     private lateinit var firstname1: Firstname
     private lateinit var firstname2: Firstname
     private lateinit var firstname3: Firstname
-    private lateinit var firstnames: MutableIterable<Firstname>
-    private lateinit var firstnamesOf1Element: MutableIterable<Firstname>
-    private lateinit var firstnamesOf3Elements: MutableIterable<Firstname>
+    private lateinit var firstnames: Page<Firstname>
+    private lateinit var firstnamesOf1Element: Page<Firstname>
+    private lateinit var firstnamesOf3Elements: Page<Firstname>
     private lateinit var firstName1Json: String
 
     @BeforeEach
@@ -82,9 +83,9 @@ class FirstnameResourceTest @Autowired constructor(
             meaning = "",
             size = Size.SHORT)
 
-        firstnames = mutableListOf(firstname1, firstname2)
-        firstnamesOf1Element = mutableListOf(firstname1)
-        firstnamesOf3Elements = mutableListOf(firstname1, firstname2, firstname3)
+        firstnames = listOf(firstname1, firstname2) as Page<Firstname>
+        firstnamesOf1Element = listOf(firstname1) as Page<Firstname>
+        firstnamesOf3Elements = listOf(firstname1, firstname2, firstname3) as Page<Firstname>
 
         val objectMapper: ObjectMapper = JsonMapper.builder()
             .findAndAddModules()
@@ -95,8 +96,8 @@ class FirstnameResourceTest @Autowired constructor(
     @Test
     @WithMockUser(username = "myUser", roles = ["USER"])
     fun givenNoExistingFirstnames_whenGetRequest_thenReturnsFirstnameJsonWithStatus404() {
-        every { firstnameService.findFirstnames(pageable = Pageable.ofSize(20)) } returns mutableListOf()
-        every { firstnameService.findFirstnames(pageable = Pageable.unpaged()) } returns mutableListOf()
+        every { firstnameService.findFirstnames(pageable = Pageable.ofSize(20)) } returns Page.empty()
+        every { firstnameService.findFirstnames(pageable = Pageable.unpaged()) } returns Page.empty()
 
         mockMvc.perform(get("/api/v1/firstnames/paged"))
             .andExpect(status().isNotFound)
@@ -128,8 +129,8 @@ class FirstnameResourceTest @Autowired constructor(
     @Test
     @WithMockUser(username = "myUser", roles = ["USER"])
     fun givenExistingFirstnames_whenFindPrenomsAlea_thenReturnsFirstnameJsonWithStatus200() {
-        every { firstnameService.findRandomFirstnames() } returns firstnames
-        every { firstnameService.findRandomFirstnames(pageable = Pageable.ofSize(100)) } returns firstnames
+        every { firstnameService.findRandomFirstnames() } returns firstnames.toList()
+        every { firstnameService.findRandomFirstnames(pageable = Pageable.ofSize(100)) } returns firstnames.toList()
 
         mockMvc.perform(get("/api/v1/firstnames/random"))
             .andExpect(status().isOk)
@@ -177,8 +178,8 @@ class FirstnameResourceTest @Autowired constructor(
     @Test
     @WithMockUser(username = "myUser", roles = ["USER"])
     fun givenExistingFirstnames_whenFindRandomFirstnameWithPaginationAndSizeOf3_thenReturnsFirstnameJsonWithStatus200() {
-        every { firstnameService.findRandomFirstnames(pageable = Pageable.ofSize(3)) } returns firstnamesOf3Elements
-        every { firstnameService.findRandomFirstnames(pageable = Pageable.unpaged()) } returns firstnamesOf3Elements
+        every { firstnameService.findRandomFirstnames(pageable = Pageable.ofSize(3)) } returns firstnamesOf3Elements.toList()
+        every { firstnameService.findRandomFirstnames(pageable = Pageable.unpaged()) } returns firstnamesOf3Elements.toList()
 
         mockMvc.perform(get("/api/v1/firstnames/random?size=3"))
             .andExpect(status().isOk)
