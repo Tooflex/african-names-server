@@ -17,6 +17,10 @@ import org.springframework.stereotype.Repository
 interface FirstnameTranslationRepository: JpaRepository
 <FirstnameTranslation, Long>, JpaSpecificationExecutor<FirstnameTranslation> {
 
+    // findByLanguageAndFirstnameIds
+    @Query("SELECT ft FROM FirstnameTranslation ft WHERE ft.language.languageCode = :language AND ft.firstname.id IN :firstnameIds")
+    fun findByLanguageAndFirstnameIds(@Param("language") language: String, @Param("firstnameIds") firstnameIds: List<Long>): List<FirstnameTranslation>
+
     @Query("SELECT ft FROM FirstnameTranslation ft " +
             "inner join ft.firstname ftfn " +
             "where ftfn.id = :firstnameId " +
