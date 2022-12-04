@@ -2,6 +2,7 @@ package com.tooflexdev.prenomsafricains.web.rest
 
 import com.sipios.springsearch.anotation.SearchSpec
 import com.tooflexdev.prenomsafricains.domain.Firstname
+import com.tooflexdev.prenomsafricains.domain.response.FirstnameResponse
 import com.tooflexdev.prenomsafricains.service.CsvService
 import com.tooflexdev.prenomsafricains.service.FirstnameService
 import io.swagger.v3.oas.annotations.Operation
@@ -10,7 +11,9 @@ import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.domain.Specification
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -22,19 +25,43 @@ import org.springframework.web.multipart.MultipartFile
 @RequestMapping("/api/v1/firstnames")
 class FirstnameResource(val service: FirstnameService, val csvService: CsvService) {
 
-    @Operation(summary = "Get firstnames")
+    @Operation(summary = "Get firstnames list")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "Firstnames retrieved",
-            content = [Content(mediaType = "application/json", array = (
-                ArraySchema(schema = Schema(implementation = Firstname::class))
-            ))]),
+            content = [Content(mediaType = "application/json",
+                schema = Schema(implementation = FirstnameResponse::class))]),
         ApiResponse(responseCode = "400", description = "Bad request", content = [Content()]),
         ApiResponse(responseCode = "404", description = "No firstname found", content = [Content()])]
     )
     @GetMapping("")
-    fun findFirstnames(@RequestParam(defaultValue = "en") lang: String): ResponseEntity<Any?> {
-         val firstnamesRetrieved = service.findFirstnames(lang = lang)
-        return if (firstnamesRetrieved.isNotEmpty()) {
+    fun findFirstnames(
+        @RequestParam(defaultValue = "en") lang: String,
+        pageable: Pageable
+    ): ResponseEntity<Any?> {
+        val firstnamesRetrieved = service.findFirstnames(lang = lang, pageable = pageable)
+        return if (firstnamesRetrieved.any()) {
+            ResponseEntity(firstnamesRetrieved, HttpStatus.OK)
+        } else {
+            ResponseEntity<Any?>("Error: No firstname found", HttpStatus.NOT_FOUND)
+        }
+    }
+
+    @Operation(summary = "Get firstnames list (paginated)")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "Firstnames retrieved page by page",
+            content = [Content(mediaType = "application/json",
+                schema = Schema(implementation = FirstnameResponse::class)
+            )]),
+        ApiResponse(responseCode = "400", description = "Bad request", content = [Content()]),
+        ApiResponse(responseCode = "404", description = "No firstname found", content = [Content()])]
+    )
+    @GetMapping("/paged")
+    fun findPagedFirstnames(
+        @RequestParam(defaultValue = "en") lang: String,
+        @PageableDefault(page = 0, size = 20) pageable: Pageable
+    ): ResponseEntity<Any?> {
+         val firstnamesRetrieved = service.findFirstnames(lang = lang, pageable = pageable)
+        return if (firstnamesRetrieved.any()) {
             ResponseEntity(firstnamesRetrieved, HttpStatus.OK)
         } else {
             ResponseEntity<Any?>("Error: No firstname found", HttpStatus.NOT_FOUND)
@@ -50,10 +77,15 @@ class FirstnameResource(val service: FirstnameService, val csvService: CsvServic
         ApiResponse(responseCode = "400", description = "Bad request", content = [Content()]),
         ApiResponse(responseCode = "404", description = "No firstname found", content = [Content()])]
     )
+
     @GetMapping("/random")
-    fun findPrenomsAlea(@RequestParam(defaultValue = "en") lang: String): ResponseEntity<Any?> {
-        val firstnamesRetrieved = service.findPrenomsAlea(lang = lang)
-        return if (firstnamesRetrieved.isNotEmpty()) {
+    fun findPrenomsAlea(
+        @RequestParam(defaultValue = "en") lang: String,
+        // Unpaged by default
+        @PageableDefault(page = 0, size = 100) pageable: Pageable)
+    : ResponseEntity<Any?> {
+        val firstnamesRetrieved = service.findRandomFirstnames(lang = lang, pageable = pageable)
+        return if (firstnamesRetrieved.any()) {
             ResponseEntity(firstnamesRetrieved, HttpStatus.OK)
         } else {
             ResponseEntity<Any?>("Error: No firstname found", HttpStatus.NOT_FOUND)
@@ -106,7 +138,7 @@ class FirstnameResource(val service: FirstnameService, val csvService: CsvServic
         method = [RequestMethod.POST],
         consumes = [MediaType.MULTIPART_FORM_DATA_VALUE]
     )
-    fun uploadCsvFile(@RequestPart("file") file: MultipartFile): ResponseEntity<List<Firstname>> {
+    fun uploadCsvFile(@RequestPart("file") file: MultipartFile): ResponseEntity<MutableIterable<Firstname>> {
         val importedEntries = csvService.uploadCsvFile(file)
         return ResponseEntity.ok(importedEntries)
     }

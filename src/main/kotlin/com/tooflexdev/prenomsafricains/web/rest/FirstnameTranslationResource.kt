@@ -7,6 +7,7 @@ package com.tooflexdev.prenomsafricains.web.rest
 
 import com.tooflexdev.prenomsafricains.domain.Firstname
 import com.tooflexdev.prenomsafricains.domain.FirstnameTranslation
+import com.tooflexdev.prenomsafricains.domain.response.FirstnameTranslationResponse
 import com.tooflexdev.prenomsafricains.service.CsvService
 import com.tooflexdev.prenomsafricains.service.FirstnameTranslationService
 import io.swagger.v3.oas.annotations.Operation
@@ -15,6 +16,9 @@ import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -29,15 +33,18 @@ class FirstnameTranslationResource(val service: FirstnameTranslationService, val
     @Operation(summary = "Get firstname translations")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "Firstname Translations retrieved",
-            content = [Content(mediaType = "application/json", array = (
-                    ArraySchema(schema = Schema(implementation = FirstnameTranslation::class))
-                    ))]),
+            content = [Content(mediaType = "application/json",
+                    schema = Schema(implementation = FirstnameTranslationResponse::class)
+                    )]),
         ApiResponse(responseCode = "400", description = "Bad request", content = [Content()]),
         ApiResponse(responseCode = "404", description = "No firstname found", content = [Content()])]
     )
     @GetMapping("")
-    fun findFirstnameTranslations(@RequestParam(defaultValue = "en") lang: String): ResponseEntity<List<FirstnameTranslation>>
-        = ResponseEntity(service.findFirstnameTranslations(), HttpStatus.OK)
+    fun findFirstnameTranslations(
+        @RequestParam(defaultValue = "en") lang: String,
+        @PageableDefault(page = 0, size = 20) pageable: Pageable)
+    : ResponseEntity<Page<FirstnameTranslation>>
+        = ResponseEntity(service.findFirstnameTranslations(pageable), HttpStatus.OK)
 
     @Operation(summary = "Get firstname translations")
     @ApiResponses(value = [
@@ -80,7 +87,7 @@ class FirstnameTranslationResource(val service: FirstnameTranslationService, val
         method = [RequestMethod.POST],
         consumes = [MediaType.MULTIPART_FORM_DATA_VALUE]
     )
-    fun uploadCsvFile(@RequestPart("file") file: MultipartFile): ResponseEntity<List<FirstnameTranslation>> {
+    fun uploadCsvFile(@RequestPart("file") file: MultipartFile): ResponseEntity<MutableIterable<FirstnameTranslation>> {
         val importedEntries = csvService.uploadFirstnameTranslationCsvFile(file)
         return ResponseEntity.ok(importedEntries)
     }

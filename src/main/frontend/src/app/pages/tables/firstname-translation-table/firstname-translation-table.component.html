@@ -5,13 +5,13 @@
 
   <nb-card-body>
     <div class="buttons-row">
-      <ng-template #popContent><app-import-form (uploadFinished)="findTranslations()"></app-import-form></ng-template>
+      <ng-template #popContent><app-import-form></app-import-form></ng-template>
       <button nbButton status="primary" [nbPopover]="popContent" hero>
         Import CSV
       </button>
       <span style="margin-left: 50px"></span>
       <nb-select placeholder="Select Showcase" [(selected)]="langList[0]">
-        <nb-option value="" disabled>All</nb-option>
+        <nb-option> All</nb-option>
         <nb-option *ngFor="let lang of langList" [value]="lang">{{lang.title}}</nb-option>
       </nb-select >
     </div>

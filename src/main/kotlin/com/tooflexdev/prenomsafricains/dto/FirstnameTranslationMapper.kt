@@ -33,7 +33,7 @@ class FirstnameTranslationMapper(val languageRepository: LanguageRepository, val
 
     fun toFirstnameTranslation(firstnameTranslationDTO: FirstnameTranslationDTO): FirstnameTranslation {
         val language: Language = languageRepository.findLanguageByLanguageCode(firstnameTranslationDTO.languageCode!!)
-        val firstname: Firstname = firstnameRepository.getReferenceById(firstnameTranslationDTO.firstnameId!!)
+        val firstname: Firstname = firstnameRepository.findById(firstnameTranslationDTO.firstnameId!!).get()
         return FirstnameTranslation(
             firstnameTranslationDTO.id,
             meaningTranslation = firstnameTranslationDTO.meaningTranslation,

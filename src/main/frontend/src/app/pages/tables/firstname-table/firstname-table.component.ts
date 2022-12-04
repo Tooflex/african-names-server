@@ -1,12 +1,13 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Firstname} from 'src/app/api/models';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Firstname} from 'src/app/api/models';
 import { FirstnameResourceService } from 'src/app/api/services';
-import { ServerDataSource } from 'ng2-smart-table';
-import { Subject, takeUntil } from 'rxjs';
+import {ServerDataSource} from 'ng2-smart-table';
+import {Subject, takeUntil} from 'rxjs';
 import { NbPopoverDirective } from '@nebular/theme';
 import { DatePipe } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "../../../../environments/environment";
+import {NgxFilterDelayComponent} from "../../../shared/ngx-filter-delay/ngx-filter-delay.component";
 
 @Component({
   selector: 'app-firstname-table',
@@ -41,7 +42,13 @@ export class FirstnameTableComponent implements OnInit, OnDestroy {
     columns: {
       firstname: {
         title: 'First Name',
-        type: 'string',
+        filter: {
+          type: 'custom', // must set type 'cutom'
+          component: NgxFilterDelayComponent,
+        },
+        custom: {
+          delayTime: 1000,
+        },
       },
       gender: {
         title: 'Gender',
@@ -87,10 +94,6 @@ export class FirstnameTableComponent implements OnInit, OnDestroy {
       },
       celebrities: {
         title: 'Celebrities',
-        type: 'string',
-      },
-      soundURL: {
-        title: 'Sound URL',
         type: 'string',
       },
       size: {
@@ -199,4 +202,3 @@ export class FirstnameTableComponent implements OnInit, OnDestroy {
     }
   }
 }
-

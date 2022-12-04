@@ -14,7 +14,6 @@ import { AuthGuardService } from './@core/services/auth-guard.service';
 
 import { HttpClientModule } from '@angular/common/http';
 import {ReactiveFormsModule} from "@angular/forms";
-import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 
 // Note we need a separate function as it's required
 // by the AOT compiler.
@@ -36,7 +35,6 @@ export function playerFactory() {
     NbMenuModule.forRoot(),
     NbLayoutModule,
     NbEvaIconsModule,
-    FontAwesomeModule,
     LottieModule.forRoot({ player: playerFactory }),
     ReactiveFormsModule,
   ],

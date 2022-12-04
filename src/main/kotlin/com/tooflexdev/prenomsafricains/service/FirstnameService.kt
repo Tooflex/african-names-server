@@ -3,19 +3,20 @@ package com.tooflexdev.prenomsafricains.service
 import com.tooflexdev.prenomsafricains.domain.Firstname
 import com.tooflexdev.prenomsafricains.repository.FirstnameRepository
 import com.tooflexdev.prenomsafricains.repository.FirstnameTranslationRepository
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
 import java.util.NoSuchElementException
 
 @Service
 class FirstnameService(val db: FirstnameRepository, val dbFirstnameTranslation: FirstnameTranslationRepository) {
-    fun findFirstnames(lang: String = "en"): List<Firstname> {
-        val firstnameList =  db.findAll()
+    fun findFirstnames(lang: String = "en", pageable: Pageable): MutableIterable<Firstname> {
+        val firstnameList =  db.findAll(pageable)
         if (lang == "en") {
             return firstnameList
         }
 
-        val translations = dbFirstnameTranslation.findByLanguage(lang)
+        val translations = dbFirstnameTranslation.findByLanguage(lang, pageable)
 
         for (firstname in firstnameList) {
             if (translations.isNotEmpty()) {
@@ -33,9 +34,36 @@ class FirstnameService(val db: FirstnameRepository, val dbFirstnameTranslation: 
         return firstnameList
     }
 
-    fun findPrenomsAlea(lang: String = "en"): List<Firstname> {
-        val firstnameList = this.findFirstnames(lang)
-        return firstnameList.shuffled()
+    // Get list of random paginated firstnames
+    fun findRandomFirstnames(lang: String = "en", pageable: Pageable = Pageable.ofSize(20)): MutableIterable<Firstname> {
+
+        // Get all records then pick random records by lang from the list with the size of the page and then return the list
+        val firstnameList = db.findAll()
+        if (pageable.isUnpaged) {
+            return firstnameList.shuffled() as MutableIterable<Firstname>
+        }
+        val randomFirstnames = firstnameList.shuffled().take(pageable.pageSize)
+        if (lang == "en") {
+            return randomFirstnames as MutableIterable<Firstname>
+        }
+
+        val translations = randomFirstnames.map { firstname -> dbFirstnameTranslation.findByLanguageAndFirstnameId(lang, firstname.id) }
+
+        for (firstname in randomFirstnames) {
+            if (translations.isNotEmpty()) {
+                val translation = translations.find { firstnameTranslation -> firstnameTranslation.firstname.id == firstname.id }
+                if (translation != null) {
+                    firstname.meaning = translation.meaningTranslation
+                    firstname.origins = translation.originsTranslation
+                }
+            } else {
+                firstname.meaning = "-"
+                firstname.origins = "-"
+            }
+
+        }
+
+        return randomFirstnames as MutableIterable<Firstname>
     }
 
     fun searchFirstnames(specs: Specification<Firstname?>?): List<Firstname> = db.findAll(Specification.where(specs))
@@ -66,12 +94,8 @@ class FirstnameService(val db: FirstnameRepository, val dbFirstnameTranslation: 
         db.deleteById(id)
     }
 
-    fun saveAll(firstnames: List<Firstname>): List<Firstname> {
+    fun saveAll(firstnames: List<Firstname>): MutableIterable<Firstname> {
         return db.saveAll(firstnames)
-    }
-
-    fun findDistinctOrigins(): List<String> {
-        return db.findDistinctOrigins()
     }
 }
 

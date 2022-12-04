@@ -1,11 +1,17 @@
+/*
+ * Copyright (c) 2022.
+ * @Author Otourou Da Costa
+ */
+
 package com.tooflexdev.prenomsafricains.domain.response
 
 import com.google.gson.annotations.SerializedName
+import com.tooflexdev.prenomsafricains.domain.FirstnameTranslation
 
 
 data class FirstnameTranslationResponse (
 
-  @SerializedName("content"          ) var content          : ArrayList<Content> = arrayListOf(),
+  @SerializedName("content"          ) var content          : ArrayList<FirstnameTranslation> = arrayListOf(),
   @SerializedName("pageable"         ) var pageable         : Pageable?          = Pageable(),
   @SerializedName("totalElements"    ) var totalElements    : Int?               = null,
   @SerializedName("totalPages"       ) var totalPages       : Int?               = null,

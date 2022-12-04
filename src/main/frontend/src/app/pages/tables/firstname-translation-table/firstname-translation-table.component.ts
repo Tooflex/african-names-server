@@ -35,13 +35,13 @@ export class FirstnameTranslationTableComponent implements OnInit, OnDestroy {
       confirmCreate: true,
     },
     edit: {
-      editButtonContent: 'fa fa-pencil',
-      saveButtonContent: 'fa fa-checkmark',
-      cancelButtonContent: 'fa fa-close',
+      editButtonContent: 'edit',
+      saveButtonContent: 'OK',
+      cancelButtonContent: 'X',
       confirmSave: true,
     },
     delete: {
-      deleteButtonContent: '<i class="nb-trash"></i>',
+      deleteButtonContent: 'X',
       confirmDelete: true,
     },
     columns: {
@@ -51,6 +51,13 @@ export class FirstnameTranslationTableComponent implements OnInit, OnDestroy {
         type: 'string',
         valuePrepareFunction: (cell: any) => {
           return cell.firstname;
+        },
+        filterFunction: (cell?: any, search?: string) => {
+          if (search) {
+            this.findTranslations()
+            return cell.firstname.toLowerCase().includes(search.toLowerCase());
+          }
+          return true;
         }
       },
       language: {
@@ -92,12 +99,6 @@ export class FirstnameTranslationTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.findTranslations();
-    this.source.onChanged().pipe(takeUntil(this.destroy$)).subscribe((change) => {
-      if (change.action === 'page') {
-        this.findTranslations(change.paging.page, change.paging.perPage);
-      }
-    });
     }
 
   ngOnDestroy(): void {
@@ -107,7 +108,11 @@ export class FirstnameTranslationTableComponent implements OnInit, OnDestroy {
 
   findTranslations(page = 0, size = 1000): void {
     this.service.findFirstnameTranslations({lang: 'en', pageable: {pageNumber: page, pageSize: size}})
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntil(this.destroy$)
+      ).subscribe((data) => {
+        let firstnameTranslations: any[] = data.content as any[];
+        this.source.load(firstnameTranslations).then(r => console.log(r));
+      });
   }
 
   onCreateConfirm(event: any): void {

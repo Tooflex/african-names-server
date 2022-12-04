@@ -1,11 +1,12 @@
 package com.tooflexdev.prenomsafricains.domain.response
 
 import com.google.gson.annotations.SerializedName
+import com.tooflexdev.prenomsafricains.domain.Firstname
 
 
 data class FirstnameResponse (
 
-  @SerializedName("content"          ) var content          : ArrayList<Content> = arrayListOf(),
+  @SerializedName("content"          ) var content          : ArrayList<Firstname> = arrayListOf(),
   @SerializedName("pageable"         ) var pageable         : Pageable?          = Pageable(),
   @SerializedName("totalPages"       ) var totalPages       : Int?               = null,
   @SerializedName("totalElements"    ) var totalElements    : Int?               = null,

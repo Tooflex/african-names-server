@@ -21,7 +21,7 @@ class FirstnameTranslation (
     @ManyToOne
     @CsvBindByPosition(position = 3)
     var language: Language,
-    @ManyToOne
+    @ManyToOne()
     @CsvBindByPosition(position = 4)
     var firstname: Firstname
 )

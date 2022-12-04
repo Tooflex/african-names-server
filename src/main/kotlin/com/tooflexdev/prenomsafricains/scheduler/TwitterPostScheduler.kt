@@ -61,7 +61,8 @@ class TwitterPostScheduler {
     }
 
     private fun createTweet(): String {
-        val randomFirstname = firstnameService.findPrenomsAlea()[0]
+        // Pageable all firstnames
+        val randomFirstname = firstnameService.findRandomFirstnames().first()
         return "${randomFirstname.firstname} " +
                 "means \"${randomFirstname.meaning?.trim()}\" " +
                 "and it's origins is ${randomFirstname.origins} " +
