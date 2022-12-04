@@ -77,9 +77,10 @@ class FirstnameServiceTest {
     fun whenGetFirstname_thenReturnFirstname() {
         // given
         every { firstnameRepository.findAll(Pageable.ofSize(20)) } returns page
+        every { firstnameTranslationRepository.findByLanguage("fr", Pageable.ofSize(20)) } returns frFirstnameTranslations
 
         // when
-        val result = firstnameService.findFirstnames(pageable = Pageable.ofSize(20))
+        val result = firstnameService.findFirstnames("fr", pageable = Pageable.ofSize(20))
 
         // then
         verify(exactly = 1) { firstnameRepository.findAll(Pageable.ofSize(20)) }
@@ -92,6 +93,7 @@ class FirstnameServiceTest {
         every { firstnameRepository.findAll(Pageable.unpaged()) } returns page
         every { firstnameRepository.findAll(Pageable.ofSize(20)) } returns page
         every { firstnameRepository.findAll() } returns firstnames.toList()
+        every { firstnameTranslationRepository.findByLanguageAndFirstnameIds("en", listOf(0,0)) } returns frFirstnameTranslations
 
         // when
         val result = firstnameService.findRandomFirstnames(pageable = Pageable.ofSize(20))
@@ -120,6 +122,7 @@ class FirstnameServiceTest {
         // given
         every { firstnameRepository.findAll(Pageable.ofSize(1)) } returns pageOf1
         every { firstnameRepository.findAll() } returns firstnames.toList()
+        every { firstnameTranslationRepository.findByLanguageAndFirstnameIds("en", listOf(0)) } returns frFirstnameTranslations
 
         // when
         val result = firstnameService.findRandomFirstnames(pageable = Pageable.ofSize(1))
@@ -135,8 +138,8 @@ class FirstnameServiceTest {
         // given
         every { firstnameRepository.findAll(Pageable.ofSize(1)) } returns pageOf1
         every { firstnameRepository.findAll() } returns firstnames.toList()
-        //every {  firstnameTranslationRepository.findByLanguageAndFirstnameIds("fr", listOf(firstname1.id, firstname2.id)) } returns frFirstnameTranslations
-        //every { firstnameTranslationRepository.findByLanguageAndFirstnameIds("fr", listOf()) } returns listOf()
+        every { firstnameTranslationRepository.findByLanguageAndFirstnameIds("fr", listOf(firstname1.id, firstname2.id)) } returns frFirstnameTranslations
+        every { firstnameTranslationRepository.findByLanguageAndFirstnameIds("fr", listOf(0)) } returns listOf()
 
         // when
         val result1 = firstnameService.findRandomFirstnames("fr", pageable = Pageable.ofSize(1))
