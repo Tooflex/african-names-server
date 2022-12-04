@@ -1,10 +1,13 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Firstname } from 'src/app/api/models';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Firstname} from 'src/app/api/models';
 import { FirstnameResourceService } from 'src/app/api/services';
-import { LocalDataSource } from 'ng2-smart-table';
-import { Subject, takeUntil } from 'rxjs';
+import {ServerDataSource} from 'ng2-smart-table';
+import {Subject, takeUntil} from 'rxjs';
 import { NbPopoverDirective } from '@nebular/theme';
-import {DatePipe} from "@angular/common";
+import { DatePipe } from "@angular/common";
+import { HttpClient } from "@angular/common/http";
+import { environment } from "../../../../environments/environment";
+import {NgxFilterDelayComponent} from "../../../shared/ngx-filter-delay/ngx-filter-delay.component";
 
 @Component({
   selector: 'app-firstname-table',
@@ -16,7 +19,6 @@ export class FirstnameTableComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
 
   @ViewChild(NbPopoverDirective) popover: NbPopoverDirective | undefined;
-
 
   genderList = [{ value: 0, title: 'MALE' }, { value: 1, title: 'FEMALE' }, { value: 2, title: 'MIXED' }];
 
@@ -40,7 +42,13 @@ export class FirstnameTableComponent implements OnInit, OnDestroy {
     columns: {
       firstname: {
         title: 'First Name',
-        type: 'string',
+        filter: {
+          type: 'custom', // must set type 'cutom'
+          component: NgxFilterDelayComponent,
+        },
+        custom: {
+          delayTime: 1000,
+        },
       },
       gender: {
         title: 'Gender',
@@ -88,10 +96,6 @@ export class FirstnameTableComponent implements OnInit, OnDestroy {
         title: 'Celebrities',
         type: 'string',
       },
-      soundURL: {
-        title: 'Sound URL',
-        type: 'string',
-      },
       size: {
         title: 'Size',
         type: 'string',
@@ -119,34 +123,27 @@ export class FirstnameTableComponent implements OnInit, OnDestroy {
     },
   };
 
-  source: LocalDataSource = new LocalDataSource();
+  source: ServerDataSource;
 
-  constructor(private service: FirstnameResourceService) {
+  constructor(private service: FirstnameResourceService, private http: HttpClient) {
+    this.source = new ServerDataSource(
+      this.http,
+      {
+        endPoint: environment.baseApiUrl + FirstnameResourceService.FindFirstnamesPath,
+        dataKey: 'content',
+        pagerPageKey: 'page',
+        pagerLimitKey: 'size',
+        totalKey: 'totalElements',
+        });
+    this.source.setPaging(0, 10, true);
   }
 
   ngOnInit() {
-    this.findFirstnames()
   }
 
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
-  }
-
-  findFirstnames() {
-    this.service.findFirstnames()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (firstnames) => {
-          if (this.popover) {
-            this.popover.hide();
-          }
-          this.source.load(firstnames).then();
-        },
-        error: (err) => {
-          console.log(err);
-        }
-      });
   }
 
   onCreateConfirm(event: any): void {
@@ -205,4 +202,3 @@ export class FirstnameTableComponent implements OnInit, OnDestroy {
     }
   }
 }
-

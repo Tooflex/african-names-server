@@ -1,16 +1,18 @@
-import { Component } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import { Subject } from 'rxjs';
-import { LocalDataSource } from 'ng2-smart-table';
-import { map, takeUntil } from 'rxjs/operators';
+import { ServerDataSource} from 'ng2-smart-table';
+import { takeUntil } from 'rxjs/operators';
 import { ImportFormComponent } from 'src/app/shared/import-form/import-form.component';
 import { FirstnameTranslationResourceService } from 'src/app/api/services';
+import { environment } from "../../../../environments/environment";
+import { HttpClient } from "@angular/common/http";
 
 @Component({
   selector: 'app-firstname-translation-table',
   templateUrl: './firstname-translation-table.component.html',
   styleUrls: ['./firstname-translation-table.component.scss'],
 })
-export class FirstnameTranslationTableComponent {
+export class FirstnameTranslationTableComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
 
   importForm = ImportFormComponent;
@@ -23,6 +25,9 @@ export class FirstnameTranslationTableComponent {
   ];
 
   settings = {
+    actions: {
+      edit: true
+    },
     add: {
       addButtonContent: '+',
       createButtonContent: 'OK',
@@ -30,19 +35,30 @@ export class FirstnameTranslationTableComponent {
       confirmCreate: true,
     },
     edit: {
-      editButtonContent: '<i class="nb-edit"></i>',
-      saveButtonContent: '<i class="nb-checkmark"></i>',
-      cancelButtonContent: '<i class="nb-close"></i>',
+      editButtonContent: 'edit',
+      saveButtonContent: 'OK',
+      cancelButtonContent: 'X',
       confirmSave: true,
     },
     delete: {
-      deleteButtonContent: '<i class="nb-trash"></i>',
+      deleteButtonContent: 'X',
       confirmDelete: true,
     },
     columns: {
+      // Firstname value of Firstname object
       firstname: {
         title: 'First Name',
         type: 'string',
+        valuePrepareFunction: (cell: any) => {
+          return cell.firstname;
+        },
+        filterFunction: (cell?: any, search?: string) => {
+          if (search) {
+            this.findTranslations()
+            return cell.firstname.toLowerCase().includes(search.toLowerCase());
+          }
+          return true;
+        }
       },
       language: {
         title: 'Lang',
@@ -53,6 +69,9 @@ export class FirstnameTranslationTableComponent {
             list: this.langList,
           },
         },
+        valuePrepareFunction: (cell: any) => {
+          return cell.name;
+        }
       },
       meaningTranslation: {
         title: 'Meaning translation',
@@ -65,28 +84,34 @@ export class FirstnameTranslationTableComponent {
     },
   };
 
-  source: LocalDataSource = new LocalDataSource();
+  source: ServerDataSource
 
-  constructor(private service: FirstnameTranslationResourceService) {
+  constructor(
+    private service: FirstnameTranslationResourceService, private http: HttpClient) {
     this.importForm.type = 'firstname_translation';
+    this.source = new ServerDataSource(this.http, {
+      endPoint: environment.baseApiUrl + FirstnameTranslationResourceService.FindFirstnameTranslationsPath,
+      pagerPageKey: 'page',
+      pagerLimitKey: 'size',
+      dataKey: 'content',
+      totalKey: 'totalElements',
+    });
   }
 
   ngOnInit(): void {
-    this.findTranslations();
-  }
+    }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
-  findTranslations(): void {
-    this.service.findFirstnameTranslations({ lang: 'en' })
-      .pipe(takeUntil(this.destroy$))
-      // get firstname of firstname and language code of language
-      .pipe(map((res) => res.map((item) => ({ ...item, firstname: item.firstname!.firstname, language: item.language!.languageCode }))))
-      .subscribe(firstnameTranslations => {
-        this.source.load(firstnameTranslations).then();
+  findTranslations(page = 0, size = 1000): void {
+    this.service.findFirstnameTranslations({lang: 'en', pageable: {pageNumber: page, pageSize: size}})
+      .pipe(takeUntil(this.destroy$)
+      ).subscribe((data) => {
+        let firstnameTranslations: any[] = data.content as any[];
+        this.source.load(firstnameTranslations).then(r => console.log(r));
       });
   }
 

@@ -10,6 +10,8 @@ import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
 import { Firstname } from '../models/firstname';
+import { FirstnameResponse } from '../models/firstname-response';
+import { Pageable } from '../models/pageable';
 import { SpecificationFirstname } from '../models/specification-firstname';
 
 @Injectable({
@@ -252,7 +254,7 @@ export class FirstnameResourceService extends BaseService {
   static readonly FindFirstnamesPath = '/api/v1/firstnames';
 
   /**
-   * Get firstnames.
+   * Get firstnames list.
    *
    *
    *
@@ -261,13 +263,15 @@ export class FirstnameResourceService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  findFirstnames$Response(params?: {
+  findFirstnames$Response(params: {
     lang?: string;
-  }): Observable<StrictHttpResponse<Array<Firstname>>> {
+    pageable: Pageable;
+  }): Observable<StrictHttpResponse<FirstnameResponse>> {
 
     const rb = new RequestBuilder(this.rootUrl, FirstnameResourceService.FindFirstnamesPath, 'get');
     if (params) {
       rb.query('lang', params.lang, {});
+      rb.query('pageable', params.pageable, {});
     }
 
     return this.http.request(rb.build({
@@ -276,13 +280,13 @@ export class FirstnameResourceService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<Firstname>>;
+        return r as StrictHttpResponse<FirstnameResponse>;
       })
     );
   }
 
   /**
-   * Get firstnames.
+   * Get firstnames list.
    *
    *
    *
@@ -291,12 +295,13 @@ export class FirstnameResourceService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  findFirstnames(params?: {
+  findFirstnames(params: {
     lang?: string;
-  }): Observable<Array<Firstname>> {
+    pageable: Pageable;
+  }): Observable<FirstnameResponse> {
 
     return this.findFirstnames$Response(params).pipe(
-      map((r: StrictHttpResponse<Array<Firstname>>) => r.body as Array<Firstname>)
+      map((r: StrictHttpResponse<FirstnameResponse>) => r.body as FirstnameResponse)
     );
   }
 
@@ -369,13 +374,15 @@ export class FirstnameResourceService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  findPrenomsAlea$Response(params?: {
+  findPrenomsAlea$Response(params: {
     lang?: string;
+    pageable: Pageable;
   }): Observable<StrictHttpResponse<Array<Firstname>>> {
 
     const rb = new RequestBuilder(this.rootUrl, FirstnameResourceService.FindPrenomsAleaPath, 'get');
     if (params) {
       rb.query('lang', params.lang, {});
+      rb.query('pageable', params.pageable, {});
     }
 
     return this.http.request(rb.build({
@@ -399,12 +406,70 @@ export class FirstnameResourceService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  findPrenomsAlea(params?: {
+  findPrenomsAlea(params: {
     lang?: string;
+    pageable: Pageable;
   }): Observable<Array<Firstname>> {
 
     return this.findPrenomsAlea$Response(params).pipe(
       map((r: StrictHttpResponse<Array<Firstname>>) => r.body as Array<Firstname>)
+    );
+  }
+
+  /**
+   * Path part for operation findPagedFirstnames
+   */
+  static readonly FindPagedFirstnamesPath = '/api/v1/firstnames/paged';
+
+  /**
+   * Get firstnames list (paginated).
+   *
+   *
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `findPagedFirstnames()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  findPagedFirstnames$Response(params: {
+    lang?: string;
+    pageable: Pageable;
+  }): Observable<StrictHttpResponse<FirstnameResponse>> {
+
+    const rb = new RequestBuilder(this.rootUrl, FirstnameResourceService.FindPagedFirstnamesPath, 'get');
+    if (params) {
+      rb.query('lang', params.lang, {});
+      rb.query('pageable', params.pageable, {});
+    }
+
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<FirstnameResponse>;
+      })
+    );
+  }
+
+  /**
+   * Get firstnames list (paginated).
+   *
+   *
+   *
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `findPagedFirstnames$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  findPagedFirstnames(params: {
+    lang?: string;
+    pageable: Pageable;
+  }): Observable<FirstnameResponse> {
+
+    return this.findPagedFirstnames$Response(params).pipe(
+      map((r: StrictHttpResponse<FirstnameResponse>) => r.body as FirstnameResponse)
     );
   }
 

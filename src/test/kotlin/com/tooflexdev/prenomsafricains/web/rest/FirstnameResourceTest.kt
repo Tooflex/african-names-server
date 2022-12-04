@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.data.domain.Pageable
 import org.springframework.http.MediaType
 import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.context.junit.jupiter.SpringExtension
@@ -51,25 +52,39 @@ class FirstnameResourceTest @Autowired constructor(
 
     private lateinit var firstname1: Firstname
     private lateinit var firstname2: Firstname
-    private lateinit var firstnames: List<Firstname>
+    private lateinit var firstname3: Firstname
+    private lateinit var firstnames: MutableIterable<Firstname>
+    private lateinit var firstnamesOf1Element: MutableIterable<Firstname>
+    private lateinit var firstnamesOf3Elements: MutableIterable<Firstname>
     private lateinit var firstName1Json: String
 
     @BeforeEach
     fun init() {
 
         firstname1 = Firstname(
+            id = 0,
             firstname = "Amadou",
             gender = Gender.MALE,
             meaning = "",
             size = Size.MEDIUM)
 
         firstname2 = Firstname(
+            id = 1,
             firstname = "Fatou",
             gender = Gender.FEMALE,
             meaning = "",
             size = Size.SHORT)
 
-        firstnames = arrayListOf(firstname1, firstname2)
+        firstname3 = Firstname(
+            id = 2,
+            firstname = "Eniola",
+            gender = Gender.FEMALE,
+            meaning = "",
+            size = Size.SHORT)
+
+        firstnames = mutableListOf(firstname1, firstname2)
+        firstnamesOf1Element = mutableListOf(firstname1)
+        firstnamesOf3Elements = mutableListOf(firstname1, firstname2, firstname3)
 
         val objectMapper: ObjectMapper = JsonMapper.builder()
             .findAndAddModules()
@@ -80,27 +95,29 @@ class FirstnameResourceTest @Autowired constructor(
     @Test
     @WithMockUser(username = "myUser", roles = ["USER"])
     fun givenNoExistingFirstnames_whenGetRequest_thenReturnsFirstnameJsonWithStatus404() {
-        every { firstnameService.findFirstnames() } returns emptyList()
+        every { firstnameService.findFirstnames(pageable = Pageable.ofSize(20)) } returns mutableListOf()
+        every { firstnameService.findFirstnames(pageable = Pageable.unpaged()) } returns mutableListOf()
 
-        mockMvc.perform(get("/api/v1/firstnames"))
+        mockMvc.perform(get("/api/v1/firstnames/paged"))
             .andExpect(status().isNotFound)
             .andExpect(content().string(containsString("No firstname found")))
     }
 
     @Test
     fun givenExistingFirstnamesAndUnauthorizedUser_whenGetRequest_thenReturnsFirstnameJsonWithStatus401() {
-        every { firstnameService.findFirstnames() } returns firstnames
+        every { firstnameService.findFirstnames(pageable = Pageable.unpaged()) } returns firstnames
 
-        mockMvc.perform(get("/api/v1/firstnames"))
+        mockMvc.perform(get("/api/v1/firstnames/paged"))
             .andExpect(status().isUnauthorized)
     }
 
     @Test
     @WithMockUser(username = "myUser", roles = ["USER"])
     fun givenExistingFirstnames_whenGetRequest_thenReturnsFirstnameJsonWithStatus200() {
-        every { firstnameService.findFirstnames() } returns firstnames
+        every { firstnameService.findFirstnames(pageable = Pageable.ofSize(20)) } returns firstnames
+        every { firstnameService.findFirstnames(pageable = Pageable.unpaged()) } returns firstnames
 
-        mockMvc.perform(get("/api/v1/firstnames"))
+        mockMvc.perform(get("/api/v1/firstnames/paged"))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.*", hasSize<Firstname>(2)))
@@ -111,7 +128,8 @@ class FirstnameResourceTest @Autowired constructor(
     @Test
     @WithMockUser(username = "myUser", roles = ["USER"])
     fun givenExistingFirstnames_whenFindPrenomsAlea_thenReturnsFirstnameJsonWithStatus200() {
-        every { firstnameService.findPrenomsAlea() } returns firstnames
+        every { firstnameService.findRandomFirstnames() } returns firstnames
+        every { firstnameService.findRandomFirstnames(pageable = Pageable.ofSize(100)) } returns firstnames
 
         mockMvc.perform(get("/api/v1/firstnames/random"))
             .andExpect(status().isOk)
@@ -119,33 +137,52 @@ class FirstnameResourceTest @Autowired constructor(
             .andExpect(jsonPath("$.*", hasSize<Firstname>(2)))
     }
 
-//    @Test
-//    //@WithMockUser(username = "myUser", roles = ["USER"])
-//    fun givenFirstnameInfoAndUserRole_whenPostRequest_withCreateFirstname_thenReturnsCreatedFirstnameWithStatus403() {
-//        every { firstnameService.createFirstname(firstname1) } returns firstname1
-//
-//        mockMvc.perform(post("/api/v1/firstnames/")
-//            .with(jwt()
-//                .authorities(SimpleGrantedAuthority("USER")))
-//        .contentType(MediaType.APPLICATION_JSON)
-//            .content(firstName1Json)
-//            .accept(MediaType.APPLICATION_JSON))
-//            .andExpect(status().isForbidden)
-//    }
-//
-//   @Test
-//   //@WithMockUser(username = "myAdmin", roles = ["ADMIN"])
-//   fun givenFirstnameInfoAndAdminRole_whenPostRequest_withCreateFirstname_thenReturnsCreatedFirstnameWithStatus201() {
-//       every { firstnameService.createFirstname(firstname1) } returns firstname1
-//
-//       mockMvc.perform(post("/api/v1/firstnames/")
-//           .with(jwt()
-//               .authorities(SimpleGrantedAuthority("ADMIN")))
-//           .contentType(MediaType.APPLICATION_JSON)
-//               .content(firstName1Json)
-//           .characterEncoding("utf-8")
-//           .accept(MediaType.APPLICATION_JSON))
-//              .andExpect(status().isCreated)
-//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-//   }
+    @Test
+    @WithMockUser(username = "myUser", roles = ["USER"])
+    fun givenExistingFirstnames_whenFindFirstnameWithPaginationAndSize_thenReturnsFirstnameJsonWithStatus200() {
+        every { firstnameService.findFirstnames(pageable = Pageable.ofSize(20)) } returns firstnames
+        every { firstnameService.findFirstnames(pageable = Pageable.unpaged()) } returns firstnames
+
+        mockMvc.perform(get("/api/v1/firstnames"))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.*", hasSize<Firstname>(2)))
+    }
+
+    @Test
+    @WithMockUser(username = "myUser", roles = ["USER"])
+    fun givenExistingFirstnames_whenFindFirstnameWithPaginationAndSizeOf1_thenReturnsFirstnameJsonWithStatus200() {
+        every { firstnameService.findFirstnames(pageable = Pageable.ofSize(1)) } returns firstnamesOf1Element
+        every { firstnameService.findFirstnames(pageable = Pageable.unpaged()) } returns firstnamesOf1Element
+
+        mockMvc.perform(get("/api/v1/firstnames?size=1"))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.*", hasSize<Firstname>(1)))
+    }
+
+    @Test
+    @WithMockUser(username = "myUser", roles = ["USER"])
+    fun givenExistingFirstnames_whenFindFirstnameWithPaginationAndSizeOf1AndPage1_thenReturnsFirstnameJsonWithStatus200() {
+        every { firstnameService.findFirstnames(lang = "en", pageable = Pageable.ofSize(1).withPage(1)) } returns firstnamesOf1Element
+        every { firstnameService.findFirstnames(pageable = Pageable.unpaged()) } returns firstnamesOf1Element
+
+
+        mockMvc.perform(get("/api/v1/firstnames?size=1&page=1"))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.*", hasSize<Firstname>(1)))
+    }
+
+    @Test
+    @WithMockUser(username = "myUser", roles = ["USER"])
+    fun givenExistingFirstnames_whenFindRandomFirstnameWithPaginationAndSizeOf3_thenReturnsFirstnameJsonWithStatus200() {
+        every { firstnameService.findRandomFirstnames(pageable = Pageable.ofSize(3)) } returns firstnamesOf3Elements
+        every { firstnameService.findRandomFirstnames(pageable = Pageable.unpaged()) } returns firstnamesOf3Elements
+
+        mockMvc.perform(get("/api/v1/firstnames/random?size=3"))
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.*", hasSize<Firstname>(3)))
+    }
 }

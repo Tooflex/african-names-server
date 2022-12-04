@@ -32,7 +32,7 @@ class CsvService {
     @Autowired
     lateinit var firstnameTranslationMapper: FirstnameTranslationMapper
 
-    fun uploadCsvFile(file: MultipartFile): List<Firstname> {
+    fun uploadCsvFile(file: MultipartFile): MutableIterable<Firstname> {
         throwIfFileEmpty(file)
         var fileReader: BufferedReader? = null
 
@@ -50,7 +50,7 @@ class CsvService {
         }
     }
 
-    fun uploadFirstnameTranslationCsvFile(file: MultipartFile): List<FirstnameTranslation> {
+    fun uploadFirstnameTranslationCsvFile(file: MultipartFile): MutableIterable<FirstnameTranslation> {
         throwIfFileEmpty(file)
         var fileReader: BufferedReader? = null
 

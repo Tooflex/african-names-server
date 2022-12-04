@@ -11,6 +11,8 @@ import { map, filter } from 'rxjs/operators';
 
 import { Firstname } from '../models/firstname';
 import { FirstnameTranslation } from '../models/firstname-translation';
+import { FirstnameTranslationResponse } from '../models/firstname-translation-response';
+import { Pageable } from '../models/pageable';
 
 @Injectable({
   providedIn: 'root',
@@ -96,13 +98,15 @@ export class FirstnameTranslationResourceService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  findFirstnameTranslations$Response(params?: {
+  findFirstnameTranslations$Response(params: {
     lang?: string;
-  }): Observable<StrictHttpResponse<Array<FirstnameTranslation>>> {
+    pageable: Pageable;
+  }): Observable<StrictHttpResponse<FirstnameTranslationResponse>> {
 
     const rb = new RequestBuilder(this.rootUrl, FirstnameTranslationResourceService.FindFirstnameTranslationsPath, 'get');
     if (params) {
       rb.query('lang', params.lang, {});
+      rb.query('pageable', params.pageable, {});
     }
 
     return this.http.request(rb.build({
@@ -111,7 +115,7 @@ export class FirstnameTranslationResourceService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Array<FirstnameTranslation>>;
+        return r as StrictHttpResponse<FirstnameTranslationResponse>;
       })
     );
   }
@@ -126,12 +130,13 @@ export class FirstnameTranslationResourceService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  findFirstnameTranslations(params?: {
+  findFirstnameTranslations(params: {
     lang?: string;
-  }): Observable<Array<FirstnameTranslation>> {
+    pageable: Pageable;
+  }): Observable<FirstnameTranslationResponse> {
 
     return this.findFirstnameTranslations$Response(params).pipe(
-      map((r: StrictHttpResponse<Array<FirstnameTranslation>>) => r.body as Array<FirstnameTranslation>)
+      map((r: StrictHttpResponse<FirstnameTranslationResponse>) => r.body as FirstnameTranslationResponse)
     );
   }
 

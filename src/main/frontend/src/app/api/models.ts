@@ -3,6 +3,10 @@ export { SubscribeNewsletterRequest } from './models/subscribe-newsletter-reques
 export { SignupRequest } from './models/signup-request';
 export { LoginRequest } from './models/login-request';
 export { JwtResponse } from './models/jwt-response';
+export { Pageable } from './models/pageable';
 export { FirstnameTranslation } from './models/firstname-translation';
+export { FirstnameTranslationResponse } from './models/firstname-translation-response';
 export { Language } from './models/language';
+export { Sort } from './models/sort';
+export { FirstnameResponse } from './models/firstname-response';
 export { SpecificationFirstname } from './models/specification-firstname';
