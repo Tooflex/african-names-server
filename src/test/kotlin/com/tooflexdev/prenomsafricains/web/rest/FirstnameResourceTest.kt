@@ -24,6 +24,8 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.http.MediaType
 import org.springframework.security.test.context.support.WithMockUser
@@ -54,10 +56,13 @@ class FirstnameResourceTest @Autowired constructor(
     private lateinit var firstname1: Firstname
     private lateinit var firstname2: Firstname
     private lateinit var firstname3: Firstname
-    private lateinit var firstnames: Page<Firstname>
-    private lateinit var firstnamesOf1Element: Page<Firstname>
-    private lateinit var firstnamesOf3Elements: Page<Firstname>
+    private lateinit var firstnames: List<Firstname>
+    private lateinit var firstnamesOf1Element: List<Firstname>
+    private lateinit var firstnamesOf3Elements: List<Firstname>
     private lateinit var firstName1Json: String
+    private lateinit var pageOfFirstname: Page<Firstname>
+    private lateinit var pageOfFirstnameOf1Element: Page<Firstname>
+    private lateinit var pageOfFirstnameOf3Elements: Page<Firstname>
 
     @BeforeEach
     fun init() {
@@ -83,9 +88,14 @@ class FirstnameResourceTest @Autowired constructor(
             meaning = "",
             size = Size.SHORT)
 
-        firstnames = listOf(firstname1, firstname2) as Page<Firstname>
-        firstnamesOf1Element = listOf(firstname1) as Page<Firstname>
-        firstnamesOf3Elements = listOf(firstname1, firstname2, firstname3) as Page<Firstname>
+        firstnames = listOf(firstname1, firstname2)
+        firstnamesOf1Element = listOf(firstname1)
+        firstnamesOf3Elements = listOf(firstname1, firstname2, firstname3)
+
+        val pageable = PageRequest.of(0, 20)
+        pageOfFirstname = PageImpl(firstnames, pageable, firstnames.size.toLong())
+        pageOfFirstnameOf1Element = PageImpl(firstnamesOf1Element, pageable, firstnamesOf1Element.size.toLong())
+        pageOfFirstnameOf3Elements = PageImpl(firstnamesOf3Elements, pageable, firstnamesOf3Elements.size.toLong())
 
         val objectMapper: ObjectMapper = JsonMapper.builder()
             .findAndAddModules()
@@ -106,7 +116,7 @@ class FirstnameResourceTest @Autowired constructor(
 
     @Test
     fun givenExistingFirstnamesAndUnauthorizedUser_whenGetRequest_thenReturnsFirstnameJsonWithStatus401() {
-        every { firstnameService.findFirstnames(pageable = Pageable.unpaged()) } returns firstnames
+        every { firstnameService.findFirstnames(pageable = Pageable.unpaged()) } returns pageOfFirstname
 
         mockMvc.perform(get("/api/v1/firstnames/paged"))
             .andExpect(status().isUnauthorized)
@@ -115,15 +125,15 @@ class FirstnameResourceTest @Autowired constructor(
     @Test
     @WithMockUser(username = "myUser", roles = ["USER"])
     fun givenExistingFirstnames_whenGetRequest_thenReturnsFirstnameJsonWithStatus200() {
-        every { firstnameService.findFirstnames(pageable = Pageable.ofSize(20)) } returns firstnames
-        every { firstnameService.findFirstnames(pageable = Pageable.unpaged()) } returns firstnames
+        every { firstnameService.findFirstnames(pageable = Pageable.ofSize(20)) } returns pageOfFirstname
+        every { firstnameService.findFirstnames(pageable = Pageable.unpaged()) } returns pageOfFirstname
 
         mockMvc.perform(get("/api/v1/firstnames/paged"))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.*", hasSize<Firstname>(2)))
-            .andExpect(jsonPath("$[0].firstname").value("Amadou"))
-            .andExpect(jsonPath("$[1].firstname").value("Fatou"))
+            .andExpect(jsonPath("$.content", hasSize<Firstname>(2)))
+            .andExpect(jsonPath("$.content[0].firstname").value("Amadou"))
+            .andExpect(jsonPath("$.content[1].firstname").value("Fatou"))
     }
 
     @Test
@@ -141,32 +151,37 @@ class FirstnameResourceTest @Autowired constructor(
     @Test
     @WithMockUser(username = "myUser", roles = ["USER"])
     fun givenExistingFirstnames_whenFindFirstnameWithPaginationAndSize_thenReturnsFirstnameJsonWithStatus200() {
-        every { firstnameService.findFirstnames(pageable = Pageable.ofSize(20)) } returns firstnames
-        every { firstnameService.findFirstnames(pageable = Pageable.unpaged()) } returns firstnames
+        every { firstnameService.findFirstnames(pageable = Pageable.ofSize(20)) } returns pageOfFirstname
+        every { firstnameService.findFirstnames(pageable = Pageable.unpaged()) } returns pageOfFirstname
 
         mockMvc.perform(get("/api/v1/firstnames"))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.*", hasSize<Firstname>(2)))
+            .andExpect(jsonPath("$.content", hasSize<Firstname>(2)))
+            .andExpect(jsonPath("$.content[0].firstname").value("Amadou"))
+            .andExpect(jsonPath("$.content[1].firstname").value("Fatou"))
+            .andExpect(jsonPath("$.totalElements").value(2))
+
     }
 
     @Test
     @WithMockUser(username = "myUser", roles = ["USER"])
     fun givenExistingFirstnames_whenFindFirstnameWithPaginationAndSizeOf1_thenReturnsFirstnameJsonWithStatus200() {
-        every { firstnameService.findFirstnames(pageable = Pageable.ofSize(1)) } returns firstnamesOf1Element
-        every { firstnameService.findFirstnames(pageable = Pageable.unpaged()) } returns firstnamesOf1Element
+        every { firstnameService.findFirstnames(pageable = Pageable.ofSize(1)) } returns pageOfFirstnameOf1Element
+        every { firstnameService.findFirstnames(pageable = Pageable.unpaged()) } returns pageOfFirstnameOf1Element
 
         mockMvc.perform(get("/api/v1/firstnames?size=1"))
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.*", hasSize<Firstname>(1)))
-    }
+            // and expect only one firstname in the response and totalElements = 1
+            .andExpect(jsonPath("$.content", hasSize<Firstname>(1)))
+            .andExpect(jsonPath("$.totalElements").value(1))
 
     @Test
     @WithMockUser(username = "myUser", roles = ["USER"])
     fun givenExistingFirstnames_whenFindFirstnameWithPaginationAndSizeOf1AndPage1_thenReturnsFirstnameJsonWithStatus200() {
-        every { firstnameService.findFirstnames(lang = "en", pageable = Pageable.ofSize(1).withPage(1)) } returns firstnamesOf1Element
-        every { firstnameService.findFirstnames(pageable = Pageable.unpaged()) } returns firstnamesOf1Element
+        every { firstnameService.findFirstnames(lang = "en", pageable = Pageable.ofSize(1).withPage(1)) } returns pageOfFirstnameOf1Element
+        every { firstnameService.findFirstnames(pageable = Pageable.unpaged()) } returns pageOfFirstnameOf1Element
 
 
         mockMvc.perform(get("/api/v1/firstnames?size=1&page=1"))
@@ -186,4 +201,4 @@ class FirstnameResourceTest @Autowired constructor(
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.*", hasSize<Firstname>(3)))
     }
-}
+}}
