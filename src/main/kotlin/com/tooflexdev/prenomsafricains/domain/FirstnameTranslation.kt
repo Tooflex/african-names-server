@@ -1,5 +1,6 @@
 package com.tooflexdev.prenomsafricains.domain
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.opencsv.bean.CsvBindByPosition
 import org.hibernate.annotations.Cache
 import org.hibernate.annotations.CacheConcurrencyStrategy
@@ -21,7 +22,8 @@ class FirstnameTranslation (
     @ManyToOne
     @CsvBindByPosition(position = 3)
     var language: Language,
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @CsvBindByPosition(position = 4)
     var firstname: Firstname
 )

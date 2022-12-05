@@ -41,10 +41,10 @@ class FirstnameTranslationResource(val service: FirstnameTranslationService, val
     )
     @GetMapping("")
     fun findFirstnameTranslations(
-        @RequestParam(defaultValue = "en") lang: String,
+        @RequestParam(defaultValue = "*") lang: String,
         @PageableDefault(page = 0, size = 20) pageable: Pageable)
     : ResponseEntity<Page<FirstnameTranslation>>
-        = ResponseEntity(service.findFirstnameTranslations(pageable), HttpStatus.OK)
+        = ResponseEntity(service.findFirstnameTranslations(lang, pageable), HttpStatus.OK)
 
     @Operation(summary = "Get firstname translations")
     @ApiResponses(value = [

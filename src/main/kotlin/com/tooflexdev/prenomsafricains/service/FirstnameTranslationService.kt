@@ -8,6 +8,7 @@ package com.tooflexdev.prenomsafricains.service
 import com.tooflexdev.prenomsafricains.domain.FirstnameTranslation
 import com.tooflexdev.prenomsafricains.repository.FirstnameTranslationRepository
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.domain.Specification
@@ -17,8 +18,12 @@ import org.springframework.stereotype.Service
 @Service
 class FirstnameTranslationService(val dbFirstnameTranslation: FirstnameTranslationRepository) {
 
-    fun findFirstnameTranslations(pageable: Pageable): Page<FirstnameTranslation> {
-        return dbFirstnameTranslation.findAll(pageable)
+    fun findFirstnameTranslations(lang: String, pageable: Pageable): Page<FirstnameTranslation> {
+        return if (lang == "*") {
+            dbFirstnameTranslation.findAll(pageable)
+        } else {
+            PageImpl(findFirstnameByLanguage(lang, pageable))
+        }
     }
 
     fun findFirstnameTranslationsByFirstname(firstnameID: Long): List<FirstnameTranslation> {

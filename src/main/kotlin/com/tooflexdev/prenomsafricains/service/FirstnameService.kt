@@ -1,7 +1,6 @@
 package com.tooflexdev.prenomsafricains.service
 
 import com.tooflexdev.prenomsafricains.domain.Firstname
-import com.tooflexdev.prenomsafricains.domain.FirstnameTranslation
 import com.tooflexdev.prenomsafricains.repository.FirstnameRepository
 import com.tooflexdev.prenomsafricains.repository.FirstnameTranslationRepository
 import org.springframework.data.domain.Page
@@ -30,8 +29,10 @@ class FirstnameService(val db: FirstnameRepository, val dbFirstnameTranslation: 
                 firstname.meaning = translation.meaningTranslation
                 firstname.origins = translation.originsTranslation
             } else {
-                firstname.meaning = null
-                firstname.origins = null
+                if(lang != "en") {
+                    firstname.meaning = null
+                    firstname.origins = null
+                }
             }
         }
 
@@ -66,8 +67,10 @@ class FirstnameService(val db: FirstnameRepository, val dbFirstnameTranslation: 
                 firstname.meaning = translation.meaningTranslation
                 firstname.origins = translation.originsTranslation
             } else {
-                firstname.meaning = null
-                firstname.origins = null
+                if(lang != "en") {
+                    firstname.meaning = null
+                    firstname.origins = null
+                }
             }
         }
 
